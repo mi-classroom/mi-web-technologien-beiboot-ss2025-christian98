@@ -1,0 +1,70 @@
+FILE:
+    FileName: proper-file.jpg
+    FileDateTime: 1743930482
+    FileSize: 15244599
+    FileType: 2
+    MimeType: image/jpeg
+    SectionsFound: 'ANY_TAG, IFD0, THUMBNAIL, EXIF'
+COMPUTED:
+    html: 'width="6000" height="4000"'
+    Height: 4000
+    Width: 6000
+    IsColor: 1
+    ByteOrderMotorola: 0
+    ApertureFNumber: f/4.5
+    Thumbnail.FileType: 2
+    Thumbnail.MimeType: image/jpeg
+IFD0:
+    Make: FUJIFILM
+    Model: X-T2
+    XResolution: 240/1
+    YResolution: 240/1
+    ResolutionUnit: 2
+    Software: 'Adobe Photoshop Lightroom 6.12 (Macintosh)'
+    DateTime: '2018:04:29 15:11:14'
+    Artist: 'IGOR BUDASOV'
+    Exif_IFD_Pointer: 232
+THUMBNAIL:
+    Compression: 6
+    XResolution: 72/1
+    YResolution: 72/1
+    ResolutionUnit: 2
+    JPEGInterchangeFormat: 972
+    JPEGInterchangeFormatLength: 8545
+EXIF:
+    ExposureTime: 1/750
+    FNumber: 45/10
+    ExposureProgram: 3
+    ISOSpeedRatings: 400
+    'UndefinedTag:0x8830': 1
+    ExifVersion: '0230'
+    DateTimeOriginal: '2018:03:28 12:41:26'
+    DateTimeDigitized: '2018:03:28 12:41:26'
+    ShutterSpeedValue: 9550747/1000000
+    ApertureValue: 433985/100000
+    BrightnessValue: 750/100
+    ExposureBiasValue: 33/100
+    MaxApertureValue: 300/100
+    MeteringMode: 5
+    LightSource: 0
+    Flash: 0
+    FocalLength: 2330/100
+    ColorSpace: 1
+    FocalPlaneXResolution: 2564/1
+    FocalPlaneYResolution: 2564/1
+    FocalPlaneResolutionUnit: 3
+    SensingMethod: 2
+    FileSource: !!binary Aw==
+    SceneType: !!binary AQ==
+    CustomRendered: 1
+    ExposureMode: 0
+    WhiteBalance: 0
+    FocalLengthIn35mmFilm: 35
+    SceneCaptureType: 0
+    Sharpness: 0
+    SubjectDistanceRange: 0
+    'UndefinedTag:0xA431': 73M54489
+    'UndefinedTag:0xA432': [1800/100, 5500/100, 280/100, 400/100]
+    'UndefinedTag:0xA433': FUJIFILM
+    'UndefinedTag:0xA434': 'XF18-55mmF2.8-4 R LM OIS'
+    'UndefinedTag:0xA435': 61U02416
