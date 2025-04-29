@@ -11,7 +11,7 @@ class ImageTypeTest extends TestCase
     public static function allImageTypes(): array
     {
         return collect(ImageType::cases())
-            ->mapWithKeys(fn (ImageType $imageType) =>[$imageType->name => ['imageType' => $imageType]])
+            ->mapWithKeys(fn (ImageType $imageType) => [$imageType->name => ['imageType' => $imageType]])
             ->toArray();
     }
 

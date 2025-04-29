@@ -7,12 +7,11 @@ use Illuminate\Contracts\Support\Arrayable;
 class IptcData implements Arrayable
 {
     /**
-     * @param array<string, array<int, string>> $data
+     * @param  array<string, array<int, string>>  $data
      */
     public function __construct(
         protected array $data
-    ) {
-    }
+    ) {}
 
     public function get(IptcTag $key): ?array
     {
@@ -36,7 +35,7 @@ class IptcData implements Arrayable
 
     public function push(IptcTag $key, string $value): void
     {
-        if (!isset($this->data[$key->toString()])) {
+        if (! isset($this->data[$key->toString()])) {
             $this->data[$key->toString()] = [];
         }
 
@@ -47,6 +46,7 @@ class IptcData implements Arrayable
     {
         if ($index !== null) {
             unset($this->data[$key->toString()][$index]);
+
             return;
         }
 

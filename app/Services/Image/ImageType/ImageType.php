@@ -31,7 +31,7 @@ enum ImageType: int
 
     public function supportsExif(): bool
     {
-        return match($this) {
+        return match ($this) {
             self::JPEG, self::TIFF_II, self::TIFF_MM => true,
             default => false,
         };
@@ -39,7 +39,7 @@ enum ImageType: int
 
     public function supportsIptc(): true
     {
-        return match($this) {
+        return match ($this) {
             // https://exiftool.org/TagNames/IPTC.html, JPG, TIFF, PNG, MIFF, PS, PDF, PSD, XCF and DNG
             self::JPEG, self::TIFF_II, self::TIFF_MM, self::PNG, self::PSD => true,
             default => false,

@@ -34,12 +34,12 @@ class File extends Model
                 $bytes /= 1024;
             }
 
-            return round($bytes, 2) . ' ' . $units[$i];
+            return round($bytes, 2).' '.$units[$i];
         })->shouldCache();
     }
 
     public function downloadUrl(): Attribute
     {
-        return Attribute::get(fn() => url('storage/' . $this->path))->shouldCache();
+        return Attribute::get(fn () => url('storage/'.$this->path))->shouldCache();
     }
 }

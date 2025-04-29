@@ -7,12 +7,11 @@ use Illuminate\Contracts\Support\Arrayable;
 class ExifData implements Arrayable
 {
     /**
-     * @param array<string, string> $data
+     * @param  array<string, string>  $data
      */
     public function __construct(
         protected array $data
-    ) {
-    }
+    ) {}
 
     public function get(ExifTag $key): ?string
     {

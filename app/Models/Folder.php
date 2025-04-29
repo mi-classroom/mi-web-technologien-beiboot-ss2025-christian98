@@ -14,7 +14,7 @@ class Folder extends Model
 
     protected $fillable = [
         'name',
-        'parent_id'
+        'parent_id',
     ];
 
     public function parent(): BelongsTo

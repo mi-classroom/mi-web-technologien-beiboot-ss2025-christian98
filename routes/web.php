@@ -31,5 +31,5 @@ Route::get('files/{file}/download', [FileController::class, 'download'])
     ->middleware(['auth', 'verified'])
     ->name('files.download');
 
-require __DIR__ . '/settings.php';
-require __DIR__ . '/auth.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';

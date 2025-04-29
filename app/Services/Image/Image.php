@@ -20,7 +20,7 @@ class Image
     protected readonly mixed $tempFile;
 
     public function __construct(
-        protected string  $filename,
+        protected string $filename,
         protected ?string $disk = null,
     ) {
         // Copy image to temporary location
@@ -48,7 +48,7 @@ class Image
 
     public function type(): ImageType\ImageType
     {
-        return (new ImageTypeDetector())->detect($this->tempFileName());
+        return (new ImageTypeDetector)->detect($this->tempFileName());
     }
 
     public function intervention(): ImageInterface

@@ -112,7 +112,6 @@ enum IptcTag: int
     case Title = 05;
     // endregion
 
-
     // case ObjectName = 0x5;
     // case Caption = 0x78;
     // case Datetime = 0x19;
@@ -120,7 +119,7 @@ enum IptcTag: int
     // case ByLineTitle = 0x55;
     case Version = 0;
     case ObjectName = 1;
-    case Credit = 0x7b;
+    case Credit = 0x7B;
 
     public function toString(): string
     {
@@ -130,12 +129,14 @@ enum IptcTag: int
     public static function fromString(string $tag): self
     {
         $tag = explode('#', $tag)[1];
-        return self::from((int)$tag);
+
+        return self::from((int) $tag);
     }
 
     public static function tryFromString(string $tag): ?self
     {
         $tag = explode('#', $tag)[1];
-        return self::tryFrom((int)$tag);
+
+        return self::tryFrom((int) $tag);
     }
 }
