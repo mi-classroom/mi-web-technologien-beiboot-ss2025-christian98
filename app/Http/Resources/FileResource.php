@@ -12,7 +12,7 @@ class FileResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $image = new Image($this->path, 'public');
+        $image = Image::fromDisk($this->path, 'public');
 
         return [
             'id' => $this->id,

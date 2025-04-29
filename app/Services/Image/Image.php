@@ -9,97 +9,82 @@ use App\Services\Image\IPTC\IptcReader;
 use App\Services\Image\IPTC\IptcWriter;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Interfaces\ImageInterface;
-use RuntimeException;
 
 class Image
 {
-    /**
-     * @var resource
-     */
-    protected readonly mixed $tempFile;
-
     public function __construct(
-        protected string $filename,
-        protected ?string $disk = null,
-    ) {
-        // Copy image to temporary location
-        $tmpFile = tmpfile();
-        if ($tmpFile === false) {
-            throw new RuntimeException('Failed to create temporary file');
-        }
-        fwrite($this->tempFile = $tmpFile, $this->contents());
+        protected readonly TempFile $tempFile,
+    ) {}
+
+    public static function fromDisk(string $filename, null|string|Filesystem $disk = null): static
+    {
+        /** @var Filesystem $disk */
+        $disk = $disk instanceof Filesystem ? $disk : Storage::disk($disk);
+        $content = $disk->get($filename);
+
+        // Debug the values to see what's actually happening
+        $originalTime = $disk->lastModified($filename);
+        ray("Original timestamp: $originalTime (".date('Y-m-d H:i:s', $originalTime).")\n")->label('Original Timestamp');
+
+        return new self(
+            TempFile::withFilename($filename)
+                ->write($content)
+                ->setLastModified($disk->lastModified($filename))
+        );
     }
 
-    protected function tempFileName()
+    public static function fromContent(string $content): static
     {
-        return stream_get_meta_data($this->tempFile)['uri'];
+        return new self(TempFile::withRandomName()->write($content));
+    }
+
+    /**
+     * @param  resource|null  $streamContext
+     */
+    public static function fromPath(string $path, mixed $streamContext = null): static
+    {
+        return new self(TempFile::withFilename($path)->copyFrom($path, $streamContext));
+    }
+
+    public function exifReader(): ExifReader
+    {
+        return ExifReader::fromFilename($this->tempFile->filename());
     }
 
     public function exif(): Exif\ExifData
     {
-        return ExifReader::fromFilename($this->tempFileName())->read();
+        return $this->exifReader()->read();
+    }
+
+    public function iptcReader(): IptcReader
+    {
+        return IptcReader::fromFilename($this->tempFile->filename());
     }
 
     public function iptc(): IPTC\IptcData
     {
-        return IptcReader::fromFilename($this->tempFileName())->read();
+        return $this->iptcReader()->read();
     }
 
     public function type(): ImageType\ImageType
     {
-        return (new ImageTypeDetector)->detect($this->tempFileName());
-    }
-
-    public function intervention(): ImageInterface
-    {
-        return \Intervention\Image\Laravel\Facades\Image::read($this->filename);
-    }
-
-    public function size(): int
-    {
-        return $this->disk()->size($this->filename);
-    }
-
-    public function mimeType(): string
-    {
-        return $this->disk()->mimeType($this->filename);
-    }
-
-    public function lastModified(): int
-    {
-        return $this->disk()->lastModified($this->filename);
-    }
-
-    public function url(): string
-    {
-        return $this->disk()->url($this->filename);
+        return (new ImageTypeDetector)->detect($this->tempFile->filename());
     }
 
     public function contents(): ?string
     {
-        return $this->disk()->get($this->filename);
+        return file_get_contents($this->tempFile->filename());
     }
 
-    protected function disk(): Filesystem
+    public function iptcWriter(): IptcWriter
     {
-        return Storage::disk($this->disk);
-    }
-
-    public function __destruct()
-    {
-        fclose($this->tempFile); // Also delete the temporary file
+        return new IptcWriter($this->tempFile->filename());
     }
 
     public function writeIptc(IptcData $data): static
     {
-        (new IptcWriter($this->tempFileName()))->write($data);
+        $this->iptcWriter()->write($data);
 
         return $this;
-    }
-
-    public function save(): void
-    {
-        $this->disk()->put($this->filename, file_get_contents($this->tempFileName()));
     }
 }

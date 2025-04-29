@@ -34,7 +34,7 @@ class FileController extends Controller
     public function update(UpdateFileRequest $request, File $file): RedirectResponse
     {
         $file->update($request->except('meta_data'));
-        $image = new Image($file->path, 'public');
+        $image = Image::fromDisk($file->path, 'public');
 
         if ($image->type()->supportsIptc()) {
             $iptc = $image->iptc();
@@ -52,7 +52,8 @@ class FileController extends Controller
             }
 
             // Save the IPTC data back to the image
-            $image->writeIptc($iptc)->save();
+            $image->writeIptc($iptc);
+            Storage::disk('public')->put($file->path, $image->contents());
         }
 
         return redirect()->route('files.show', $file)
