@@ -13,7 +13,7 @@ class CreateFolderRequest extends FormRequest
 
         return [
             'name' => [
-                'required', 'string', 'max:255',
+                'required', 'string', 'max:255', 'regex:/^(\w+\.?)*\w+$/u',
                 Rule::unique('folders', 'name')
                     ->where('parent_id', $parentId),
             ],
