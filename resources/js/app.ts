@@ -6,6 +6,7 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
+import { i18nVue } from "laravel-vue-i18n";
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -29,6 +30,20 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(i18nVue, {
+                fallbackLang: "en",
+                resolve: async (lang: string) => {
+                    const langs = import.meta.glob('../../lang/*.json');
+                    const langModuleLoader = langs[`../../lang/${lang}.json`];
+
+                    if (!langModuleLoader) {
+                        console.warn('Language file not found:', `../../lang/${lang}.json`);
+                        return {};
+                    }
+
+                    return await langModuleLoader();
+                }
+            })
             .mount(el);
     },
     progress: {

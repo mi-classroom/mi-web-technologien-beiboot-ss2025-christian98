@@ -4,6 +4,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\FolderFileController;
 use App\Http\Controllers\FolderFolderController;
+use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -30,6 +31,11 @@ Route::resource('files', FileController::class)
 Route::get('files/{file}/download', [FileController::class, 'download'])
     ->middleware(['auth', 'verified'])
     ->name('files.download');
+
+Route::post('/locale', [LocaleController::class, 'setLocale'])
+    ->name('locale.set');
+Route::get('/locale', [LocaleController::class, 'getLocale'])
+    ->name('locale.get');
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

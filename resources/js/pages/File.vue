@@ -143,7 +143,7 @@ function removeIptcTag(blockHeader: string) {
                                     <FileInfoBlock v-if="props.file.data.meta_data.iptc">
                                         <FileInfoAttribute
                                             v-for="[blockHeader, metaBlock] in Object.entries(props.file.data.meta_data.iptc)"
-                                            :label="blockHeader">
+                                            :label="trans(`iptc_tag.${blockHeader}`)">
                                             <template #actions>
                                                 <UpdateIptcMeta :file="props.file.data" :tag="blockHeader"/>
                                                 <Button variant="destructive" @click="() => removeIptcTag(blockHeader)">

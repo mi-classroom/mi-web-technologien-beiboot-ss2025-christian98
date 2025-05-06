@@ -8,6 +8,7 @@ import {Input} from "@/components/ui/input";
 import {useCloned} from "@vueuse/core";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
+import {trans} from "laravel-vue-i18n";
 
 const props = defineProps<{
     file: File;
@@ -52,7 +53,7 @@ function closeDialog() {
             <form @submit.prevent="updateMeta" class="grid gap-4">
                 <DialogHeader>
                     <DialogTitle>
-                        Edit IPTC-Meta: <span class="italic">{{ props.tag }}</span>
+                        Edit IPTC-Meta: <span class="italic">{{ trans(`iptc_tag.${props.tag}`) }}</span>
                     </DialogTitle>
                 </DialogHeader>
                 <div class="mx-2">
