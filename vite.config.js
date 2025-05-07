@@ -4,6 +4,7 @@ import path from 'path';
 import tailwindcss from "@tailwindcss/vite";
 import {resolve} from 'node:path';
 import {defineConfig} from 'vite';
+import i18n from "laravel-vue-i18n/vite";
 
 export default defineConfig({
     plugins: [
@@ -21,6 +22,7 @@ export default defineConfig({
                 },
             },
         }),
+        i18n(),
     ],
     resolve: {
         alias: {
