@@ -23,6 +23,6 @@ class ImageTypeDetector
             return ImageType::from($imagetype);
         }
 
-        throw new RuntimeException('Cannot detect image type');
+        return ImageType::Unknown;
     }
 }

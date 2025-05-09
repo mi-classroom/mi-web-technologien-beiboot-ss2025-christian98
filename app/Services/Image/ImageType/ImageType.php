@@ -24,6 +24,9 @@ enum ImageType: int
     case WEBP = 18;
     case AVIF = 19;
 
+    case HEIC = 20;
+    case Unknown = 0;
+
     public function mimeType(): string
     {
         return image_type_to_mime_type($this->value);
@@ -37,7 +40,7 @@ enum ImageType: int
         };
     }
 
-    public function supportsIptc(): true
+    public function supportsIptc(): bool
     {
         return match ($this) {
             // https://exiftool.org/TagNames/IPTC.html, JPG, TIFF, PNG, MIFF, PS, PDF, PSD, XCF and DNG
