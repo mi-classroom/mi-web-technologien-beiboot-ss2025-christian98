@@ -32,7 +32,7 @@ class FolderController extends Controller
         ]);
     }
 
-    public function store(): Response
+    public function store(): RedirectResponse
     {
         $user = Auth::user();
         $folder = $user->folders()->create([
