@@ -5,7 +5,7 @@ import type {Folder} from "@/types";
 import CreateFolderButton from "@/components/folder/CreateFolderButton.vue";
 import {computed} from "vue";
 import CreateFileButton from "@/components/folder/CreateFileButton.vue";
-import NumberFormat = Intl.NumberFormat;
+import DeleteFolder from "@/components/folder/DeleteFolder.vue";
 
 interface Props {
     folder: { data: Folder };
@@ -47,6 +47,7 @@ function navigate(event: Event) {
                 <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none flex gap-x-1">
                     <CreateFileButton :folder="props.folder.data"/>
                     <CreateFolderButton :folder="props.folder.data"/>
+                    <DeleteFolder v-if="props.folder.data.parent_id" :folder="props.folder.data"/>
                 </div>
             </div>
             <div class="mt-8 flow-root">

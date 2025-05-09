@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\FolderResource;
 use App\Models\Folder;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -40,5 +41,13 @@ class FolderController extends Controller
         ]);
 
         return redirect()->route('folders.show', $folder);
+    }
+
+    public function destroy(Folder $folder): RedirectResponse
+    {
+        $folder->delete();
+
+        return redirect()->route('folders.index')
+            ->with('success', 'Folder has been deleted.');
     }
 }
