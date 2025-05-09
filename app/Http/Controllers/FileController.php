@@ -56,6 +56,8 @@ class FileController extends Controller
             Storage::disk('public')->put($file->path, $image->contents());
         }
 
+        $file->touch();
+
         return redirect()->route('files.show', $file)
             ->with('success', 'File updated successfully.');
     }

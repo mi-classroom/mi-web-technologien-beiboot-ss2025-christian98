@@ -27,6 +27,8 @@ class FolderFileController extends Controller
             })
         );
 
+        $folder->touch();
+
         return redirect()->route('folders.show', $folder)
             ->with('success', 'File uploaded successfully.');
     }

@@ -11,7 +11,8 @@ class FolderFolderController extends Controller
     public function store(CreateFolderRequest $request, Folder $folder): RedirectResponse
     {
         $newFolder = $folder->folders()->create($request->validated());
-        ray($newFolder);
+
+        $folder->touch();
 
         return redirect()->route('folders.show', $newFolder);
     }
