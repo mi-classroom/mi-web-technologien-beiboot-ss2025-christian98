@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\ImageRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\File;
 
@@ -12,7 +13,7 @@ class CreateFileRequest extends FormRequest
         return [
             'files' => ['required', 'array', 'min:1'],
             'files.*.name' => ['filled', 'string', 'max:255'],
-            'files.*.file' => ['required', 'file', File::image()],
+            'files.*.file' => ['required', 'file', File::default(), new ImageRule],
         ];
     }
 }
