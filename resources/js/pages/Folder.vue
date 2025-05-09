@@ -19,17 +19,22 @@ const breadcrumbs = computed(() => props.breadcrumbs.map((folder) => ({
     href: route('folders.show', {folder: folder.id}),
 })));
 
-function navigate(event: Event) {
-    const href = (event.currentTarget as HTMLTableRowElement).dataset['href'];
+const items = computed(() => {
+    return [
+        ...(props.folder.data.folders ?? []),
+        ...(props.folder.data.files ?? []),
+    ].toSorted((a, b) => {
+        return b.created_at.localeCompare(a.created_at);
+    });
+});
 
-    if (!href) {
-        return;
-    }
+function navigate(itemOrParentId: Folder | File | number) {
+    const href = typeof itemOrParentId === 'object' && 'type' in itemOrParentId
+        ? route('files.show', {file: itemOrParentId})
+        : route('folders.show', {folder: itemOrParentId})
 
     router.visit(href);
 }
-
-
 </script>
 
 <template>
@@ -60,60 +65,56 @@ function navigate(event: Event) {
                                     class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold sm:pl-3">
                                     Name
                                 </th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">Path
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">
+                                    Path
+                                </th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">
+                                    Size
+                                </th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">
+                                    Created At
+                                </th>
+                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold">
+                                    Updated At
                                 </th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="border-t border-border">
-                                <th colspan="5" scope="colgroup"
-                                    class="py-2 pr-3 pl-4 text-left text-sm font-semibold sm:pl-3">
-                                    Folders
-                                </th>
-                            </tr>
                             <tr v-if="props.folder.data.parent_id"
-                                @click="navigate"
+                                @click="navigate(props.folder.data.parent_id)"
                                 :data-href="route('folders.show', {folder: props.folder.data.parent_id})"
                                 class="border-t border-border cursor-pointer">
                                 <td class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap sm:pl-3">
                                     ..
                                 </td>
                             </tr>
-                            <tr v-for="f in props.folder.data.folders" @click="navigate"
-                                :data-href="route('folders.show', {folder:f.id})"
+                            <tr v-for="item in items" @click="navigate(item)"
                                 class="border-t border-border cursor-pointer hover:bg-gray-100">
                                 <td class="py-4 pr-3 pl-4 text-sm flex items-center space-x-2 font-medium whitespace-nowrap sm:pl-3">
-                                    <svg class="h-8 w-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg"
-                                         fill="currentColor" viewBox="0 0 24 24">
-                                        <path
-                                            d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
-                                    </svg>
-                                    <span>{{ f.name }}</span>
-                                </td>
-                                <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">{{
-                                        f.path
-                                    }}
-                                </td>
-                            </tr>
-
-                            <tr class="border-t border-border">
-                                <th colspan="5" scope="colgroup"
-                                    class="py-2 pr-3 pl-4 text-left text-sm font-semibold sm:pl-3">
-                                    Files
-                                </th>
-                            </tr>
-                            <tr v-for="file in props.folder.data.files" class="border-t border-border cursor-pointer hover:bg-gray-100"
-                                @click="navigate" :data-href="route('files.show', {file: file.id})">
-                                <td class="py-4 flex items-center space-x-2 pr-3 pl-4 text-sm font-medium whitespace-nowrap  sm:pl-3">
-                                    <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    <svg v-if="'type' in item" class="h-6 w-6 text-indigo-600"
+                                         xmlns="http://www.w3.org/2000/svg" fill="none"
                                          viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                               d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
                                     </svg>
-                                    <span>{{ file.name }}</span>
+                                    <svg v-else class="h-8 w-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg"
+                                         fill="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                                    </svg>
+                                    <span>{{ item.name }}</span>
                                 </td>
                                 <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">
-                                    {{ file.size_for_humans }}
+                                    {{ 'type' in item ? `${props.folder.data.path}/${item.name}` : item.path }}
+                                </td>
+                                <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">
+                                    {{ 'type' in item ? item.size_for_humans : null }}
+                                </td>
+                                <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">
+                                    {{ new Date(item.created_at).toLocaleString() }}
+                                </td>
+                                <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">
+                                    {{ new Date(item.updated_at).toLocaleString() }}
                                 </td>
                             </tr>
                             </tbody>
