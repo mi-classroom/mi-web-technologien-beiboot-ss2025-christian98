@@ -81,7 +81,7 @@ function navigate(event: Event) {
                             </tr>
                             <tr v-for="f in props.folder.data.folders" @click="navigate"
                                 :data-href="route('folders.show', {folder:f.id})"
-                                class="border-t border-border cursor-pointer">
+                                class="border-t border-border cursor-pointer hover:bg-gray-100">
                                 <td class="py-4 pr-3 pl-4 text-sm flex items-center space-x-2 font-medium whitespace-nowrap sm:pl-3">
                                     <svg class="h-8 w-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg"
                                          fill="currentColor" viewBox="0 0 24 24">
@@ -90,7 +90,10 @@ function navigate(event: Event) {
                                     </svg>
                                     <span>{{ f.name }}</span>
                                 </td>
-                                <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">{{ f.path }}</td>
+                                <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">{{
+                                        f.path
+                                    }}
+                                </td>
                             </tr>
 
                             <tr class="border-t border-border">
@@ -99,7 +102,7 @@ function navigate(event: Event) {
                                     Files
                                 </th>
                             </tr>
-                            <tr v-for="file in props.folder.data.files" class="border-t border-border cursor-pointer"
+                            <tr v-for="file in props.folder.data.files" class="border-t border-border cursor-pointer hover:bg-gray-100"
                                 @click="navigate" :data-href="route('files.show', {file: file.id})">
                                 <td class="py-4 flex items-center space-x-2 pr-3 pl-4 text-sm font-medium whitespace-nowrap  sm:pl-3">
                                     <svg class="h-6 w-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none"

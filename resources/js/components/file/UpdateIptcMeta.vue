@@ -16,8 +16,7 @@ const props = defineProps<{
 
 const model = defineModel<boolean>();
 
-const dialogOpen = ref(false);
-const {cloned: iptcMeta, sync} = useCloned<(string | number)[]>(props.file.meta_data.iptc?.[props.tag] ?? []);
+const {cloned: iptcMeta, sync} = useCloned<(string | number)[]>(props.file.meta_data?.iptc?.[props.tag] ?? []);
 
 function updateMeta() {
     router.put(route('files.update', {id: props.file.id}), {

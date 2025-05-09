@@ -29,7 +29,7 @@ function handleCreate() {
 
 <template>
     <Dialog v-model:open="dialogOpen">
-        <DialogTrigger>
+        <DialogTrigger as-child>
             <Button>Create Folder</Button>
         </DialogTrigger>
         <DialogContent>
