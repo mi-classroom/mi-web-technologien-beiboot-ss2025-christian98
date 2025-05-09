@@ -18,7 +18,7 @@ class FileController extends Controller
     public function show(File $file): Response
     {
         return Inertia::render('File', [
-            'file' => new FileResource($file),
+            'file' => new FileResource($file)->withMetaData(),
             'breadcrumbs' => [
                 ...$file->folder->all_parents,
                 $file->folder,

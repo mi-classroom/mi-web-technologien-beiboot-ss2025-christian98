@@ -46,7 +46,7 @@ export interface File {
     size: number;
     type: string;
     size_for_humans: string;
-    meta_data: {
+    meta_data?: {
         exif?: Record<string, Record<string, string|number>>;
         iptc?: Record<string, string[]>;
     };
