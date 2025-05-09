@@ -15,13 +15,13 @@ import IptcMetadataContextMenu from "@/components/file/IptcMetadataContextMenu.v
 
 const props = defineProps<{
     file: { data: File };
-    breadcrumbs: Folder[];
+    breadcrumbs: App.Data.BreadcrumbData[];
 }>();
 
 const breadcrumbs = computed(() => {
-    const folderBreadcrumbs = props.breadcrumbs.map((folder) => ({
+    return props.breadcrumbs.map((folder) => ({
         title: folder.name != '' ? folder.name : '/',
-        href: route('folders.show', {folder: folder.id}),
+        href: folder.url,
     }));
 
     return [
