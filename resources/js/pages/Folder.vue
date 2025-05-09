@@ -91,18 +91,14 @@ function navigate(itemOrParentId: Folder | File | number) {
                             <tr v-for="item in items" @click="navigate(item)"
                                 class="border-t border-border cursor-pointer hover:bg-gray-100">
                                 <td class="py-4 pr-3 pl-4 text-sm flex items-center space-x-2 font-medium whitespace-nowrap sm:pl-3">
-                                    <svg v-if="'type' in item" class="h-6 w-6 text-indigo-600"
-                                         xmlns="http://www.w3.org/2000/svg" fill="none"
-                                         viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                                    </svg>
+                                    <img v-if="'type' in item" class="size-8 object-contain overflow-clip"
+                                         :src="route('files.download', {file: item})" :alt="item.name"/>
                                     <svg v-else class="h-8 w-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg"
                                          fill="currentColor" viewBox="0 0 24 24">
                                         <path
                                             d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
                                     </svg>
-                                    <span>{{ item.name }}</span>
+                                    <span class="overflow-ellipsis overflow-hidden" :title="item.name">{{ item.name }}</span>
                                 </td>
                                 <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">
                                     {{ 'type' in item ? `${props.folder.data.path}/${item.name}` : item.path }}
