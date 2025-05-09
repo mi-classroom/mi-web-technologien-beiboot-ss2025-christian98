@@ -18,7 +18,7 @@ Route::get('dashboard', function () {
 
 Route::resource('folders', FolderController::class)
     ->middleware(['auth', 'verified'])
-    ->only(['index', 'show']);
+    ->only(['index', 'show', 'destroy']);
 Route::post('/folders/{folder}', [FolderFolderController::class, 'store'])
     ->middleware(['auth', 'verified'])
     ->name('folders.folders.store');
