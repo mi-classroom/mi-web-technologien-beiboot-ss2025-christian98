@@ -9,8 +9,9 @@ import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/ui/collapsible";
 import FileInfoBlock from "@/components/file/FileInfoBlock.vue";
 import FileInfoAttribute from "@/components/file/FileInfoAttribute.vue";
-import {Link} from "@inertiajs/vue3";
-import UpdateIptcMeta from "@/components/file/UpdateIptcMeta.vue";
+import DeleteFile from "@/components/file/DeleteFile.vue";
+import {trans} from "laravel-vue-i18n";
+import IptcMetadataContextMenu from "@/components/file/IptcMetadataContextMenu.vue";
 
 const props = defineProps<{
     file: { data: File };
@@ -51,11 +52,7 @@ const breadcrumbs = computed(() => {
                         <Icon name="ArrowDownToLine"/>
                         <span>Download</span>
                     </Button>
-                    <Button variant="destructive" :as="Link" method="delete"
-                            :href="route('files.destroy', {file: props.file.data.id})">
-                        <Icon name="Trash2"/>
-                        <span>Delete</span>
-                    </Button>
+                    <DeleteFile :file="props.file.data"/>
                 </div>
             </div>
             <div class="mt-8 flow-root">
@@ -108,7 +105,7 @@ const breadcrumbs = computed(() => {
                             <Card>
                                 <CardHeader>Exif</CardHeader>
                                 <CardContent class="space-y-6">
-                                    <FileInfoBlock v-if="props.file.data.meta_data.exif"
+                                    <FileInfoBlock v-if="props.file.data.meta_data?.exif"
                                                    v-for="[blockHeader, metaBlock] in Object.entries(props.file.data.meta_data.exif)"
                                                    :header="blockHeader">
                                         <FileInfoAttribute
@@ -117,15 +114,17 @@ const breadcrumbs = computed(() => {
                                             {{ attribute }}
                                         </FileInfoAttribute>
                                     </FileInfoBlock>
-                                    <div v-else>
-                                        <p class="text-sm">No EXIF data found.</p>
+                                    <div v-else class="flex justify-center items-center w-full">
+                                        <p class="text-sm italic text-secondary-foreground">
+                                            No Exif data found.
+                                        </p>
                                     </div>
                                 </CardContent>
                             </Card>
                             <Card>
                                 <CardHeader>IPTC</CardHeader>
                                 <CardContent>
-                                    <FileInfoBlock v-if="props.file.data.meta_data.iptc">
+                                    <FileInfoBlock v-if="props.file.data.meta_data?.iptc">
                                         <FileInfoAttribute
                                             v-for="[blockHeader, metaBlock] in Object.entries(props.file.data.meta_data.iptc)"
                                             :label="trans(`iptc_tag.${blockHeader}`)">
@@ -137,8 +136,10 @@ const breadcrumbs = computed(() => {
                                             </ul>
                                         </FileInfoAttribute>
                                     </FileInfoBlock>
-                                    <div v-else>
-                                        <p class="text-sm">No IPTC data found.</p>
+                                    <div v-else class="flex justify-center items-center w-full">
+                                        <p class="text-sm italic text-secondary-foreground">
+                                            No IPTC data found.
+                                        </p>
                                     </div>
                                 </CardContent>
                             </Card>
