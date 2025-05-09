@@ -16,21 +16,18 @@ Route::get('dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::resource('folders', FolderController::class)
-    ->middleware(['auth', 'verified'])
-    ->only(['index', 'show', 'destroy']);
-Route::post('/folders/{folder}', [FolderFolderController::class, 'store'])
-    ->middleware(['auth', 'verified'])
-    ->name('folders.folders.store');
-Route::resource('folders.files', FolderFileController::class)
-    ->middleware(['auth', 'verified'])
-    ->only(['store']);
-Route::resource('files', FileController::class)
-    ->middleware(['auth', 'verified'])
-    ->only(['show', 'update', 'destroy']);
-Route::get('files/{file}/download', [FileController::class, 'download'])
-    ->middleware(['auth', 'verified'])
-    ->name('files.download');
+// region local storage
+Route::middleware(['auth', 'verified'])->prefix('local')->name('local.')->group(function () {
+    Route::resource('folders', FolderController::class)->only(['index', 'destroy']);
+    Route::get('/folders/{folder}', [FolderController::class, 'show'])
+        ->where('folder', '.*')->name('folders.show');
+    Route::post('/folders/{folder}', [FolderFolderController::class, 'store'])->name('folders.folders.store');
+    Route::resource('folders.files', FolderFileController::class)->only(['store']);
+    Route::resource('files', FileController::class)->only(['show', 'update', 'destroy']);
+    Route::get('files/{file}/download', [FileController::class, 'download']) ->name('files.download');
+});
+// endregion
+
 
 Route::post('/locale', [LocaleController::class, 'setLocale'])
     ->name('locale.set');

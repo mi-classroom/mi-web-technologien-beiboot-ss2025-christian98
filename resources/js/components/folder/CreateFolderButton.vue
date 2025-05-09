@@ -22,7 +22,7 @@ const form = reactive({
 const dialogOpen = ref(false);
 
 function handleCreate() {
-    router.post(route('folders.folders.store', {folder: props.folder.id}), form);
+    router.post(route('local.folders.folders.store', {folder: props.folder.id}), form);
     dialogOpen.value = false;
 }
 </script>

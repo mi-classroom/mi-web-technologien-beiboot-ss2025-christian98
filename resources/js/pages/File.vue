@@ -28,7 +28,7 @@ const breadcrumbs = computed(() => {
         ...folderBreadcrumbs,
         {
             title: props.file.data.name,
-            href: route('files.show', {file: props.file.data.id}),
+            href: route('local.files.show', {file: props.file.data}),
         },
     ]
 });
@@ -48,7 +48,7 @@ const breadcrumbs = computed(() => {
                 </div>
                 <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none flex gap-x-1">
                     <Button variant="default" as="a"
-                            :href="route('files.download', {file: props.file.data.id})">
+                            :href="route('local.files.download', {file: props.file.data.id})">
                         <Icon name="ArrowDownToLine"/>
                         <span>Download</span>
                     </Button>
@@ -62,7 +62,7 @@ const breadcrumbs = computed(() => {
                             <Card>
                                 <CardHeader>Preview</CardHeader>
                                 <CardContent class="flex items-center">
-                                    <img :src="route('files.download', {file: props.file.data.id})" alt="File preview"
+                                    <img :src="route('local.files.download', {file: props.file.data.id})" alt="File preview"
                                          class="w-full h-auto rounded-xl"/>
                                 </CardContent>
                             </Card>

@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Jobs\UpdatePathCache;
+use App\Services\Cache\FolderCache;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Str;
 
 class Folder extends Model
 {
@@ -16,6 +20,28 @@ class Folder extends Model
         'name',
         'parent_id',
     ];
+
+    protected static function booted(): void
+    {
+        parent::booted();
+
+        static::retrieved(function (self $folder) {
+            Bus::dispatch(new UpdatePathCache($folder)); // TODO : remove this
+        });
+
+        static::created(function (self $folder) {
+            $folder->loadMissing('folders');
+            app(FolderCache::class)->populateFolderIdCache($folder);
+        });
+
+        static::updated(function (self $folder) {
+            Bus::dispatch(new UpdatePathCache($folder));
+        });
+
+        static::deleted(function (self $folder) {
+            app(FolderCache::class)->clearCache($folder);
+        });
+    }
 
     public function parent(): BelongsTo
     {
@@ -53,4 +79,27 @@ class Folder extends Model
             return $this->all_parents->push($this)->pluck('name')->implode('/');
         })->shouldCache();
     }
+
+    // region route model binding
+    public function getRouteKey(): string
+    {
+        return $this->path;
+    }
+
+    public function resolveRouteBinding($value, $field = null): ?Model
+    {
+        // if the field is not null and not 'path', use the default behavior
+        if (!is_null($field) && $field !== 'path') {
+            return parent::resolveRouteBinding($value, $field);
+        }
+
+        // retrieve folder id from cache
+        if ($folderId = app(FolderCache::class)->getFolderId(Str::start($value, '/'))) {
+            return $this->newQuery()->findOrFail($folderId);
+        }
+
+        // if not found in cache, fallback to default behavior
+        return parent::resolveRouteBinding($value, $field);
+    }
+    // endregion
 }

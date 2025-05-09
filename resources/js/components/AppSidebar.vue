@@ -24,7 +24,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Local Files',
-        href: route('folders.index', undefined, false),
+        href: route('local.folders.index', undefined, false),
         icon: Folder,
     },
     {

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Local;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateFolderRequest;
 use App\Models\Folder;
 use Illuminate\Http\RedirectResponse;
@@ -14,6 +15,6 @@ class FolderFolderController extends Controller
 
         $folder->touch();
 
-        return redirect()->route('folders.show', $newFolder);
+        return redirect()->route('local.folders.show', $newFolder);
     }
 }

@@ -59,6 +59,7 @@ export interface Folder {
     name: string;
     path: string;
     parent_id?: number;
+    parent?: Folder;
     folders?: Folder[];
     files?: File[];
     created_at: string;

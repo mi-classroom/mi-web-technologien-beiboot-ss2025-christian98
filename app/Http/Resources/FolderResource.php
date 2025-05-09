@@ -16,6 +16,7 @@ class FolderResource extends JsonResource
             'name' => $this->name,
             'path' => $this->path,
             'parent_id' => $this->parent_id,
+            'parent' => new FolderResource($this->whenLoaded('parent')),
             'folders' => self::collection($this->whenLoaded('folders')),
             'files' => FileResource::collection($this->whenLoaded('files')),
             'created_at' => $this->created_at,

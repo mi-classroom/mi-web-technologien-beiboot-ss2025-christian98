@@ -43,7 +43,7 @@ function uploadFiles(event: Event) {
 }
 
 function handleCreate() {
-    router.post(route('folders.files.store', {folder: props.folder.id}), form);
+    router.post(route('local.folders.files.store', {folder: props.folder.id}), form);
     dialogOpen.value = false;
 }
 </script>

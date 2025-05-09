@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Local;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateFileRequest;
 use App\Models\Folder;
 use Illuminate\Http\RedirectResponse;
@@ -29,7 +30,7 @@ class FolderFileController extends Controller
 
         $folder->touch();
 
-        return redirect()->route('folders.show', $folder)
+        return redirect()->route('local.folders.show', $folder)
             ->with('success', 'File uploaded successfully.');
     }
 }

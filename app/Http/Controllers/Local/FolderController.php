@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Local;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\FolderResource;
 use App\Models\Folder;
 use Illuminate\Http\RedirectResponse;
@@ -14,11 +15,11 @@ class FolderController extends Controller
     public function index(): Response
     {
         $user = Auth::user();
-        $folder = $user->folders()->with(['files', 'folders'])->first();
+        $folder = $user->folders()->with(['files', 'folders', 'parent'])->first();
 
         return Inertia::render('Folder', [
             'folder' => new FolderResource($folder),
-            'breadcrumbs' => [$folder],
+            'breadcrumbs' => FolderResource::collection([$folder]),
         ]);
     }
 
@@ -28,7 +29,7 @@ class FolderController extends Controller
 
         return Inertia::render('Folder', [
             'folder' => new FolderResource($folder),
-            'breadcrumbs' => [...$folder->all_parents, $folder],
+            'breadcrumbs' => FolderResource::collection([...$folder->all_parents, $folder]),
         ]);
     }
 
@@ -40,14 +41,14 @@ class FolderController extends Controller
             'path' => '',
         ]);
 
-        return redirect()->route('folders.show', $folder);
+        return redirect()->route('local.folders.show', $folder);
     }
 
     public function destroy(Folder $folder): RedirectResponse
     {
         $folder->delete();
 
-        return redirect()->route('folders.index')
+        return redirect()->route('local.folders.index')
             ->with('success', 'Folder has been deleted.');
     }
 }

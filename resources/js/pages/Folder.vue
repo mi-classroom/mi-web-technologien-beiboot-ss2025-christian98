@@ -9,14 +9,14 @@ import DeleteFolder from "@/components/folder/DeleteFolder.vue";
 
 interface Props {
     folder: { data: Folder };
-    breadcrumbs: Folder[];
+    breadcrumbs: { data: Folder[] };
 }
 
 const props = defineProps<Props>();
 
-const breadcrumbs = computed(() => props.breadcrumbs.map((folder) => ({
+const breadcrumbs = computed(() => props.breadcrumbs.data.map((folder) => ({
     title: folder.name != '' ? folder.name : '/',
-    href: route('folders.show', {folder: folder.id}),
+    href: route('local.folders.show', {folder: folder.path.slice(1)}),
 })));
 
 const items = computed(() => {
@@ -28,10 +28,10 @@ const items = computed(() => {
     });
 });
 
-function navigate(itemOrParentId: Folder | File | number) {
-    const href = typeof itemOrParentId === 'object' && 'type' in itemOrParentId
-        ? route('files.show', {file: itemOrParentId})
-        : route('folders.show', {folder: itemOrParentId})
+function navigate(item: Folder | File) {
+    const href = 'type' in item
+        ? route('local.files.show', {file: item})
+        : route('local.folders.show', {folder: item.path.slice(1)})
 
     router.visit(href);
 }

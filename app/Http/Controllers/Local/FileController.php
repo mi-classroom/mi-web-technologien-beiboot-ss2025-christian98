@@ -1,14 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Local;
 
+use App\Data\BreadcrumbData;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateFileRequest;
 use App\Http\Resources\FileResource;
 use App\Models\File;
+use App\Models\Folder;
 use App\Services\Image\Image;
 use App\Services\Image\IPTC\IptcTag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -17,12 +21,22 @@ class FileController extends Controller
 {
     public function show(File $file): Response
     {
+        $folderBreadcrumbs = collect([...$file->folder->all_parents, $file->folder])
+            ->map(function (Folder $folder) {
+                return [
+                    'name' => $folder->name,
+                    'url' => $folder->parent_id
+                        ? route('local.folders.show', ['folder' => Str::chopStart($folder->getRouteKey(), '/')])
+                        : route('local.folders.index'),
+                ];
+            });
+
         return Inertia::render('File', [
             'file' => new FileResource($file)->withMetaData(),
-            'breadcrumbs' => [
-                ...$file->folder->all_parents,
-                $file->folder,
-            ],
+            'breadcrumbs' => BreadcrumbData::collect($folderBreadcrumbs->add([
+                'name' => $file->name,
+                'url' => route('local.files.show', ['file' => $file]),
+            ])),
         ]);
     }
 
@@ -58,7 +72,7 @@ class FileController extends Controller
 
         $file->touch();
 
-        return redirect()->route('files.show', $file)
+        return redirect()->route('local.files.show', $file)
             ->with('success', 'File updated successfully.');
     }
 
@@ -66,7 +80,7 @@ class FileController extends Controller
     {
         $file->delete();
 
-        return redirect()->route('folders.show', $file->folder)
+        return redirect()->route('local.folders.show', $file->folder)
             ->with('success', 'File deleted successfully.');
     }
 }
