@@ -31,21 +31,6 @@ const breadcrumbs = computed(() => {
         },
     ]
 });
-
-function removeIptcTag(blockHeader: string) {
-    router.put(route('files.update', {
-        file: props.file.data.id,
-    }), {
-        meta_data: {
-            iptc: [
-                {
-                    tag: blockHeader,
-                    value: [],
-                },
-            ],
-        },
-    });
-}
 </script>
 
 <template>
@@ -145,10 +130,7 @@ function removeIptcTag(blockHeader: string) {
                                             v-for="[blockHeader, metaBlock] in Object.entries(props.file.data.meta_data.iptc)"
                                             :label="trans(`iptc_tag.${blockHeader}`)">
                                             <template #actions>
-                                                <UpdateIptcMeta :file="props.file.data" :tag="blockHeader"/>
-                                                <Button variant="destructive" @click="() => removeIptcTag(blockHeader)">
-                                                    Delete
-                                                </Button>
+                                                <IptcMetadataContextMenu :tag="blockHeader" :file="props.file.data"/>
                                             </template>
                                             <ul class="list-disc">
                                                 <li v-for="e in metaBlock">{{ e }}</li>

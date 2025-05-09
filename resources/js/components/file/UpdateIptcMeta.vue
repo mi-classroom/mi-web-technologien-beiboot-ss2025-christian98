@@ -3,7 +3,6 @@ import Icon from "@/components/Icon.vue";
 import {Button} from "@/components/ui/button";
 import {File} from "@/types";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
-import {ref} from "vue";
 import {Input} from "@/components/ui/input";
 import {useCloned} from "@vueuse/core";
 import {router} from "@inertiajs/vue3";
@@ -14,6 +13,8 @@ const props = defineProps<{
     file: File;
     tag: string;
 }>();
+
+const model = defineModel<boolean>();
 
 const dialogOpen = ref(false);
 const {cloned: iptcMeta, sync} = useCloned<(string | number)[]>(props.file.meta_data.iptc?.[props.tag] ?? []);
@@ -30,25 +31,19 @@ function updateMeta() {
         },
     }, {
         onSuccess: () => {
-            dialogOpen.value = false;
+            model.value = false;
         }
     })
 }
 
 function closeDialog() {
-    dialogOpen.value = false;
+    model.value = false;
     sync();
 }
 </script>
 
 <template>
-    <Dialog v-model:open="dialogOpen">
-        <DialogTrigger>
-            <Button variant="ghost" size="default">
-                <Icon name="Pencil"/>
-                <span>Edit</span>
-            </Button>
-        </DialogTrigger>
+    <Dialog v-model:open="model">
         <DialogContent>
             <form @submit.prevent="updateMeta" class="grid gap-4">
                 <DialogHeader>
