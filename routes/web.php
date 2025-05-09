@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\FileController;
-use App\Http\Controllers\FolderController;
-use App\Http\Controllers\FolderFileController;
-use App\Http\Controllers\FolderFolderController;
+use App\Http\Controllers\Local\FileController;
+use App\Http\Controllers\Local\FolderController;
+use App\Http\Controllers\Local\FolderFileController;
+use App\Http\Controllers\Local\FolderFolderController;
 use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
