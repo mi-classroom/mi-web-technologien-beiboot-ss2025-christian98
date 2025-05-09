@@ -40,7 +40,7 @@ function navigate(event: Event) {
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
                     <h1 class="text-base font-semibold">Local Files</h1>
-                    <p class="mt-2 text-sm">
+                    <p class="mt-2 mi-text-meta-info">
                         This is a list of all your local files. You can create folders and upload files to them.
                     </p>
                 </div>

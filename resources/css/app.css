@@ -58,7 +58,119 @@
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
+
+    /* region MI colors */
+    --color-mi-primary: var(--primary);
+    --color-mi-secondary: var(--secondary);
+    --color-mi-warm-light: hsl(48 23% 90%);
+    --color-mi-warm-medium: hsl(48 8% 61%);
+    --color-mi-warm-dark: hsl(51 5% 28%);
+    --color-mi-dark: hsl(0 0% 40%);
+    --color-mi-darker: hsl(0 0% 20%);
+    --color-mi-darkest: hsl(0 0% 0%);
+    --color-mi-darken: hsla(0 0% 0% / 0.8);
+    --color-mi-light: hsl(0 0% 96%);
+    --color-mi-lighter: hsl(0 0% 100%);
+    --color-mi-lighten: hsl(0 0% 100% / 0.8);
+    /* endregion */
 }
+
+/* region border */
+@theme {
+    --border-width-xs: 0.5px;
+    --border-width-s: 1px;
+    --border-width-m: 2px;
+}
+
+@utility mi-border-* {
+    --border-width: var(--border-width-xs);
+}
+/* endregion */
+
+/* region font-size */
+@utility mi-text-title {
+    font-size: 24px;
+    font-weight: 700;
+    font-family: "Spline Sans", system-ui;
+}
+
+@utility mi-text-subtitle {
+    font-size: 18px;
+    font-weight: 500;
+    font-family: "Spline Sans", system-ui;
+}
+
+@utility mi-text-headline-content {
+    font-size: 20px;
+    font-weight: 700;
+    font-family: "Spline Sans", system-ui;
+}
+
+@utility mi-text-subtitle-content {
+    font-size: 16px;
+    font-weight: 500;
+    font-family: "Spline Sans", system-ui;
+}
+
+@utility mi-text-section-headline-content {
+    font-size: 14px;
+    font-weight: 600;
+    font-family: "Spline Sans", system-ui;
+}
+
+@utility mi-text-content {
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Spline Sans", system-ui;
+}
+
+@utility mi-text-big-number {
+    font-size: 40px;
+    font-weight: 400;
+    font-family: "Spline Sans", system-ui;
+}
+
+@utility mi-text-technical-data {
+    font-size: 12px;
+    font-weight: 400;
+    font-family: "Spline Sans Mono", monospace;
+}
+
+@utility mi-text-meta-info {
+    font-size: 10px;
+    font-weight: 400;
+    font-family: "Spline Sans", system-ui;
+    line-height: 140%;
+}
+
+@utility mi-text-meta-info-important {
+    font-size: 10px;
+    font-weight: 00;
+    font-family: "Spline Sans", system-ui;
+    line-height: 140%;
+}
+
+@layer base {
+    h1 {
+        @apply mi-text-title;
+    }
+    h2 {
+        @apply mi-text-subtitle;
+    }
+    h3 {
+        @apply mi-text-headline-content;
+    }
+    h4 {
+        @apply mi-text-subtitle-content;
+    }
+    h5 {
+        @apply mi-text-section-headline-content;
+    }
+    p {
+        @apply mi-text-content;
+    }
+}
+/* endregion */
 
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -95,10 +207,10 @@
     --card-foreground: hsl(0 0% 3.9%);
     --popover: hsl(0 0% 100%);
     --popover-foreground: hsl(0 0% 3.9%);
-    --primary: hsl(0 0% 9%);
-    --primary-foreground: hsl(0 0% 98%);
-    --secondary: hsl(0 0% 92.1%);
-    --secondary-foreground: hsl(0 0% 9%);
+    --primary: hsl(180, 64%, 45%);
+    --primary-foreground: hsl(180 64% 98%);
+    --secondary: hsl(356, 100%, 65%);
+    --secondary-foreground: hsl(356 100% 9%);
     --muted: hsl(0 0% 96.1%);
     --muted-foreground: hsl(0 0% 45.1%);
     --accent: hsl(0 0% 96.1%);
@@ -114,7 +226,7 @@
     --chart-4: hsl(43 74% 66%);
     --chart-5: hsl(27 87% 67%);
     --radius: 0.5rem;
-    --sidebar-background: hsl(0 0% 98%);
+    --sidebar-background: hsl(49, 22%, 90%);
     --sidebar-foreground: hsl(240 5.3% 26.1%);
     --sidebar-primary: hsl(0 0% 10%);
     --sidebar-primary-foreground: hsl(0 0% 98%);
@@ -133,10 +245,10 @@
     --card-foreground: hsl(0 0% 98%);
     --popover: hsl(0 0% 3.9%);
     --popover-foreground: 0 0% 98%;
-    --primary: hsl(0 0% 98%);
-    --primary-foreground: hsl(0 0% 9%);
-    --secondary: hsl(0 0% 14.9%);
-    --secondary-foreground: hsl(0 0% 98%);
+    --primary: hsl(180, 64%, 45%);
+    --primary-foreground: hsl(180 64% 9%);
+    --secondary: hsl(356, 100%, 65%);
+    --secondary-foreground: hsl(356 100% 98%);
     --muted: hsl(0 0% 16.08%);
     --muted-foreground: hsl(0 0% 63.9%);
     --accent: hsl(0 0% 14.9%);
@@ -151,7 +263,7 @@
     --chart-3: hsl(30 80% 55%);
     --chart-4: hsl(280 65% 60%);
     --chart-5: hsl(340 75% 55%);
-    --sidebar-background: hsl(0 0% 7%);
+    --sidebar-background: hsl(49, 22%, 7%);
     --sidebar-foreground: hsl(0 0% 95.9%);
     --sidebar-primary: hsl(360, 100%, 100%);
     --sidebar-primary-foreground: hsl(0 0% 100%);

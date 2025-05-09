@@ -65,7 +65,7 @@ function handleCreate() {
                             <div class="mt-4 flex text-sm/6 text-gray-600">
                                 <label
                                     for="file-upload"
-                                    class="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 focus-within:outline-hidden hover:text-indigo-500"
+                                    class="relative cursor-pointer rounded-md bg-white font-semibold text-primary focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:outline-hidden"
                                 >
                                     <span>Upload a file</span>
                                     <Input @change="uploadFiles" id="file-upload" type="file" multiple class="sr-only"/>
