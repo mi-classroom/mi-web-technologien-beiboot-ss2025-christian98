@@ -19,18 +19,22 @@ import AppLogo from './AppLogo.vue';
 const mainNavItems: NavItem[] = [
     {
         title: 'Dashboard',
-        href: '/dashboard',
+        href: route('dashboard', undefined, false),
         icon: LayoutGrid,
     },
     {
         title: 'Local Files',
-        href: '/folder',
-        icon: Cloud,
-        disabled: true,
+        href: route('folders.index', undefined, false),
+        icon: Folder,
     },
     {
         title: 'Nextcloud',
-        href: '/nextcloud',
+        href: '/cloud-storage/nextcloud',
+        icon: Cloud,
+    },
+    {
+        title: 'Connect Cloud-Storage',
+        href: '/settings/cloud-storage',
         icon: Plus,
         disabled: true,
     }

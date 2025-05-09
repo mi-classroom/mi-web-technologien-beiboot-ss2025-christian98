@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import {
+    SidebarGroup,
+    SidebarGroupLabel,
+    SidebarMenu,
+    SidebarMenuButton,
+    SidebarMenuItem
+} from '@/components/ui/sidebar';
 import { type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/vue3';
 
@@ -16,11 +22,12 @@ const page = usePage<SharedData>();
         <SidebarMenu>
             <SidebarMenuItem v-for="item in items" :key="item.title">
                 <SidebarMenuButton
-                    as-child :is-active="item.href === page.url"
+                    as-child :is-active="page.url.startsWith(item.href)"
                     :tooltip="item.title"
                 >
-                    <Link :href="item.href" :disabled="item.disabled">
-                        <component :is="item.icon" />
+                    <Link :href="item.href" :disabled="item.disabled"
+                          class="data-[active=true]:bg-sidebar-foreground/10 data-[active=true]:text-sidebar-foreground">
+                        <component :is="item.icon"/>
                         <span>{{ item.title }}</span>
                     </Link>
                 </SidebarMenuButton>
