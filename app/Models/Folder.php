@@ -31,7 +31,9 @@ class Folder extends Model
         });
 
         static::updated(function (self $folder) {
-            Bus::dispatch(new UpdatePathCache($folder));
+            if ($folder->wasChanged('name', 'parent_id')) {
+                Bus::dispatch(new UpdatePathCache($folder));
+            }
         });
 
         static::deleted(function (self $folder) {
