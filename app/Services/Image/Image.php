@@ -2,7 +2,9 @@
 
 namespace App\Services\Image;
 
+use App\Services\Image\Exif\ExifData;
 use App\Services\Image\Exif\ExifReader;
+use App\Services\Image\ImageType\ImageType;
 use App\Services\Image\ImageType\ImageTypeDetector;
 use App\Services\Image\IPTC\IptcData;
 use App\Services\Image\IPTC\IptcReader;
@@ -51,7 +53,7 @@ class Image
         return ExifReader::fromFilename($this->tempFile->filename());
     }
 
-    public function exif(): Exif\ExifData
+    public function exif(): ?ExifData
     {
         return $this->exifReader()->read();
     }
@@ -61,12 +63,12 @@ class Image
         return IptcReader::fromFilename($this->tempFile->filename());
     }
 
-    public function iptc(): IPTC\IptcData
+    public function iptc(): ?IptcData
     {
         return $this->iptcReader()->read();
     }
 
-    public function type(): ImageType\ImageType
+    public function type(): ImageType
     {
         return (new ImageTypeDetector)->detect($this->tempFile->filename());
     }

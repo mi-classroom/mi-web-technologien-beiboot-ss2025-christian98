@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Image\Exif;
+namespace App\Services\Image\Exif\File;
 
 use DateTimeImmutable;
 use Illuminate\Contracts\Support\Arrayable;

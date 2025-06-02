@@ -2,6 +2,7 @@
 
 namespace App\Services\Image\Exif;
 
+use App\Services\Image\Exif\File\ExifFileData;
 use Illuminate\Contracts\Support\Arrayable;
 
 class ExifData implements Arrayable

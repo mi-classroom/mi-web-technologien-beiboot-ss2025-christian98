@@ -2,10 +2,10 @@
 
 namespace App\Services\Image\Exif;
 
+use App\Services\Image\AbstractReader;
 use InvalidArgumentException;
-use RuntimeException;
 
-class ExifReader
+class ExifReader extends AbstractReader
 {
     /**
      * @param  string|resource  $filename
@@ -36,15 +36,16 @@ class ExifReader
         return new static($resource);
     }
 
-    public function read(): ExifData
+    public function read(): ?ExifData
     {
-        $exif = exif_read_data($this->filename, 'EXIF', true);
+        ini_set('exif.encode_unicode', 'UTF-8');
+        ini_set('exif.decode_unicode_motorola', 'UCS-2LE');
+
+        $exif = exif_read_data($this->filename, 'ANY_TAG', true);
         if ($exif !== false) {
-            return new ExifData($exif);
+            return new ExifData($this->sanitizeIptcData($exif));
         }
 
-        return new ExifData([]);
-
-        throw new RuntimeException('No Exif data found');
+        return null;
     }
 }
