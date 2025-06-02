@@ -3,7 +3,6 @@
 namespace App\Services\Image\ImageType;
 
 use InvalidArgumentException;
-use RuntimeException;
 
 class ImageTypeDetector
 {

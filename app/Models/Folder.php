@@ -89,7 +89,7 @@ class Folder extends Model
     public function resolveRouteBinding($value, $field = null): ?Model
     {
         // if the field is not null and not 'path', use the default behavior
-        if (!is_null($field) && $field !== 'path') {
+        if (! is_null($field) && $field !== 'path') {
             return parent::resolveRouteBinding($value, $field);
         }
 

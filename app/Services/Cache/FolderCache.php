@@ -4,13 +4,10 @@ namespace App\Services\Cache;
 
 use App\Models\Folder;
 use Illuminate\Cache\Repository;
-use Illuminate\Support\Facades\Cache;
 
 class FolderCache
 {
-    public function __construct(readonly Repository $cache)
-    {
-    }
+    public function __construct(readonly Repository $cache) {}
 
     public function populateFolderIdCache(Folder $folder): string
     {

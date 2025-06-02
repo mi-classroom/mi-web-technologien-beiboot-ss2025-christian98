@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->prefix('local')->name('local.')->group(
     Route::post('/folders/{folder}', [FolderFolderController::class, 'store'])->name('folders.folders.store');
     Route::resource('folders.files', FolderFileController::class)->only(['store']);
     Route::resource('files', FileController::class)->only(['show', 'update', 'destroy']);
-    Route::get('files/{file}/download', [FileController::class, 'download']) ->name('files.download');
+    Route::get('files/{file}/download', [FileController::class, 'download'])->name('files.download');
 });
 // endregion
 
