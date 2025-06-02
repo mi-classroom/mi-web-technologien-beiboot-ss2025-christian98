@@ -25,10 +25,6 @@ class Folder extends Model
     {
         parent::booted();
 
-        static::retrieved(function (self $folder) {
-            Bus::dispatch(new UpdatePathCache($folder)); // TODO : remove this
-        });
-
         static::created(function (self $folder) {
             $folder->loadMissing('folders');
             app(FolderCache::class)->populateFolderIdCache($folder);
