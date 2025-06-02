@@ -61,7 +61,7 @@ function handleCreate() {
                 <div class="col-span-full">
                     <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                         <div class="text-center">
-                            <Icon name="photo" class="mx-auto size-12 text-gray-300" />
+                            <Icon name="image" class="mx-auto size-12 text-gray-300" />
                             <div class="mt-4 flex text-sm/6 text-gray-600">
                                 <label
                                     for="file-upload"
