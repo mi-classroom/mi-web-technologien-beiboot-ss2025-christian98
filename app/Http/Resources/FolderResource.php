@@ -9,6 +9,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /** @mixin Folder */
 class FolderResource extends JsonResource
 {
+    protected bool $withMetaData = false;
+
     public function toArray(Request $request): array
     {
         return [
@@ -18,9 +20,23 @@ class FolderResource extends JsonResource
             'parent_id' => $this->parent_id,
             'parent' => new FolderResource($this->whenLoaded('parent')),
             'folders' => self::collection($this->whenLoaded('folders')),
-            'files' => FileResource::collection($this->whenLoaded('files')),
+            'files' => new FileResourceCollection($this->whenLoaded('files'))->withMetaData($this->withMetaData),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
+    }
+
+    public function withMetaData(bool $withMetaData = true): FolderResource
+    {
+        $this->withMetaData = $withMetaData;
+
+        return $this;
+    }
+
+    public function ray()
+    {
+        ray(json_decode($this->toJson()));
+
+        return $this;
     }
 }

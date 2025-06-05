@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Local\FileController;
 use App\Http\Controllers\Local\FolderController;
 use App\Http\Controllers\Local\FolderFileController;
@@ -12,9 +13,7 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('dashboard', [DashboardController::class, 'show'])->middleware(['auth', 'verified'])->name('dashboard');
 
 // region local storage
 Route::middleware(['auth', 'verified'])->prefix('local')->name('local.')->group(function () {

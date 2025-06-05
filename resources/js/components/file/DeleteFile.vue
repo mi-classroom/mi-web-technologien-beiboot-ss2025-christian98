@@ -17,6 +17,7 @@ import Icon from "@/components/Icon.vue";
 
 const props = defineProps<{
     file: File;
+    variant?: 'ghost' | 'destructive';
 }>();
 
 const form = useForm({});
@@ -40,9 +41,11 @@ const closeModal = () => {
 <template>
     <Dialog>
         <DialogTrigger as-child>
-            <Button variant="destructive">
-                <Icon name="Trash2"/>
-                <span>Delete</span>
+            <Button :variant="props.variant ?? 'destructive'">
+                <slot>
+                    <Icon name="Trash2"/>
+                    <span>Delete</span>
+                </slot>
             </Button>
         </DialogTrigger>
         <DialogContent>
@@ -59,7 +62,7 @@ const closeModal = () => {
 
                 <DialogFooter class="gap-2">
                     <DialogClose as-child>
-                        <Button variant="secondary" @click="closeModal"> Cancel</Button>
+                        <Button variant="outline" @click="closeModal">Cancel</Button>
                     </DialogClose>
 
                     <Button variant="destructive" :disabled="form.processing">

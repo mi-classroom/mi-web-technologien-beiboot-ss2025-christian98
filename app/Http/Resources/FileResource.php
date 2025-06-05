@@ -38,4 +38,14 @@ class FileResource extends JsonResource
 
         return $this;
     }
+
+    /**
+     * Create a new resource instance.
+     *
+     * @param  mixed  $resource
+     */
+    protected static function newCollection($resource): FileResourceCollection
+    {
+        return new FileResourceCollection($resource);
+    }
 }
