@@ -41,16 +41,25 @@ class Folder extends Model
         });
     }
 
+    /**
+     * @return BelongsTo
+     */
     public function parent(): BelongsTo
     {
         return $this->belongsTo(__CLASS__, 'parent_id');
     }
 
+    /**
+     * @return HasMany<Folder, self>
+     */
     public function folders(): HasMany
     {
         return $this->hasMany(__CLASS__, 'parent_id');
     }
 
+    /**
+     * @return HasMany<File, self>
+     */
     public function files(): HasMany
     {
         return $this->hasMany(File::class);

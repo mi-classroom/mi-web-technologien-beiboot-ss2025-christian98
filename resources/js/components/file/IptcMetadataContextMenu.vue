@@ -4,7 +4,7 @@ import {DropdownMenuPortal} from "reka-ui";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import Icon from "@/components/Icon.vue";
 import {router} from "@inertiajs/vue3";
-import {File} from "@/types";
+import {File, IptcItem} from "@/types";
 import UpdateIptcMeta from "@/components/file/UpdateIptcMeta.vue";
 import {ref} from "vue";
 import {
@@ -16,36 +16,26 @@ import {
 } from "@/components/ui/dialog";
 
 const props = defineProps<{
-    file: File;
-    tag: string;
+    iptcItem: IptcItem;
 }>();
 
 const updateDialogOpen = ref(false);
 const deleteDialogOpen = ref(false);
 
-function removeIptcTag(tag: string) {
-    router.put(route('files.update', {
-        file: props.file.id,
-    }), {
-        meta_data: {
-            iptc: [
-                {
-                    tag: tag,
-                    value: [],
-                },
-            ],
-        },
-    });
+function removeIptcTag() {
+    router.put(route('local.iptc.destroy', {
+        file: props.iptcItem.id,
+    }));
 }
 </script>
 
 <template>
-    <UpdateIptcMeta v-model="updateDialogOpen" :file="props.file" :tag="props.tag"/>
+    <UpdateIptcMeta v-model="updateDialogOpen" :iptcItem="iptcItem"/>
     <Dialog v-model:open="deleteDialogOpen">
         <DialogContent>
-            <form class="space-y-6" @submit="() => removeIptcTag(tag)">
+            <form class="space-y-6" @submit="removeIptcTag">
                 <DialogHeader class="space-y-3">
-                    <DialogTitle>Are you sure you want to delete {{ props.tag }}?</DialogTitle>
+                    <DialogTitle>Are you sure you want to delete {{ props.iptcItem.tag }}?</DialogTitle>
                 </DialogHeader>
 
                 <DialogFooter class="gap-2">
@@ -54,7 +44,7 @@ function removeIptcTag(tag: string) {
                     </DialogClose>
 
                     <Button variant="destructive">
-                        <button type="submit">Delete {{ props.tag }}</button>
+                        <button type="submit">Delete {{ props.iptcItem.tag }}</button>
                     </Button>
                 </DialogFooter>
             </form>

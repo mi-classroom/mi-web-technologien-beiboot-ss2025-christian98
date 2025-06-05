@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Jobs\IndexFileJob;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Bus;
 
 class File extends Model
 {
@@ -19,9 +22,23 @@ class File extends Model
         'folder_id',
     ];
 
+    protected static function booted(): void
+    {
+        parent::booted();
+
+        static::created(function (self $file) {
+            Bus::dispatch(new IndexFileJob($file));
+        });
+    }
+
     public function folder(): BelongsTo
     {
         return $this->belongsTo(Folder::class);
+    }
+
+    public function iptcItems(): HasMany
+    {
+        return $this->hasMany(IptcItem::class)->orderBy('tag');
     }
 
     public function sizeForHumans(): Attribute

@@ -124,15 +124,15 @@ const breadcrumbs = computed(() => {
                             <Card>
                                 <CardHeader>IPTC</CardHeader>
                                 <CardContent>
-                                    <FileInfoBlock v-if="props.file.data.meta_data?.iptc">
+                                    <FileInfoBlock v-if="props.file.data.meta_data?.iptc_items">
                                         <FileInfoAttribute
-                                            v-for="[blockHeader, metaBlock] in Object.entries(props.file.data.meta_data.iptc)"
-                                            :label="trans(`iptc_tag.${blockHeader}`)">
+                                            v-for="iptcItem in props.file.data.meta_data.iptc_items"
+                                            :label="trans(`iptc_tag.${iptcItem.tag}`)">
                                             <template #actions>
-                                                <IptcMetadataContextMenu :tag="blockHeader" :file="props.file.data"/>
+                                                <IptcMetadataContextMenu :iptcItem="iptcItem"/>
                                             </template>
                                             <ul class="list-disc">
-                                                <li v-for="e in metaBlock">{{ e }}</li>
+                                                <li v-for="e in iptcItem.value">{{ e }}</li>
                                             </ul>
                                         </FileInfoAttribute>
                                     </FileInfoBlock>

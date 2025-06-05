@@ -25,7 +25,7 @@ class FileResource extends JsonResource
             'type' => $this->type,
             'meta_data' => $this->when($this->withMetaData, fn () => [
                 'exif' => $image->type()->supportsExif() ? rescue(fn () => $image->exif()?->toArray()) : null,
-                'iptc' => $image->type()->supportsIptc() ? rescue(fn () => $image->iptc()?->toArray()) : null,
+                'iptc_items' => IptcItemResource::collection($this->whenLoaded('iptcItems')),
             ]),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

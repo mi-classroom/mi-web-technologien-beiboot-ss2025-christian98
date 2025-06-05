@@ -11,33 +11,48 @@ import {
     SidebarMenuButton,
     SidebarMenuItem
 } from '@/components/ui/sidebar';
-import {type NavItem} from '@/types';
+import {NavGroupItem, type NavItem} from '@/types';
 import {Link} from '@inertiajs/vue3';
-import {BookOpen, Cloud, Folder, FolderGit2, LayoutGrid, Plus} from 'lucide-vue-next';
+import {BookOpen, Cloud, Folder, FolderGit2, LayoutGrid, Plus, NotebookPen} from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
-const mainNavItems: NavItem[] = [
+const mainNavItems: NavGroupItem[] = [
     {
-        title: 'Dashboard',
-        href: route('dashboard', undefined, false),
-        icon: LayoutGrid,
+        items: [
+            {
+                title: 'Dashboard',
+                href: route('dashboard', undefined, false),
+                icon: LayoutGrid,
+            },
+            {
+                title: 'Editor',
+                href: route('editor', undefined, false),
+                icon: NotebookPen,
+            },
+        ],
     },
     {
-        title: 'Local Files',
-        href: route('local.folders.index', undefined, false),
-        icon: Folder,
+        title: 'Cloud Storage',
+        items: [
+            {
+                title: 'Local Files',
+                href: route('local', undefined, false),
+                icon: Folder,
+            },
+            {
+                title: 'Nextcloud',
+                href: '/cloud-storage/nextcloud',
+                icon: Cloud,
+                disabled: true,
+            },
+            {
+                title: 'Connect Cloud-Storage',
+                href: '/settings/cloud-storage',
+                icon: Plus,
+                disabled: true,
+            },
+        ],
     },
-    {
-        title: 'Nextcloud',
-        href: '/cloud-storage/nextcloud',
-        icon: Cloud,
-    },
-    {
-        title: 'Connect Cloud-Storage',
-        href: '/settings/cloud-storage',
-        icon: Plus,
-        disabled: true,
-    }
 ];
 
 const footerNavItems: NavItem[] = [

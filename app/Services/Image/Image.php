@@ -24,10 +24,6 @@ class Image
         $disk = $disk instanceof Filesystem ? $disk : Storage::disk($disk);
         $content = $disk->get($filename);
 
-        // Debug the values to see what's actually happening
-        $originalTime = $disk->lastModified($filename);
-        ray("Original timestamp: $originalTime (".date('Y-m-d H:i:s', $originalTime).")\n")->label('Original Timestamp');
-
         return new self(
             TempFile::withFilename($filename)
                 ->write($content)

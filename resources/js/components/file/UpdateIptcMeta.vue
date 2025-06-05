@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import Icon from "@/components/Icon.vue";
 import {Button} from "@/components/ui/button";
-import {File} from "@/types";
+import {File, IptcItem} from "@/types";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {Input} from "@/components/ui/input";
 import {useCloned} from "@vueuse/core";
@@ -10,24 +10,16 @@ import {route} from "ziggy-js";
 import {trans} from "laravel-vue-i18n";
 
 const props = defineProps<{
-    file: File;
-    tag: string;
+    iptcItem: IptcItem;
 }>();
 
 const model = defineModel<boolean>();
 
-const {cloned: iptcMeta, sync} = useCloned<(string | number)[]>(props.file.meta_data?.iptc?.[props.tag] ?? []);
+const {cloned: iptcMeta, sync} = useCloned<(string | number)[]>(props.iptcItem.value ?? []);
 
 function updateMeta() {
-    router.put(route('local.files.update', {id: props.file.id}), {
-        meta_data: {
-            iptc: [
-                {
-                    tag: props.tag,
-                    value: iptcMeta.value,
-                },
-            ],
-        },
+    router.put(route('local.iptc.update', {file: props.iptcItem.file_id, iptc: props.iptcItem.id}), {
+        value: iptcMeta.value,
     }, {
         onSuccess: () => {
             model.value = false;
@@ -47,7 +39,7 @@ function closeDialog() {
             <form @submit.prevent="updateMeta" class="grid gap-4">
                 <DialogHeader>
                     <DialogTitle>
-                        Edit IPTC-Meta: <span class="italic">{{ trans(`iptc_tag.${props.tag}`) }}</span>
+                        Edit IPTC-Meta: <span class="italic">{{ trans(`iptc_tag.${props.iptcItem.tag}`) }}</span>
                     </DialogTitle>
                 </DialogHeader>
                 <div class="mx-2">

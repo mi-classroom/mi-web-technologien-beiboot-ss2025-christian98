@@ -3,8 +3,10 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -65,6 +67,14 @@ class User extends Authenticatable
         return $this->hasMany(Folder::class);
     }
 
+    public function rootFolder(): HasOne
+    {
+        return $this->folders()->one()->ofMany(aggregate: function (Builder $builder) {
+            $builder->whereNull('parent_id');
+        });
+        // return $this->folders()->whereNull('parent_id');
+    }
+
     /**
      * Get the user's initials
      */
@@ -72,7 +82,7 @@ class User extends Authenticatable
     {
         return Str::of($this->name)
             ->explode(' ')
-            ->map(fn (string $name) => Str::of($name)->substr(0, 1))
+            ->map(fn(string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
     }
 }

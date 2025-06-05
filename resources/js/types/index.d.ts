@@ -11,6 +11,14 @@ export interface BreadcrumbItem {
     href: string;
 }
 
+export interface NavGroupItem {
+    title?: string;
+    items: NavLeafItem[];
+    icon?: LucideIcon;
+    isActive?: boolean;
+    disabled?: boolean;
+}
+
 export interface NavItem {
     title: string;
     href: string;
@@ -48,7 +56,7 @@ export interface File {
     size_for_humans: string;
     meta_data?: {
         exif?: Record<string, Record<string, string | number>>;
-        iptc?: Record<string, string[]>;
+        iptc_items?: IptcItem[];
     };
     created_at: string;
     updated_at: string;
@@ -62,6 +70,16 @@ export interface Folder {
     parent?: Folder;
     folders?: Folder[];
     files?: File[];
+    created_at: string;
+    updated_at: string;
+}
+
+export interface IptcItem {
+    id: number;
+    tag: string;
+    value: string[];
+    file_id: number;
+    file?: File;
     created_at: string;
     updated_at: string;
 }
