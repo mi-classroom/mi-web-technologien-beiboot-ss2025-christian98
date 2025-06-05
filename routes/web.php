@@ -36,6 +36,25 @@ Route::middleware(['auth', 'verified'])->prefix('local')->name('local.')->group(
 });
 // endregion
 
+Route::middleware(['auth', 'verified'])->prefix('storage/{storageConfig}')->name('storage.')->group(function () {
+    // Folders
+    Route::get('/folders', [\App\Http\Controllers\Storage\FolderController::class, 'index'])
+        ->name('folders.index');
+    Route::delete('/folders/{path}', [\App\Http\Controllers\Storage\FolderController::class, 'destroy'])
+        ->where('path', '.*')->name('folders.destroy');
+    Route::get('/folders/{path}', [\App\Http\Controllers\Storage\FolderController::class, 'show'])
+        ->where('path', '.*')->name('folders.show');
+    Route::post('/folders/{path}', [FolderFolderController::class, 'store'])
+        ->where('path', '.*')->name('folders.folders.store');
+
+    // Download
+    Route::get('/download/{path}', [\App\Http\Controllers\Storage\FolderController::class, 'download'])
+        ->where('path', '.*')->name('folders.download');
+
+    Route::resource('folders.files', FolderFileController::class)->only(['store']);
+    Route::resource('files', FileController::class)->only(['show', 'update', 'destroy']);
+    Route::get('files/{file}/download', [FileController::class, 'download'])->name('files.download');
+});
 
 Route::post('/locale', [LocaleController::class, 'setLocale'])
     ->name('locale.set');
