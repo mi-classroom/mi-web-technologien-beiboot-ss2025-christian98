@@ -66,6 +66,14 @@ export interface Folder {
     updated_at: string;
 }
 
+export interface StorageConfig {
+    id: number;
+    provider_type: App.Services.Storage.StorageProvider;
+    options: object;
+    created_at: string;
+    updated_at: string;
+}
+
 // endregion
 
 export type BreadcrumbItemType = BreadcrumbItem;
