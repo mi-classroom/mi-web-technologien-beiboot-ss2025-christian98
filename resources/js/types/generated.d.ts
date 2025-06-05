@@ -20,3 +20,29 @@ export type IptcTag = 90 | 116 | 101 | 100 | 80 | 85 | 110 | 55 | 120 | 122 | 10
 declare namespace App.Services.Image.ImageType {
 export type ImageType = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 0;
 }
+declare namespace App.Services.Storage {
+export type StorageProvider = 'local';
+}
+declare namespace App.Services.Storage.Entities {
+export type File = {
+name: string;
+path: string;
+mime_type: string | null;
+size: number | null;
+download_url: string | null;
+preview_url: string | null;
+thumbnail_url: string | null;
+folder: App.Services.Storage.Entities.Folder | null;
+created_at: string;
+updated_at: string;
+};
+export type Folder = {
+name: string;
+path: string;
+created_at: string;
+updated_at: string;
+files: Array<App.Services.Storage.Entities.File> | null;
+folders: Array<App.Services.Storage.Entities.Folder> | null;
+parent: App.Services.Storage.Entities.Folder | null;
+};
+}
