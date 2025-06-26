@@ -4,69 +4,55 @@ namespace App\Http\Controllers\Storage;
 
 use App\Data\BreadcrumbData;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\FolderResource;
 use App\Http\Resources\StorageConfigResource;
+use App\Models\Folder;
 use App\Models\StorageConfig;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class FolderController extends Controller
 {
-    public function index(StorageConfig $storageConfig)
+    public function index(StorageConfig $storageConfig): Response
     {
-        $storage = $storageConfig->getStorage();
+        $folder = $storageConfig->rootFolder()->with(['files', 'folders'])->firstOrFail();
 
-        return inertia('Storage/Folder', [
-            'folder' => $storage->getRoot(),
+        return Inertia::render('Folder', [
             'storageConfig' => new StorageConfigResource($storageConfig),
-            'breadcrumbs' => BreadcrumbData::collect([
-                [
-                    'name' => '/',
-                    'url' => route('storage.folders.index', [
-                        'storageConfig' => $storageConfig,
-                    ]),
-                ],
-            ]),
+            'folder' => new FolderResource($folder),
+            'breadcrumbs' => FolderResource::collection([$folder]),
         ]);
     }
 
-    public function show(StorageConfig $storageConfig, string $path)
+    public function show(StorageConfig $storageConfig, Folder $folder): Response
     {
-        ray($path);
-        ray($this->getBreadCrumbs($path, $storageConfig));
-        $storage = $storageConfig->getStorage();
+        $folder->loadMissing('files', 'folders');
 
-        return inertia('Storage/Folder', [
-            'folder' => $storage->getFolder($path),
+        return Inertia::render('Folder', [
             'storageConfig' => new StorageConfigResource($storageConfig),
-            'breadcrumbs' => BreadcrumbData::collect($this->getBreadCrumbs($path, $storageConfig)),
+            'folder' => new FolderResource($folder),
+            'breadcrumbs' => FolderResource::collection([...$folder->all_parents, $folder]),
         ]);
     }
 
-    protected function getBreadCrumbs(string $path, StorageConfig $storageConfig): array
+    public function store(StorageConfig $storageConfig): RedirectResponse
     {
-        ray($path);
-        if ($path === '.') {
-            return [
-                $this->createBreadcrumbEntry('/', $storageConfig),
-            ];
-        }
+        $user = Auth::user();
+        $folder = $user->folders()->create([
+            'name' => 'New Folder',
+            'path' => '',
+        ]);
 
-        return [...$this->getBreadCrumbs(dirname($path), $storageConfig),
-            $this->createBreadcrumbEntry($path, $storageConfig),
-        ];
+        return redirect()->route('storage.folders.show', ['folder' => $folder, 'storageConfig' => $storageConfig]);
     }
 
-    private function createBreadcrumbEntry(string $path, StorageConfig $storageConfig): array
+    public function destroy(StorageConfig $storageConfig, Folder $folder): RedirectResponse
     {
-        $isRoot = $path === '/';
+        $folder->delete();
 
-        return ray()->pass([
-            'name' => $isRoot ? '/' : basename($path),
-            'url' => route(
-                $isRoot ? 'storage.folders.index' : 'storage.folders.show',
-                array_filter([
-                    'storageConfig' => $storageConfig,
-                    'folder' => $isRoot ? null : ($path),
-                ])
-            ),
-        ]);
+        return redirect()->route('storage.folders.index', ['storageConfig' => $storageConfig])
+            ->with('success', 'Folder has been deleted.');
     }
 }

@@ -63,7 +63,7 @@ export interface User {
 export interface File {
     id: number;
     name: string;
-    path: string;
+    full_path: string;
     size: number;
     type: string;
     size_for_humans: string;
@@ -78,7 +78,7 @@ export interface File {
 export interface Folder {
     id: number;
     name: string;
-    path: string;
+    full_path: string;
     parent_id?: number;
     parent?: Folder;
     folders?: Folder[];

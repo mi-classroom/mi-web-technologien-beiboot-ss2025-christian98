@@ -25,7 +25,7 @@ class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
 
     public function handle(): void
     {
-        $image = Image::fromDisk($this->file->path, $this->diskName());
+        $image = Image::fromDisk($this->file->full_path, $this->file->folder->storageConfig->getStorage());
 
         if ($image->type()->supportsIptc()) {
             $currentIptc = $image->iptcReader()->read();
@@ -55,7 +55,7 @@ class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
 
             // Save the IPTC data back to the image
             $image->writeIptc($currentIptc);
-            Storage::disk($this->diskName())->put($this->file->path, $image->contents());
+            $this->file->folder->storageConfig->getStorage()->put($this->file->full_path, $image->contents());
         }
 
         $this->file->touch();

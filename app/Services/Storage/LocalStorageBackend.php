@@ -10,7 +10,7 @@ use RuntimeException;
 
 class LocalStorageBackend implements StorageBackend
 {
-    public function getFolder(string $path): Entities\Folder
+    public function getFolders(string $path): Entities\Folder
     {
         // retrieve folder id from cache
         if ($folderId = app(FolderCache::class)->getFolderId(Str::start($path, '/'))) {
@@ -20,7 +20,7 @@ class LocalStorageBackend implements StorageBackend
         throw new RuntimeException('Folder not found');
     }
 
-    public function getFile(string $path): Entities\File
+    public function getFiles(string $path): Entities\File
     {
         return Entities\File::from(
             app(FolderCache::class)->getFolderId(Str::start($path, '/'))
