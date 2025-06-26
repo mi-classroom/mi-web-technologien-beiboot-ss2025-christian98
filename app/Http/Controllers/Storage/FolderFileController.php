@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Local;
+namespace App\Http\Controllers\Storage;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateFileRequest;
 use App\Models\Folder;
+use App\Models\StorageConfig;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
 class FolderFileController extends Controller
 {
-    public function store(CreateFileRequest $request, Folder $folder): RedirectResponse
+    public function store(CreateFileRequest $request, StorageConfig $storageConfig, Folder $folder): RedirectResponse
     {
         $files = $request->validated('files');
 
@@ -21,7 +22,7 @@ class FolderFileController extends Controller
 
                 return [
                     'name' => $file['name'] ?? $uploadedFile->getClientOriginalName(),
-                    'path' => $uploadedFile->store('files', 'public'),
+                    'path' => $uploadedFile->storeAS('files', $uploadedFile->getClientOriginalName(), 'public'),
                     'size' => $uploadedFile->getSize(),
                     'type' => $uploadedFile->getMimeType(),
                 ];
@@ -30,7 +31,7 @@ class FolderFileController extends Controller
 
         $folder->touch();
 
-        return redirect()->route('local.folders.show', $folder)
+        return redirect()->route('storage.folders.show', ['folder' => $folder, 'storageConfig' => $storageConfig])
             ->with('success', 'File uploaded successfully.');
     }
 }

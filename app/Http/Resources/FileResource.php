@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Services\Image\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Str;
 
 /** @mixin File */
 class FileResource extends JsonResource
@@ -14,12 +15,12 @@ class FileResource extends JsonResource
 
     public function toArray(Request $request): array
     {
-        $image = Image::fromDisk($this->path, 'public');
+        $image = Image::fromDisk($this->full_path, $this->folder->storageConfig->getStorage());
 
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'path' => $this->path,
+            'full_path' => $this->full_path,
             'size' => $this->size,
             'size_for_humans' => $this->size_for_humans,
             'type' => $this->type,

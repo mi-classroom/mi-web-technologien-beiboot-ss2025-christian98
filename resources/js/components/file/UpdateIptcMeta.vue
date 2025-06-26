@@ -18,7 +18,7 @@ const model = defineModel<boolean>();
 const {cloned: iptcMeta, sync} = useCloned<(string | number)[]>(props.iptcItem.value ?? []);
 
 function updateMeta() {
-    router.put(route('local.iptc.update', {file: props.iptcItem.file_id, iptc: props.iptcItem.id}), {
+    router.put(route('storage.iptc.update', {file: props.iptcItem.file_id, iptc: props.iptcItem.id}), {
         value: iptcMeta.value,
     }, {
         onSuccess: () => {

@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Local;
+namespace App\Http\Controllers\Storage;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateIptcItemRequest;
 use App\Http\Resources\IptcItemResource;
 use App\Models\File;
 use App\Models\IptcItem;
+use App\Models\StorageConfig;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
@@ -19,7 +20,7 @@ class IptcItemController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function store(UpdateIptcItemRequest $request, File $file): RedirectResponse
+    public function store(UpdateIptcItemRequest $request, StorageConfig $storageConfig, File $file): RedirectResponse
     {
         $this->authorize('create', [IptcItem::class, $file]);
 
@@ -36,7 +37,7 @@ class IptcItemController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function update(UpdateIptcItemRequest $request, File $file, IptcItem $iptc): RedirectResponse
+    public function update(UpdateIptcItemRequest $request, StorageConfig $storageConfig, File $file, IptcItem $iptc): RedirectResponse
     {
         $this->authorize('update', $iptc);
 
@@ -50,7 +51,7 @@ class IptcItemController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function destroy(File $file, IptcItem $iptc): RedirectResponse
+    public function destroy(StorageConfig $storageConfig, File $file, IptcItem $iptc): RedirectResponse
     {
         $this->authorize('delete', $iptc);
 

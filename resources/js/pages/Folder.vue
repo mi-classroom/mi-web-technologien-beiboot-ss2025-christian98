@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import {Head, router} from "@inertiajs/vue3";
 import AppLayout from "@/layouts/AppLayout.vue";
-import type {Folder} from "@/types";
+import type {Folder, StorageConfig} from "@/types";
 import CreateFolderButton from "@/components/folder/CreateFolderButton.vue";
 import {computed} from "vue";
 import CreateFileButton from "@/components/folder/CreateFileButton.vue";
 import DeleteFolder from "@/components/folder/DeleteFolder.vue";
 
 interface Props {
+    storageConfig: { data: StorageConfig };
     folder: { data: Folder };
     breadcrumbs: { data: Folder[] };
 }
@@ -16,7 +17,7 @@ const props = defineProps<Props>();
 
 const breadcrumbs = computed(() => props.breadcrumbs.data.map((folder) => ({
     title: folder.name != '' ? folder.name : '/',
-    href: route('local.folders.show', {folder: folder.path.slice(1)}),
+    href: route('storage.folders.show', {folder: folder, storageConfig: props.storageConfig.data}),
 })));
 
 const items = computed(() => {
@@ -30,8 +31,8 @@ const items = computed(() => {
 
 function navigate(item: Folder | File) {
     const href = 'type' in item
-        ? route('local.files.show', {file: item})
-        : route('local.folders.show', {folder: item.path.slice(1)})
+        ? route('storage.files.show', {file: item, storageConfig: props.storageConfig.data})
+        : route('storage.folders.show', {folder: item, storageConfig: props.storageConfig.data});
 
     router.visit(href);
 }
@@ -50,8 +51,8 @@ function navigate(item: Folder | File) {
                     </p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none flex gap-x-1">
-                    <CreateFileButton :folder="props.folder.data"/>
-                    <CreateFolderButton :folder="props.folder.data"/>
+                    <CreateFileButton :folder="props.folder.data" :storageConfig="props.storageConfig.data"/>
+                    <CreateFolderButton :folder="props.folder.data" :storageConfig="props.storageConfig.data"/>
                     <DeleteFolder v-if="props.folder.data.parent_id" :folder="props.folder.data"/>
                 </div>
             </div>
@@ -82,7 +83,7 @@ function navigate(item: Folder | File) {
                             <tbody>
                             <tr v-if="props.folder.data.parent"
                                 @click="navigate(props.folder.data.parent)"
-                                :data-href="route('local.folders.show', {folder: props.folder.data.parent_id})"
+                                :data-href="route('storage.folders.show', {folder: props.folder.data.parent_id, storageConfig: props.storageConfig.data})"
                                 class="border-t border-border cursor-pointer">
                                 <td class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap sm:pl-3">
                                     ..
@@ -92,7 +93,7 @@ function navigate(item: Folder | File) {
                                 class="border-t border-border cursor-pointer hover:bg-gray-100">
                                 <td class="py-4 pr-3 pl-4 text-sm flex items-center space-x-2 font-medium whitespace-nowrap sm:pl-3">
                                     <img v-if="'type' in item" class="size-8 object-contain overflow-clip"
-                                         :src="route('local.files.download', {file: item})" :alt="item.name"/>
+                                         :src="route('storage.files.download', {file: item, storageConfig: props.storageConfig.data})" :alt="item.name"/>
                                     <svg v-else class="h-8 w-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg"
                                          fill="currentColor" viewBox="0 0 24 24">
                                         <path
@@ -103,7 +104,7 @@ function navigate(item: Folder | File) {
                                     </span>
                                 </td>
                                 <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">
-                                    {{ 'type' in item ? `${props.folder.data.path}/${item.name}` : item.path }}
+                                    {{ item.full_path }}
                                 </td>
                                 <td class="px-3 py-4 text-sm whitespace-nowrap text-secondary-foreground">
                                     {{ 'type' in item ? item.size_for_humans : null }}

@@ -28,7 +28,7 @@ class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 
     private function indexIptcMetadata(): void
     {
-        $iptcData = Image::fromDisk($this->file->path, 'public')->iptc();
+        $iptcData = Image::fromDisk($this->file->full_path, $this->file->folder->storageConfig->getStorage())->iptc();
 
         if ($iptcData === null) {
             return;
