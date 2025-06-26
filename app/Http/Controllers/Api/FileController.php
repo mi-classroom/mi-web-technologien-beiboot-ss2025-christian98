@@ -10,6 +10,7 @@ use App\Models\File;
 use App\Models\Folder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class FileController extends Controller
 {
@@ -35,6 +36,20 @@ class FileController extends Controller
     // endregion
 
     // region single resource
+    public function indexRoot(Request $request): FileResourceCollection
+    {
+        $ids = $request->query('ids', []);
+
+        $files = File::query()->whereIn('id', $ids)->with('iptcItems')->get();
+
+        foreach ($files as $file) {
+            $this->authorize('view', $file);
+        }
+
+        return new FileResourceCollection($files);
+    }
+
+
     public function show(File $file): FileResource
     {
         $this->authorize('view', $file);

@@ -8,7 +8,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 /** @see \App\Models\File */
 class FileResourceCollection extends ResourceCollection
 {
-    protected bool $withMetaData = false;
+    protected bool $withMetaData = true;
 
     public function toArray(Request $request): array
     {

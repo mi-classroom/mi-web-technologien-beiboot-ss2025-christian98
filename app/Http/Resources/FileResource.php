@@ -10,7 +10,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /** @mixin File */
 class FileResource extends JsonResource
 {
-    protected bool $withMetaData = false;
+    protected bool $withMetaData = true;
 
     public function toArray(Request $request): array
     {

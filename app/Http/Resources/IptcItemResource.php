@@ -19,7 +19,6 @@ class IptcItemResource extends JsonResource
             'updated_at' => $this->updated_at,
 
             'file_id' => $this->file_id,
-
             'file' => new FileResource($this->whenLoaded('file')),
         ];
     }

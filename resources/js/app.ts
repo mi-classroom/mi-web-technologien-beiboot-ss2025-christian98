@@ -7,6 +7,7 @@ import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from './composables/useAppearance';
 import { i18nVue } from "laravel-vue-i18n";
+import { VueQueryPlugin } from "@tanstack/vue-query";
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -44,6 +45,7 @@ createInertiaApp({
                     return await langModuleLoader();
                 }
             })
+            .use(VueQueryPlugin)
             .mount(el);
     },
     progress: {

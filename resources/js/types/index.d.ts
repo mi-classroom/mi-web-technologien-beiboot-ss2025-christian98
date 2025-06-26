@@ -19,7 +19,20 @@ export interface NavGroupItem {
     disabled?: boolean;
 }
 
-export interface NavItem {
+export type NavItem = NavGroup | NavLeafItem;
+
+export interface NavGroup {
+    title: string;
+    hideOverview?: boolean;
+    overviewTitle?: string;
+    href: string;
+    items: NavLeafItem[];
+    icon?: LucideIcon;
+    isActive?: boolean;
+    disabled?: boolean;
+}
+
+export interface NavLeafItem {
     title: string;
     href: string;
     icon?: LucideIcon;

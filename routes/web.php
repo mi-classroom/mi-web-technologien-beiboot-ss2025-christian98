@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EditorController;
 use App\Http\Controllers\Local\FileController;
 use App\Http\Controllers\Local\FolderController;
 use App\Http\Controllers\Local\FolderFileController;
@@ -15,12 +16,12 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('dashboard', [DashboardController::class, 'show'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('editor', [DashboardController::class, 'show'])->middleware(['auth', 'verified'])->name('editor');
+Route::get('editor', [EditorController::class, 'show'])->middleware(['auth', 'verified'])->name('editor');
 Route::redirect('local', 'local/folders')->middleware(['auth', 'verified'])->name('local');
 
 // region local storage
 Route::middleware(['auth', 'verified'])->prefix('local')->name('local.')->group(function () {
-    Route::redirect('', 'local/folders')->name('index');
+    // Route::redirect('/', 'local/folders')->name('index');
     Route::resource('folders', FolderController::class)->only(['index', 'destroy']);
     Route::get('/folders/{folder}', [FolderController::class, 'show'])
         ->where('folder', '.*')->name('folders.show');

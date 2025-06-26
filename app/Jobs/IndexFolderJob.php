@@ -13,20 +13,38 @@ class IndexFolderJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(private readonly Folder $folder)
-    {
+    public function __construct(
+        private readonly Folder $folder,
+        private readonly bool $shouldScanSubFolders = false
+    ) {
     }
 
     public function handle(): void
     {
         // TODO Detect all files in the storage folder
 
-        // Dispatch IndexFolderJob for subfolders
+        if ($this->shouldScanSubFolders) {
+            $this->scanSubFolders();
+        }
+
+        $this->indexDetectedFiles();
+    }
+
+    /**
+     * Dispatch IndexFolderJob for subfolders
+     */
+    protected function scanSubFolders(): void
+    {
         foreach ($this->folder->folders as $subfolder) {
             self::dispatch($subfolder);
         }
+    }
 
-        // Dispatch IndexFileJob for each file
+    /**
+     * Dispatch IndexFileJob for each file
+     */
+    private function indexDetectedFiles(): void
+    {
         foreach ($this->folder->files as $file) {
             IndexFileJob::dispatch($file);
         }
