@@ -23,7 +23,7 @@ const updateDialogOpen = ref(false);
 const deleteDialogOpen = ref(false);
 
 function removeIptcTag() {
-    router.put(route('local.iptc.destroy', {
+    router.put(route('storage.iptc.destroy', {
         file: props.iptcItem.id,
     }));
 }

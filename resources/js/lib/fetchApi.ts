@@ -12,7 +12,7 @@ export async function fetchApi<T = unknown>(input: RequestInfo, init?: RequestIn
             'Accept': 'application/json, text/plain, */*',
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest',
-            'X-CSRF-TOKEN': token,
+            'X-XSRF-TOKEN': token,
             ...init?.headers
         }
     });

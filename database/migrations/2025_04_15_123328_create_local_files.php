@@ -23,7 +23,7 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('path');
+            $table->string('full_path');
             $table->unsignedBigInteger('size');
             $table->string('type');
             $table->foreignIdFor(Folder::class)->nullable()->constrained()->cascadeOnDelete();

@@ -3,10 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -53,26 +51,12 @@ class User extends Authenticatable
         ];
     }
 
-    protected static function booted()
+    /**
+     * @return HasMany<StorageConfig, self>
+     */
+    public function storageConfigs(): HasMany
     {
-        static::created(function (User $user) {
-            $user->folders()->create([
-                'name' => '',
-            ]);
-        });
-    }
-
-    public function folders(): HasMany
-    {
-        return $this->hasMany(Folder::class);
-    }
-
-    public function rootFolder(): HasOne
-    {
-        return $this->folders()->one()->ofMany(aggregate: function (Builder $builder) {
-            $builder->whereNull('parent_id');
-        });
-        // return $this->folders()->whereNull('parent_id');
+        return $this->hasMany(StorageConfig::class);
     }
 
     /**

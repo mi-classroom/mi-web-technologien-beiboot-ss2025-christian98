@@ -2,7 +2,7 @@
 import {Head, router} from "@inertiajs/vue3";
 import AppLayout from "@/layouts/AppLayout.vue";
 import {computed} from "vue";
-import {Folder, File} from "@/types";
+import {Folder, File, type StorageConfig} from "@/types";
 import {Button} from "@/components/ui/button";
 import Icon from "@/components/Icon.vue";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
@@ -12,8 +12,10 @@ import FileInfoAttribute from "@/components/file/FileInfoAttribute.vue";
 import DeleteFile from "@/components/file/DeleteFile.vue";
 import {trans} from "laravel-vue-i18n";
 import IptcMetadataContextMenu from "@/components/file/IptcMetadataContextMenu.vue";
+import FilePreview from "@/components/file/FilePreview.vue";
 
 const props = defineProps<{
+    storageConfig: { data: StorageConfig };
     file: { data: File };
     breadcrumbs: App.Data.BreadcrumbData[];
 }>();
@@ -28,7 +30,7 @@ const breadcrumbs = computed(() => {
         ...folderBreadcrumbs,
         {
             title: props.file.data.name,
-            href: route('local.files.show', {file: props.file.data}),
+            href: route('storage.files.show', {file: props.file.data, storageConfig: props.storageConfig.data}),
         },
     ]
 });
@@ -48,7 +50,7 @@ const breadcrumbs = computed(() => {
                 </div>
                 <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none flex gap-x-1">
                     <Button variant="default" as="a"
-                            :href="route('local.files.download', {file: props.file.data.id})">
+                            :href="route('storage.files.download', {file: props.file.data.id, storageConfig: props.storageConfig.data})">
                         <Icon name="ArrowDownToLine"/>
                         <span>Download</span>
                     </Button>
@@ -62,8 +64,7 @@ const breadcrumbs = computed(() => {
                             <Card>
                                 <CardHeader>Preview</CardHeader>
                                 <CardContent class="flex items-center">
-                                    <img :src="route('local.files.download', {file: props.file.data.id})" alt="File preview"
-                                         class="w-full h-auto rounded-xl"/>
+                                    <FilePreview :file="props.file.data" class="w-full h-auto rounded-xl"/>
                                 </CardContent>
                             </Card>
                             <Card>

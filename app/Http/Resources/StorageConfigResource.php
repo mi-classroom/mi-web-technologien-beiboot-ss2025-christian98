@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Resources;
+
+use App\Models\StorageConfig;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Cache;
+
+/** @mixin StorageConfig */
+class StorageConfigResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'status' => $this->status,
+            'last_indexed_at' => $this->last_indexed_at,
+            'storage_used' => '5.2 GB', // TODO: Calculate actual storage used
+            'provider_type' => $this->provider_type,
+            'provider_options' => $this->provider_options,
+            'is_editable' => $this->is_editable,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+
+            'user_id' => $this->user_id,
+            'user' => new UserResource($this->whenLoaded('user')),
+
+            'root_folder_id' => $this->root_folder_id,
+            'root_folder' => new FolderResource($this->whenLoaded('rootFolder')),
+        ];
+    }
+}

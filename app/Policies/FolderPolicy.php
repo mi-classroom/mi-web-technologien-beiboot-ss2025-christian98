@@ -15,7 +15,7 @@ class FolderPolicy
     }
 
     public function view(User $user, Folder $folder): bool {
-        return $folder->user_id === $user->id || ($folder->parent && $user->can('view', $folder->parent));
+        return $folder->storageConfig->user_id === $user->id || ($folder->parent && $user->can('view', $folder->parent));
     }
 
     public function create(User $user): bool {
@@ -23,18 +23,18 @@ class FolderPolicy
     }
 
     public function update(User $user, Folder $folder): bool {
-        return $folder->user_id === $user->id || ($folder->parent && $user->can('update', $folder->parent));
+        return $folder->storageConfig->user_id === $user->id || ($folder->parent && $user->can('update', $folder->parent));
     }
 
     public function delete(User $user, Folder $folder): bool {
-        return $folder->user_id === $user->id || ($folder->parent && $user->can('update', $folder->parent));
+        return $folder->storageConfig->user_id === $user->id || ($folder->parent && $user->can('update', $folder->parent));
     }
 
     public function restore(User $user, Folder $folder): bool {
-        return $folder->user_id === $user->id || ($folder->parent && $user->can('update', $folder->parent));
+        return $folder->storageConfig->user_id === $user->id || ($folder->parent && $user->can('update', $folder->parent));
     }
 
     public function forceDelete(User $user, Folder $folder): bool {
-        return $folder->user_id === $user->id || ($folder->parent && $user->can('update', $folder->parent));
+        return $folder->storageConfig->user_id === $user->id || ($folder->parent && $user->can('update', $folder->parent));
     }
 }

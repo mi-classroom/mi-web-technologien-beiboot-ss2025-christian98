@@ -1,10 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Local;
+namespace App\Http\Controllers\Storage;
 
+use App\Data\BreadcrumbData;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FolderResource;
+use App\Http\Resources\StorageConfigResource;
 use App\Models\Folder;
+use App\Models\StorageConfig;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -12,28 +15,29 @@ use Inertia\Response;
 
 class FolderController extends Controller
 {
-    public function index(): Response
+    public function index(StorageConfig $storageConfig): Response
     {
-        $user = Auth::user();
-        $folder = $user->folders()->with(['files', 'folders', 'parent'])->first();
+        $folder = $storageConfig->rootFolder()->with(['files', 'folders'])->firstOrFail();
 
         return Inertia::render('Folder', [
+            'storageConfig' => new StorageConfigResource($storageConfig),
             'folder' => new FolderResource($folder),
             'breadcrumbs' => FolderResource::collection([$folder]),
         ]);
     }
 
-    public function show(Folder $folder): Response
+    public function show(StorageConfig $storageConfig, Folder $folder): Response
     {
         $folder->loadMissing('files', 'folders');
 
         return Inertia::render('Folder', [
+            'storageConfig' => new StorageConfigResource($storageConfig),
             'folder' => new FolderResource($folder),
             'breadcrumbs' => FolderResource::collection([...$folder->all_parents, $folder]),
         ]);
     }
 
-    public function store(): RedirectResponse
+    public function store(StorageConfig $storageConfig): RedirectResponse
     {
         $user = Auth::user();
         $folder = $user->folders()->create([
@@ -41,14 +45,14 @@ class FolderController extends Controller
             'path' => '',
         ]);
 
-        return redirect()->route('local.folders.show', $folder);
+        return redirect()->route('storage.folders.show', ['folder' => $folder, 'storageConfig' => $storageConfig]);
     }
 
-    public function destroy(Folder $folder): RedirectResponse
+    public function destroy(StorageConfig $storageConfig, Folder $folder): RedirectResponse
     {
         $folder->delete();
 
-        return redirect()->route('local.folders.index')
+        return redirect()->route('storage.folders.index', ['storageConfig' => $storageConfig])
             ->with('success', 'Folder has been deleted.');
     }
 }

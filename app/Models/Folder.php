@@ -4,13 +4,14 @@ namespace App\Models;
 
 use App\Jobs\UpdatePathCache;
 use App\Services\Cache\FolderCache;
+use App\Services\FullPathGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class Folder extends Model
 {
@@ -19,11 +20,16 @@ class Folder extends Model
     protected $fillable = [
         'name',
         'parent_id',
+        'storage_config_id',
     ];
 
     protected static function booted(): void
     {
         parent::booted();
+
+        static::creating(function (Folder $folder) {
+            $folder->full_path = app(FullPathGenerator::class)->getFullPath($folder->parent, $folder->name);
+        });
 
         static::created(function (self $folder) {
             $folder->loadMissing('folders');
@@ -33,12 +39,37 @@ class Folder extends Model
         static::updated(function (self $folder) {
             if ($folder->wasChanged('name', 'parent_id')) {
                 Bus::dispatch(new UpdatePathCache($folder));
+
+                DB::transaction(function () use ($folder) {
+                    // Update the full path for the folder
+                    $folder->full_path = app(FullPathGenerator::class)->getFullPath($folder->parent, $folder->name);
+
+                    // Update the full path for all subfolders
+                    $folder->folders()->each(function (Folder $subFolder) use ($folder) {
+                        $subFolder->full_path = app(FullPathGenerator::class)->getFullPath($folder, $subFolder->name);
+                        $subFolder->save();
+                    });
+
+                    // Update the full path for all files in this folder
+                    $folder->files()->each(function (File $file) use ($folder) {
+                        $file->full_path = app(FullPathGenerator::class)->getFullPath($folder, $file->name);
+                        $file->save();
+                    });
+                });
             }
         });
 
         static::deleted(function (self $folder) {
             app(FolderCache::class)->clearCache($folder);
         });
+    }
+
+    /**
+     * @return BelongsTo<StorageConfig, self>
+     */
+    public function storageConfig(): BelongsTo
+    {
+        return $this->belongsTo(StorageConfig::class);
     }
 
     /**
@@ -80,33 +111,13 @@ class Folder extends Model
         });
     }
 
+    /**
+     * @deprecated
+     */
     public function path(): Attribute
     {
         return Attribute::get(function () {
             return $this->all_parents->push($this)->pluck('name')->implode('/');
         })->shouldCache();
     }
-
-    // region route model binding
-    public function getRouteKey(): string
-    {
-        return $this->path;
-    }
-
-    public function resolveRouteBinding($value, $field = null): ?Model
-    {
-        // if the field is not null and not 'path', use the default behavior
-        if (! is_null($field) && $field !== 'path') {
-            return parent::resolveRouteBinding($value, $field);
-        }
-
-        // retrieve folder id from cache
-        if ($folderId = app(FolderCache::class)->getFolderId(Str::start($value, '/'))) {
-            return $this->newQuery()->findOrFail($folderId);
-        }
-
-        // if not found in cache, fallback to default behavior
-        return parent::resolveRouteBinding($value, $field);
-    }
-    // endregion
 }

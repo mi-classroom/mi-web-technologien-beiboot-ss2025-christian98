@@ -18,6 +18,10 @@ const sidebarNavItems: NavLeafItem[] = [
         title: 'Appearance',
         href: '/settings/appearance',
     },
+    {
+        title: 'Storage',
+        href: '/settings/storage',
+    },
 ];
 
 const page = usePage();

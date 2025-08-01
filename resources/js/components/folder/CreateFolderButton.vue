@@ -10,11 +10,12 @@ import {
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {router} from "@inertiajs/vue3";
-import {Folder} from "@/types";
+import {Folder, StorageConfig} from "@/types";
 import {reactive, ref} from "vue";
 
 const props = defineProps<{
     folder: Folder,
+    storageConfig: StorageConfig,
 }>();
 const form = reactive({
     name: '',
@@ -22,7 +23,7 @@ const form = reactive({
 const dialogOpen = ref(false);
 
 function handleCreate() {
-    router.post(route('local.folders.folders.store', {folder: props.folder.id}), form);
+    router.post(route('storage.folders.folders.store', {folder: props.folder, storageConfig: props.storageConfig}), form);
     dialogOpen.value = false;
 }
 </script>
