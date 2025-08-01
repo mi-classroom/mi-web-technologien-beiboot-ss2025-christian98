@@ -15,7 +15,6 @@ class FolderPolicy
     }
 
     public function view(User $user, Folder $folder): bool {
-        ray('Checking view permission for folder', $folder->id, $folder->storageConfig->user_id, $user->id);
         return $folder->storageConfig->user_id === $user->id || ($folder->parent && $user->can('view', $folder->parent));
     }
 

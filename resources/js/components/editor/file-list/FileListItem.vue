@@ -10,7 +10,7 @@ const model = defineModel<number[]>();
 
 <template>
     <input type="checkbox" :id="`file-${file.id}`" :value="file.id" v-model="model"/>
-    <img :src="route('local.files.download', {file})" alt="File Icon"
+    <img :src="route('api.files.preview', {file})" alt="File Icon"
          class="size-12 flex-none object-cover bg-gray-50"/>
     <label :for="`file-${file.id}`" class="min-w-0">{{ file.name }}</label>
 </template>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {File} from '@/types';
 import {Link} from "@inertiajs/vue3";
+import FilePreview from "@/components/file/FilePreview.vue";
 
 defineProps<{
     file: File
@@ -10,10 +11,10 @@ defineProps<{
 </script>
 
 <template>
-    <Link class="flex h-16 hover:bg-mi-primary/20" :href="route('local.files.show', {file: file})">
-        <div class="bg-mi-warm-light h-full aspect-square cursor-pointer">
-            <img class="size-full object-contain overflow-clip"
-                 :src="route('local.files.download', {file: file})" :alt="file.name"/>
+    <Link class="flex h-16 hover:bg-mi-primary/20"
+          :href="route('storage.files.show', {file, storageConfig: file.storage_config_id})">
+        <div class="bg-mi-warm-light dark:bg-mi-warm-dark/30 h-full aspect-square cursor-pointer">
+            <FilePreview :file class="size-full aspect-square object-contain overflow-clip"/>
         </div>
         <div class="flex justify-between w-full items-center" :title="file.name">
             <div class="flex grow flex-col cursor-pointer h-full justify-center pl-4">

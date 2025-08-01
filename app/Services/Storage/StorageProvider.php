@@ -12,7 +12,7 @@ enum StorageProvider: string
     // case S3 = 's3';
     // case SFTP = 'sftp';
     // case FTP = 'ftp';
-    // case WebDAV = 'webdav';
+    case WebDAV = 'webdav';
 
     public function getBackend(StorageConfig $storageConfig): Filesystem
     {
@@ -24,7 +24,13 @@ enum StorageProvider: string
             // self::S3 => app(S3StorageBackend::class, $parameters),
             // self::SFTP => app(SFTPStorageBackend::class, $parameters),
             // self::FTP => app(FTPStorageBackend::class, $parameters),
-            // self::WebDAV => app(WebDAVStorageBackend::class, $parameters),
+            self::WebDAV => Storage::build([
+                'driver' => 'webdav',
+                'baseUri' => $storageConfig->provider_options['base_uri'] ?? '',
+                'userName' => $storageConfig->provider_options['username'] ?? '',
+                'password' => $storageConfig->provider_options['password'] ?? '',
+                'pathPrefix' => $storageConfig->provider_options['path_prefix'] ?? parse_url($storageConfig->provider_options['base_uri'], PHP_URL_PATH) ?? '',
+            ]),
         };
     }
 }

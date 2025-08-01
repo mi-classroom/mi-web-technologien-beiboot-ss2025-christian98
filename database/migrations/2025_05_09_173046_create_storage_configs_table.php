@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('storage_configs', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('status')->default('connected');
+            $table->timestamp('last_indexed_at')->nullable();
             $table->foreignIdFor(Folder::class, 'root_folder_id')->nullable()->constrained()->nullOnUpdate()->nullOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('provider_type');
@@ -25,10 +27,18 @@ return new class extends Migration
         Schema::table('folders', function (Blueprint $table) {
             $table->foreignIdFor(StorageConfig::class)->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
         });
+
+        Schema::table('files', function (Blueprint $table) {
+            $table->foreignIdFor(StorageConfig::class)->nullable()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+        });
     }
 
     public function down(): void
     {
+        Schema::table('files', function (Blueprint $table) {
+            $table->dropForeign(['storage_config_id']);
+            $table->dropColumn('storage_config_id');
+        });
         Schema::table('folders', function (Blueprint $table) {
             $table->dropForeign(['storage_config_id']);
             $table->dropColumn('storage_config_id');

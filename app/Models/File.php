@@ -21,6 +21,7 @@ class File extends Model
         'size',
         'type',
         'folder_id',
+        'storage_config_id',
     ];
 
     protected static function booted(): void
@@ -29,16 +30,28 @@ class File extends Model
 
         static::creating(function (self $file) {
             $file->full_path = app(FullPathGenerator::class)->getFullPath($file->folder, $file->name);
+            $file->storage_config_id ??= $file->folder->storage_config_id;
         });
 
         static::created(function (self $file) {
             Bus::dispatch(new IndexFileJob($file));
+        });
+
+        static::updating(function (self $file) {
+            if ($file->isDirty('folder_id')) {
+                $file->storage_config_id = $file->folder->storage_config_id;
+            }
         });
     }
 
     public function folder(): BelongsTo
     {
         return $this->belongsTo(Folder::class);
+    }
+
+    public function storageConfig(): BelongsTo
+    {
+        return $this->belongsTo(StorageConfig::class);
     }
 
     public function iptcItems(): HasMany

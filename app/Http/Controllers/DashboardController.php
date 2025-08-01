@@ -11,20 +11,15 @@ class DashboardController extends Controller
 {
     public function show(): Response
     {
-        $rootFolder = auth()->user()->folders()
-            ->whereNull('parent_id')
-            ->first();
+        $storageConfigs = auth()->user()->storageConfigs;
+        $files = $storageConfigs->flatMap(fn ($config) => $config->allFiles);
 
         return Inertia::render('Dashboard', [
-            'recentlyEditedFiles' => Inertia::defer(function () use ($rootFolder) {
-                $files = $this->files($rootFolder)->sortByDesc('updated_at')->take(10);
-
-                return new FileResourceCollection($files);
+            'recentlyEditedFiles' => Inertia::defer(function () use ($files) {
+                return new FileResourceCollection($files->sortByDesc('updated_at')->take(10));
             }, 'recentlyEditedFiles'),
-            'recentlyAddedFiles' => Inertia::defer(function () use ($rootFolder) {
-                $files = $this->files($rootFolder)->sortByDesc('created_at')->take(10);
-
-                return new FileResourceCollection($files);
+            'recentlyAddedFiles' => Inertia::defer(function () use ($files) {
+                return new FileResourceCollection($files->sortByDesc('created_at')->take(10));
             }, 'recentlyAddedFiles'),
         ]);
     }

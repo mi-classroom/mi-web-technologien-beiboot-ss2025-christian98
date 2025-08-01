@@ -2,10 +2,11 @@
 
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
+use App\Http\Controllers\Settings\StorageConfigController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->name('settings.')->group(function () {
     Route::redirect('settings', '/settings/profile');
 
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -18,4 +19,11 @@ Route::middleware('auth')->group(function () {
     Route::get('settings/appearance', function () {
         return Inertia::render('settings/Appearance');
     })->name('appearance');
+
+    Route::get('settings/storage', [StorageConfigController::class, 'index'])->name('storage.index');
+    Route::get('settings/storage/create', [StorageConfigController::class, 'create'])->name('storage.create');
+    Route::get('settings/storage/{config}/edit', [StorageConfigController::class, 'edit'])->name('storage.edit');
+    Route::post('settings/storage', [StorageConfigController::class, 'store'])->name('storage.store');
+    Route::post('settings/storage/{config}/re-index', [StorageConfigController::class, 'reIndex'])->name('storage.re-index');
+    Route::delete('settings/storage/{config}', [StorageConfigController::class, 'destroy'])->name('storage.destroy');
 });

@@ -15,7 +15,7 @@ class FileResource extends JsonResource
 
     public function toArray(Request $request): array
     {
-        $image = Image::fromDisk($this->full_path, $this->folder->storageConfig->getStorage());
+        // $image = Image::fromDisk($this->full_path, $this->folder->storageConfig->getStorage()); // TODO: import exif into database as well
 
         return [
             'id' => $this->id,
@@ -25,11 +25,14 @@ class FileResource extends JsonResource
             'size_for_humans' => $this->size_for_humans,
             'type' => $this->type,
             'meta_data' => $this->when($this->withMetaData, fn () => [
-                'exif' => $image->type()->supportsExif() ? rescue(fn () => $image->exif()?->toArray()) : null,
+                // 'exif' => $image->type()->supportsExif() ? rescue(fn () => $image->exif()?->toArray()) : null,
                 'iptc_items' => IptcItemResource::collection($this->whenLoaded('iptcItems')),
             ]),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+
+            'storage_config_id' => $this->storage_config_id,
+            'storage_config' => StorageConfigResource::make($this->whenLoaded('storageConfig')),
         ];
     }
 

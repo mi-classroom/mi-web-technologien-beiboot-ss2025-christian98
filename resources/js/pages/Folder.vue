@@ -6,6 +6,7 @@ import CreateFolderButton from "@/components/folder/CreateFolderButton.vue";
 import {computed} from "vue";
 import CreateFileButton from "@/components/folder/CreateFileButton.vue";
 import DeleteFolder from "@/components/folder/DeleteFolder.vue";
+import FilePreview from "@/components/file/FilePreview.vue";
 
 interface Props {
     storageConfig: { data: StorageConfig };
@@ -39,13 +40,13 @@ function navigate(item: Folder | File) {
 </script>
 
 <template>
-    <Head title="Local Files"/>
+    <Head :title="props.storageConfig.data.name"/>
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="px-4 sm:px-6 lg:px-8 mt-4">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
-                    <h1 class="text-base font-semibold">Local Files</h1>
+                    <h1 class="text-base font-semibold">{{props.storageConfig.data.name}}</h1>
                     <p class="mt-2 mi-text-meta-info">
                         This is a list of all your local files. You can create folders and upload files to them.
                     </p>
@@ -90,10 +91,9 @@ function navigate(item: Folder | File) {
                                 </td>
                             </tr>
                             <tr v-for="item in items" @click="navigate(item)"
-                                class="border-t border-border cursor-pointer hover:bg-gray-100">
+                                class="border-t border-border cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <td class="py-4 pr-3 pl-4 text-sm flex items-center space-x-2 font-medium whitespace-nowrap sm:pl-3">
-                                    <img v-if="'type' in item" class="size-8 object-contain overflow-clip"
-                                         :src="route('storage.files.download', {file: item, storageConfig: props.storageConfig.data})" :alt="item.name"/>
+                                    <FilePreview v-if="'type' in item" :file="item" class="size-8 object-contain overflow-clip"/>
                                     <svg v-else class="h-8 w-8 text-yellow-500" xmlns="http://www.w3.org/2000/svg"
                                          fill="currentColor" viewBox="0 0 24 24">
                                         <path

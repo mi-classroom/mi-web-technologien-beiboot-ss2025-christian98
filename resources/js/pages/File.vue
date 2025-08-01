@@ -12,6 +12,7 @@ import FileInfoAttribute from "@/components/file/FileInfoAttribute.vue";
 import DeleteFile from "@/components/file/DeleteFile.vue";
 import {trans} from "laravel-vue-i18n";
 import IptcMetadataContextMenu from "@/components/file/IptcMetadataContextMenu.vue";
+import FilePreview from "@/components/file/FilePreview.vue";
 
 const props = defineProps<{
     storageConfig: { data: StorageConfig };
@@ -63,8 +64,7 @@ const breadcrumbs = computed(() => {
                             <Card>
                                 <CardHeader>Preview</CardHeader>
                                 <CardContent class="flex items-center">
-                                    <img :src="route('storage.files.download', {file: props.file.data.id, storageConfig: props.storageConfig.data})" alt="File preview"
-                                         class="w-full h-auto rounded-xl"/>
+                                    <FilePreview :file="props.file.data" class="w-full h-auto rounded-xl"/>
                                 </CardContent>
                             </Card>
                             <Card>

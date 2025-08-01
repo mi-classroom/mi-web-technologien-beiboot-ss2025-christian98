@@ -4,12 +4,13 @@ namespace App\Jobs;
 
 use App\Models\File;
 use App\Models\Folder;
-use App\Services\FullPathGenerator;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
 class IndexFolderJob implements ShouldQueue
 {
@@ -24,8 +25,8 @@ class IndexFolderJob implements ShouldQueue
 
     public function handle(): void
     {
-        $this->scanForSubFolders();
-        $this->scanForFiles();
+        self::scanForSubFolders($this->folder);
+        self::scanForFiles($this->folder);
 
         if ($this->shouldIndexSubFolders) {
             $this->indexSubFolders();
@@ -40,7 +41,7 @@ class IndexFolderJob implements ShouldQueue
     protected function indexSubFolders(): void
     {
         foreach ($this->folder->folders as $subfolder) {
-            self::dispatch($subfolder);
+            self::dispatch($subfolder, $this->shouldIndexSubFolders);
         }
     }
 
@@ -54,35 +55,48 @@ class IndexFolderJob implements ShouldQueue
         }
     }
 
-    private function scanForSubFolders(): void
+    /**
+     * @param Folder $folder
+     * @param Filesystem|null $storage
+     * @return Collection<Folder>
+     */
+    public static function scanForSubFolders(Folder $folder, ?Filesystem $storage = null): Collection
     {
-        $storage = $this->folder->storageConfig->getStorage();
-        $dirs = $storage->directories($this->folder->full_path);
+        $storage ??= $folder->storageConfig->getStorage();
 
-        foreach ($dirs as $dir) {
-            $name = basename($dir);
-            Folder::updateOrCreate([
-                'name' => $name,
-                'storage_config_id' => $this->folder->storageConfig->id,
-                'parent_id' => $this->folder->id,
-            ]); // TODO: import timestamps from filesystem
-        }
+        return collect($storage->directories($folder->full_path))
+            ->map(function (string $dir) use ($folder) {;
+                $name = basename($dir);
+
+                return Folder::updateOrCreate([
+                    'name' => $name,
+                    'storage_config_id' => $folder->storageConfig->id,
+                    'parent_id' => $folder->id,
+                ]); // TODO: import timestamps from filesystem
+            });
     }
 
-    private function scanForFiles(): void
+    /**
+     * @param Folder $folder
+     * @param Filesystem|null $storage
+     * @return Collection<File>
+     */
+    public static function scanForFiles(Folder $folder, ?Filesystem $storage = null): Collection
     {
-        $strorage = $this->folder->storageConfig->getStorage();
-        $files = $strorage->files($this->folder->full_path);
+        $storage ??= $folder->storageConfig->getStorage();
 
-        foreach ($files as $file) {
-            $name = basename($file);
-            File::updateOrCreate([
-                'name' => $name,
-                'folder_id' => $this->folder->id,
-            ], [
-                'size' => $strorage->size($file),
-                'type' => $strorage->mimeType($file),
-            ]);
-        }
+        return collect($storage->files($folder->full_path))
+            ->map(function (string $file) use ($storage, $folder) {
+                $name = basename($file);
+
+                return File::updateOrCreate([
+                    'name' => $name,
+                    'folder_id' => $folder->id,
+                ], [
+                    'storage_config_id' => $folder->storageConfig->id,
+                    'size' => $storage->size($file),
+                    'type' => $storage->mimeType($file),
+                ]);
+            });
     }
 }
