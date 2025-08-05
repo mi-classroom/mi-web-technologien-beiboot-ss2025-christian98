@@ -1,22 +1,45 @@
 <script setup lang="ts">
 import {Button} from "@/components/ui/button";
 import Icon from "@/components/Icon.vue";
-import {File, IptcItem} from "@/types";
+import {File, IptcItem, Resource} from "@/types";
 import FileEntry from "@/components/editor/edit-view/FileEntry.vue";
-import {useMutation} from "@tanstack/vue-query";
+import {useMutation, useQueryClient} from "@tanstack/vue-query";
 import {fetchApi} from "@/lib/fetchApi";
 
-defineProps<{
+const props = defineProps<{
     attributes: Map<string, IptcItem[]>;
     selectedFiles: File[];
+    fileIds: number[];
 }>();
 
 const selectedTag = defineModel<string | null>('selectedTag');
 
+const queryClient = useQueryClient();
+
+const createMutation = useMutation({
+    mutationKey: ['createFileAttribute'],
+    mutationFn: async (data: { file: File, newValue: string[] }) => {
+        return await fetchApi<Resource<IptcItem>>(route('api.files.iptc.store', {file: data.file}), {
+            method: 'POST',
+            body: JSON.stringify({
+                tag: selectedTag.value,
+                value: data.newValue,
+            }),
+        });
+    },
+    onSuccess: (data, variables, context) => {
+        // Handle success, e.g., show a notification
+        queryClient.invalidateQueries({ queryKey: ['files', props.fileIds] });
+    },
+    onError: (error) => {
+        // Handle error, e.g., show an error message
+    }
+});
+
 const updateMutation = useMutation({
     mutationKey: ['saveFileAttribute'],
     mutationFn: async (data: { item: IptcItem, newValue: string[] }) => {
-        return await fetchApi(route('api.iptc.update', {iptc: data.item}), {
+        return await fetchApi<Resource<IptcItem>>(route('api.iptc.update', {iptc: data.item}), {
             method: 'PUT',
             body: JSON.stringify({
                 value: data.newValue,
@@ -25,6 +48,7 @@ const updateMutation = useMutation({
     },
     onSuccess: () => {
         // Handle success, e.g., show a notification
+        queryClient.invalidateQueries({ queryKey: ['files', props.fileIds] });
     },
     onError: (error) => {
         // Handle error, e.g., show an error message
@@ -40,14 +64,20 @@ const destroyMutation = useMutation({
     },
     onSuccess: () => {
         // Handle success, e.g., show a notification
+        queryClient.invalidateQueries({ queryKey: ['files', props.fileIds] });
     },
     onError: (error) => {
         // Handle error, e.g., show an error message
     }
 });
 
-function handleSave(item: IptcItem, newValue: string[]) {
-    updateMutation.mutate({item, newValue});
+function handleSave(item: IptcItem | File, newValue: string[]) {
+    console.log(item, newValue);
+    if ('tag' in item) {
+        updateMutation.mutate({item, newValue});
+    } else {
+        createMutation.mutate({file: item, newValue});
+    }
 }
 
 function handleRemove(item: IptcItem) {
@@ -107,12 +137,8 @@ function handleRemove(item: IptcItem) {
 
     <span class="text-xl mx-2 font-bold">Files</span>
     <ul class="flex flex-col gap-y-1 px-1 divide divide-y divide-mi-dark overflow-auto">
-        <li v-if="selectedTag" v-for="item in attributes.get(selectedTag)" :key="item.id" class="py-4 ml-12">
-            <FileEntry :item @save="handleSave" @remove="handleRemove"/>
+        <li v-if="selectedTag" v-for="file in selectedFiles" :key="file.id" class="py-4 ml-12">
+            <FileEntry :file :selectedTag @save="handleSave" @remove="handleRemove"/>
         </li>
     </ul>
-
-    <div class="mt-8 px-1">
-        <Button class="w-full">Add file</Button>
-    </div>
 </template>

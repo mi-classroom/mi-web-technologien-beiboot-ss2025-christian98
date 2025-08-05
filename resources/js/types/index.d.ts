@@ -51,6 +51,10 @@ export interface SharedData extends PageProps {
 }
 
 // region Models/Resources
+export interface Resource<T> {
+    data: T;
+}
+
 export interface User {
     id: number;
     name: string;

@@ -73,7 +73,7 @@ watch(selectedFiles, (value) => {
                 'opacity-100 scale-x-100': selectedTag,
                 'opacity-0 scale-x-0 pointer-events-none': !selectedTag
             })">
-                <EditView v-model:selectedTag="selectedTag" :attributes :selectedFiles/>
+                <EditView v-model:selectedTag="selectedTag" :attributes :selectedFiles :fileIds/>
             </div>
         </div>
     </AppLayout>
