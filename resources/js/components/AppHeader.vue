@@ -16,11 +16,11 @@ import {Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/comp
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip';
 import UserMenuContent from '@/components/UserMenuContent.vue';
 import {getInitials} from '@/composables/useInitials';
-import type {BreadcrumbItem, NavItem, NavLeafItem} from '@/types';
+import type {BreadcrumbItem, NavItem, NavLeafItem, SharedData} from '@/types';
 import {Link, usePage} from '@inertiajs/vue3';
 import {
     BookOpen, Bug,
-    Cloud,
+    Cloud, Cog,
     Folder,
     FolderGit2,
     HardDrive,
@@ -28,7 +28,7 @@ import {
     Menu,
     NotebookPen,
     Plus,
-    Search
+    Search, Settings
 } from 'lucide-vue-next';
 import {computed, ref} from 'vue';
 import {NavigationMenuSub, PopoverRoot, PopoverTrigger} from "reka-ui";
@@ -41,7 +41,7 @@ const props = withDefaults(defineProps<Props>(), {
     breadcrumbs: () => [],
 });
 
-const page = usePage();
+const page = usePage<SharedData>();
 const auth = computed(() => page.props.auth);
 
 const isCurrentRoute = computed(() => (url: string) => page.url === url);
@@ -67,22 +67,22 @@ const mainNavItems: NavItem[] = [
         href: '/storage',
         icon: HardDrive,
         items: [
+            ...(page.props.storageConfigs?.data ?? []).map((config) => {
+                const iconMap = { // TODO: Move to a separate file (duplicated in ProviderIcon.vue)
+                    'local': HardDrive,
+                    'webdav': Cloud,
+                };
+
+                return ({
+                    title: config.name,
+                    href: route('storage.folders.index', {storageConfig: config,}),
+                    icon: iconMap[config.provider_type] || 'Cloud',
+                });
+            }),
             {
-                title: 'Local Files',
-                href: route('local', undefined, false),
-                icon: Folder,
-            },
-            {
-                title: 'Nextcloud',
-                href: '/storage/nextcloud',
-                icon: Cloud,
-                disabled: true,
-            },
-            {
-                title: 'Connect Cloud-Storage',
-                href: '/settings/storage',
-                icon: Plus,
-                disabled: true,
+                title: 'Configure Cloud-Storage',
+                href: route('settings.storage.index'),
+                icon: Settings,
             },
         ],
     },
@@ -161,7 +161,8 @@ const rightNavItems: NavLeafItem[] = [
 
                 <!-- Desktop Menu -->
                 <div class="hidden h-full lg:flex lg:flex-1">
-                    <NavigationMenu class="ml-10 flex h-full items-stretch" v-model="currentMainNavTrigger" disable-pointer-leave-close disable-hover-trigger>
+                    <NavigationMenu class="ml-10 flex h-full items-stretch" v-model="currentMainNavTrigger"
+                                    disable-pointer-leave-close disable-hover-trigger>
                         <NavigationMenuList class="flex h-full items-stretch space-x-2">
                             <NavigationMenuItem v-for="(item, index) in mainNavItems" :key="index"
                                                 class="relative flex h-full items-center">
@@ -178,7 +179,8 @@ const rightNavItems: NavLeafItem[] = [
                                                     <NavigationMenuLink as-child
                                                                         :class="[navigationMenuTriggerStyle(), activeItemStyles(item.href), 'h-9 min-w-full cursor-pointer px-3 items-start']"
                                                     >
-                                                        <Link class="flex flex-row items-center justify-start" :href="item.href" :disabled="item.disabled">
+                                                        <Link class="flex flex-row !items-center justify-start"
+                                                              :href="item.href" :disabled="item.disabled">
                                                             <component v-if="item.icon" :is="item.icon"
                                                                        class="mr-2 h-4 w-4"/>
                                                             {{ item.overviewTitle ?? 'Overview' }}
@@ -191,7 +193,8 @@ const rightNavItems: NavLeafItem[] = [
                                                     <NavigationMenuLink as-child
                                                                         :class="[navigationMenuTriggerStyle(), activeItemStyles(subItem.href), 'h-9 min-w-full cursor-pointer px-3 items-start']"
                                                     >
-                                                        <Link class="flex flex-row items-center justify-start" :href="subItem.href" :disabled="subItem.disabled">
+                                                        <Link class="flex flex-row !items-center justify-start"
+                                                              :href="subItem.href" :disabled="subItem.disabled">
                                                             <component v-if="subItem.icon" :is="subItem.icon"
                                                                        class="mr-2 h-4 w-4"/>
                                                             {{ subItem.title }}

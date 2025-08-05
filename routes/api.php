@@ -20,5 +20,6 @@ Route::name('api.')->group(function () {
         Route::apiResource('files.iptc', IptcItemController::class)->shallow();
         // TODO endpoint to fetch various files by id (editor), check needed for permissions
         Route::get('/files', [FileController::class, 'indexRoot'])->name('files.index');
+        Route::get('/files/{file}/preview', [FileController::class, 'preview'])->name('files.preview');
     });
 });

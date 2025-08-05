@@ -11,6 +11,7 @@ use App\Models\Folder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileController extends Controller
 {
@@ -75,4 +76,11 @@ class FileController extends Controller
         return response()->json(['message' => 'File deleted successfully.']);
     }
     // endregion
+
+    public function preview(File $file): StreamedResponse
+    {
+        $storageConfig = $file->storageConfig;
+
+        return $storageConfig->getStorage()->download($file->full_path, $file->name);
+    }
 }

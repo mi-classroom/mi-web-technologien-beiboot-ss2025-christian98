@@ -3,25 +3,27 @@
 namespace Tests\Unit\Services\Image;
 
 use App\Services\Image\Image;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ImageTest extends TestCase
 {
-    public function test_should_extract_exif()
+    public function test_should_extract_exif(): void
     {
         $image = Image::fromPath(self::PROPER_IMAGE);
 
         $this->assertMatchesObjectSnapshot($image->exif()->toArray());
     }
 
-    public function test_should_extract_exif_from_storage()
+    public function test_should_extract_exif_from_storage(): void
     {
-        $image = Image::fromDisk('files/2XpCBbU3qJU0PLZ5gHbclyeepX2uEb5A5mQuB9XL.jpg', 'public');
+        $storage = $this->buildTestStorage();
+        $image = Image::fromDisk(basename(self::PROPER_IMAGE), $storage);
 
         $this->assertMatchesObjectSnapshot($image->exif()->toArray());
     }
 
-    public function test_should_extract_iptc()
+    public function test_should_extract_iptc(): void
     {
         $image = Image::fromPath(self::PROPER_IMAGE);
 

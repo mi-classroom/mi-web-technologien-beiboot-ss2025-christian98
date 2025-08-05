@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit\Services\Image\Exif;
+namespace Tests\Unit\Services\Image\Exif;
 
 use App\Services\Image\Exif\ExifReader;
 use Tests\TestCase;

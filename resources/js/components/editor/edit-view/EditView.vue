@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import {Button} from "@/components/ui/button";
 import Icon from "@/components/Icon.vue";
-import {IptcItem} from "@/types";
+import {File, IptcItem} from "@/types";
 import FileEntry from "@/components/editor/edit-view/FileEntry.vue";
 import {useMutation} from "@tanstack/vue-query";
 import {fetchApi} from "@/lib/fetchApi";
 
 defineProps<{
     attributes: Map<string, IptcItem[]>;
+    selectedFiles: File[];
 }>();
 
 const selectedTag = defineModel<string | null>('selectedTag');

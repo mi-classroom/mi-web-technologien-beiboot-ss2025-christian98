@@ -47,6 +47,7 @@ export interface SharedData extends PageProps {
     auth: Auth;
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
+    storageConfigs?: { data: StorageConfig[] };
 }
 
 // region Models/Resources
@@ -63,7 +64,7 @@ export interface User {
 export interface File {
     id: number;
     name: string;
-    path: string;
+    full_path: string;
     size: number;
     type: string;
     size_for_humans: string;
@@ -73,18 +74,20 @@ export interface File {
     };
     created_at: string;
     updated_at: string;
+    storage_config_id: number;
 }
 
 export interface Folder {
     id: number;
     name: string;
-    path: string;
+    full_path: string;
     parent_id?: number;
     parent?: Folder;
     folders?: Folder[];
     files?: File[];
     created_at: string;
     updated_at: string;
+    storage_config_id: number;
 }
 
 export interface IptcItem {
@@ -95,6 +98,42 @@ export interface IptcItem {
     file?: File;
     created_at: string;
     updated_at: string;
+}
+
+export type StorageConfigStatus = 'connected' | 'indexing' | 'error';
+
+export interface StorageConfig {
+    id: number;
+    name: string;
+    status: StorageConfigStatus;
+    last_indexed_at: string | null;
+    storage_used: number | null;
+    user_id: number;
+    root_folder_id: number;
+    provider_type: App.Services.Storage.StorageProvider;
+    provider_options: Record<string, string>;
+    is_editable: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: string | null;
+    created_at: string;
+    updated_at: string;
+
+    folders_count: number;
+    notifications_count: number;
+    read_notifications_count: number;
+    root_folder_count: number;
+    tokens_count: number;
+    unread_notifications_count: number;
+
+    folders: Folder[];
+    rootFolder: Folder;
 }
 
 // endregion

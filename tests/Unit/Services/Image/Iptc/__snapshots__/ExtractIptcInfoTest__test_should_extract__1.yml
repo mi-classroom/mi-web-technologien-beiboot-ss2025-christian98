@@ -1,7 +1,7 @@
 '2#001':
-    - '[BINARY DATA: 3 bytes]'
+    - "\e%G"
 '2#000':
-    - '[BINARY DATA: 2 bytes]'
+    - !!binary AAQ=
 '2#055':
     - '20180328'
 '2#060':

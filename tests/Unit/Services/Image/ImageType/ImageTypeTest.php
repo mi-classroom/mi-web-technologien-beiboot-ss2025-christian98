@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit\Services\Image\ImageType;
+namespace Tests\Unit\Services\Image\ImageType;
 
 use App\Services\Image\ImageType\ImageType;
 use PHPUnit\Framework\Attributes\DataProvider;

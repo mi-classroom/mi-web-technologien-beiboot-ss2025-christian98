@@ -4,16 +4,19 @@ namespace App\Jobs;
 
 use App\Models\File;
 use App\Services\Image\Image;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
 
     public function __construct(public readonly File $file)
     {
@@ -23,19 +26,32 @@ class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
     {
         // Index creation time
         // Index last modified time
-        $this->indexIptcMetadata();
+        self::indexIptcMetadata($this->file);
     }
 
-    private function indexIptcMetadata(): void
+    public static function indexIptcMetadata(File $file, ?Filesystem $storage = null): void
     {
-        $iptcData = Image::fromDisk($this->file->path, 'public')->iptc();
+        $storage ??= $file->folder->storageConfig->getStorage();
+
+        if ($storage instanceof FilesystemAdapter && ! preg_match('/image\/.+/', $storage->mimeType($file->full_path))) {
+            // If the file is not an image, skip downloading it
+            return;
+        }
+
+        $image = Image::fromDisk($file->full_path, $storage);
+
+        if (!$image->type()->supportsIptc()) {
+            return;
+        }
+
+        $iptcData = $image->iptc();
 
         if ($iptcData === null) {
             return;
         }
 
-        $iptcData->collect()->sortKeys()->each(function (array $value, string $tag) {
-            $this->file->iptcItems()->updateOrCreate(
+        $iptcData->collect()->sortKeys()->each(function (array $value, string $tag) use ($file) {
+            $file->iptcItems()->updateOrCreate(
                 ['tag' => $tag],
                 ['value' => $value]
             );

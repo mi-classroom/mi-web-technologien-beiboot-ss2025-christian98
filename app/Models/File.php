@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Jobs\IndexFileJob;
+use App\Services\FullPathGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,24 +17,41 @@ class File extends Model
 
     protected $fillable = [
         'name',
-        'path',
+        'full_path',
         'size',
         'type',
         'folder_id',
+        'storage_config_id',
     ];
 
     protected static function booted(): void
     {
         parent::booted();
 
+        static::creating(function (self $file) {
+            $file->full_path = app(FullPathGenerator::class)->getFullPath($file->folder, $file->name);
+            $file->storage_config_id ??= $file->folder->storage_config_id;
+        });
+
         static::created(function (self $file) {
             Bus::dispatch(new IndexFileJob($file));
+        });
+
+        static::updating(function (self $file) {
+            if ($file->isDirty('folder_id')) {
+                $file->storage_config_id = $file->folder->storage_config_id;
+            }
         });
     }
 
     public function folder(): BelongsTo
     {
         return $this->belongsTo(Folder::class);
+    }
+
+    public function storageConfig(): BelongsTo
+    {
+        return $this->belongsTo(StorageConfig::class);
     }
 
     public function iptcItems(): HasMany
@@ -51,12 +69,12 @@ class File extends Model
                 $bytes /= 1024;
             }
 
-            return round($bytes, 2).' '.$units[$i];
+            return round($bytes, 2) . ' ' . $units[$i];
         })->shouldCache();
     }
 
     public function downloadUrl(): Attribute
     {
-        return Attribute::get(fn () => url('storage/'.$this->path))->shouldCache();
+        return Attribute::get(fn() => url('storage/' . $this->path))->shouldCache();
     }
 }

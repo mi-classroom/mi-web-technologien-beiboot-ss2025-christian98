@@ -30,6 +30,10 @@ class IptcReader extends AbstractReader
         if (isset($info['APP13'])) {
             $iptc = iptcparse($info['APP13']);
 
+            if ($iptc === false) {
+                return null; // No IPTC data found
+            }
+
             return new IptcData($this->sanitizeIptcData($iptc));
         }
 
