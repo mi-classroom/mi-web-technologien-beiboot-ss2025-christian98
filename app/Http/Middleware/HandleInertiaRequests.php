@@ -54,7 +54,7 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-            'storageConfigs' => StorageConfigResource::collection($request->user()?->storageConfigs()->get()),
+            'storageConfigs' => $request->user() ? StorageConfigResource::collection($request->user()->storageConfigs()->get()) : null,
         ];
     }
 }

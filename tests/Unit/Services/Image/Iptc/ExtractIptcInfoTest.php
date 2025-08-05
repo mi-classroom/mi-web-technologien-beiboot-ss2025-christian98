@@ -1,6 +1,6 @@
 <?php
 
-namespace tests\Unit\Services\Image\Iptc;
+namespace Tests\Unit\Services\Image\Iptc;
 
 use App\Services\Image\IPTC\IptcReader;
 use Tests\TestCase;
