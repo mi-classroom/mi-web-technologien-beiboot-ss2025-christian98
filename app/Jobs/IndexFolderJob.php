@@ -4,17 +4,19 @@ namespace App\Jobs;
 
 use App\Models\File;
 use App\Models\Folder;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class IndexFolderJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
 
     public function __construct(
         private readonly Folder $folder,
@@ -40,8 +42,12 @@ class IndexFolderJob implements ShouldQueue
      */
     protected function indexSubFolders(): void
     {
+        if (! $this->batching()) {
+            return;
+        }
+
         foreach ($this->folder->folders as $subfolder) {
-            self::dispatch($subfolder, $this->shouldIndexSubFolders);
+            $this->batch()?->add(new IndexFolderJob($subfolder, $this->shouldIndexSubFolders));
         }
     }
 
@@ -50,8 +56,12 @@ class IndexFolderJob implements ShouldQueue
      */
     private function indexDetectedFiles(): void
     {
+        if (! $this->batching()) {
+            return;
+        }
+
         foreach ($this->folder->files as $file) {
-            IndexFileJob::dispatch($file);
+            $this->batch()?->add(new IndexFileJob($file));
         }
     }
 
@@ -65,6 +75,9 @@ class IndexFolderJob implements ShouldQueue
         $storage ??= $folder->storageConfig->getStorage();
 
         return collect($storage->directories($folder->full_path))
+            ->reject(function (string $dir) {
+                return in_array($dir, ['.', '..', '.DS_Store', '._.DS_Store'], true);
+            })
             ->map(function (string $dir) use ($folder) {;
                 $name = basename($dir);
 
