@@ -23,7 +23,7 @@ class FolderController extends Controller
     public function show(Folder $folder): FolderResource
     {
         $this->authorize('view', $folder);
-        $folder->loadMissing('files', 'folders');
+        $folder->loadMissing('files', 'folders', 'parent');
 
         return new FolderResource($folder);
     }

@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-use App\Jobs\UpdatePathCache;
-use App\Services\Cache\FolderCache;
 use App\Services\FullPathGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
+use function Illuminate\Events\queueable;
 
 class Folder extends Model
 {
@@ -31,14 +29,13 @@ class Folder extends Model
             $folder->full_path = app(FullPathGenerator::class)->getFullPath($folder->parent, $folder->name);
         });
 
-        static::created(function (self $folder) {
-            $folder->loadMissing('folders');
-            app(FolderCache::class)->populateFolderIdCache($folder);
-        });
+        static::created(queueable(function (self $folder) {
+            // Create the folder in the storage
+            $folder->storageConfig->getStorage()->makeDirectory($folder->full_path);
+        }));
 
         static::updated(function (self $folder) {
             if ($folder->wasChanged('name', 'parent_id')) {
-                Bus::dispatch(new UpdatePathCache($folder));
 
                 DB::transaction(function () use ($folder) {
                     // Update the full path for the folder
@@ -59,9 +56,10 @@ class Folder extends Model
             }
         });
 
-        static::deleted(function (self $folder) {
-            app(FolderCache::class)->clearCache($folder);
-        });
+        static::deleted(queueable(function (self $folder) {
+            // Delete the folder from the storage
+            $folder->storageConfig->getStorage()->deleteDirectory($folder->full_path);
+        }));
     }
 
     /**
@@ -109,15 +107,5 @@ class Folder extends Model
 
             return $parents->reverse();
         });
-    }
-
-    /**
-     * @deprecated
-     */
-    public function path(): Attribute
-    {
-        return Attribute::get(function () {
-            return $this->all_parents->push($this)->pluck('name')->implode('/');
-        })->shouldCache();
     }
 }

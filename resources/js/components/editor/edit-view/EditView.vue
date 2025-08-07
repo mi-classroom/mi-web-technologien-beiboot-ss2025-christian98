@@ -5,6 +5,7 @@ import {File, IptcItem, Resource} from "@/types";
 import FileEntry from "@/components/editor/edit-view/FileEntry.vue";
 import {useMutation, useQueryClient} from "@tanstack/vue-query";
 import {fetchApi} from "@/lib/fetchApi";
+import {useTemplateRef} from "vue";
 
 const props = defineProps<{
     attributes: Map<string, IptcItem[]>;
@@ -13,6 +14,8 @@ const props = defineProps<{
 }>();
 
 const selectedTag = defineModel<string | null>('selectedTag');
+
+const fileRefs = useTemplateRef<(InstanceType<typeof FileEntry>)[]>('fileRefs');
 
 const queryClient = useQueryClient();
 
@@ -29,7 +32,7 @@ const createMutation = useMutation({
     },
     onSuccess: (data, variables, context) => {
         // Handle success, e.g., show a notification
-        queryClient.invalidateQueries({ queryKey: ['files', props.fileIds] });
+        queryClient.invalidateQueries({queryKey: ['files', props.fileIds]});
     },
     onError: (error) => {
         // Handle error, e.g., show an error message
@@ -48,7 +51,7 @@ const updateMutation = useMutation({
     },
     onSuccess: () => {
         // Handle success, e.g., show a notification
-        queryClient.invalidateQueries({ queryKey: ['files', props.fileIds] });
+        queryClient.invalidateQueries({queryKey: ['files', props.fileIds]});
     },
     onError: (error) => {
         // Handle error, e.g., show an error message
@@ -64,7 +67,7 @@ const destroyMutation = useMutation({
     },
     onSuccess: () => {
         // Handle success, e.g., show a notification
-        queryClient.invalidateQueries({ queryKey: ['files', props.fileIds] });
+        queryClient.invalidateQueries({queryKey: ['files', props.fileIds]});
     },
     onError: (error) => {
         // Handle error, e.g., show an error message
@@ -75,13 +78,20 @@ function handleSave(item: IptcItem | File, newValue: string[]) {
     console.log(item, newValue);
     if ('tag' in item) {
         updateMutation.mutate({item, newValue});
-    } else {
+    } else if (newValue.length > 0) {
+        // If it's a File and newValue is not empty, create a new Iptc
         createMutation.mutate({file: item, newValue});
     }
 }
 
 function handleRemove(item: IptcItem) {
     destroyMutation.mutate(item);
+}
+
+function handleSaveAll() {
+    fileRefs.value?.forEach(fileEntry => {
+        fileEntry.save();
+    });
 }
 
 </script>
@@ -93,11 +103,11 @@ function handleRemove(item: IptcItem) {
             <p class="text-xs text-gray-600 dark:text-gray-300">Edit attributes of selected files</p>
         </div>
         <div class="flex gap-1">
-            <Button title="Suggestions">
+            <Button title="Suggestions" disabled>
                 <Icon name="Lightbulb" class="size-4"/>
                 <span>Suggestions</span>
             </Button>
-            <Button title="Save Changes">
+            <Button title="Save Changes" @click="handleSaveAll">
                 <Icon name="Save" class="size-4"/>
                 <span>Save all</span>
             </Button>
@@ -137,8 +147,7 @@ function handleRemove(item: IptcItem) {
 
     <span class="text-xl mx-2 font-bold">Files</span>
     <ul class="flex flex-col gap-y-1 px-1 divide divide-y divide-mi-dark overflow-auto">
-        <li v-if="selectedTag" v-for="file in selectedFiles" :key="file.id" class="py-4 ml-12">
-            <FileEntry :file :selectedTag @save="handleSave" @remove="handleRemove"/>
-        </li>
+        <FileEntry v-if="selectedTag" v-for="file in selectedFiles" :key="file.id" ref="fileRefs"
+                   :file :selectedTag @save="handleSave" @remove="handleRemove"/>
     </ul>
 </template>

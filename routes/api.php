@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\FolderController;
 use App\Http\Controllers\Api\FolderFolderController;
 use App\Http\Controllers\Api\IptcItemController;
+use App\Http\Controllers\Api\StorageConfigController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,7 @@ Route::name('api.')->group(function () {
     })->middleware('auth:sanctum');
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::apiResource('storage-config', StorageConfigController::class)->only(['index', 'show']);
         Route::apiResource('folders', FolderController::class)->only(['index', 'show', 'update', 'destroy']);
         Route::get('/folders/{folder}/folders', [FolderFolderController::class, 'index'])->name('folders.folders.index');
         Route::post('/folders/{folder}/folders', [FolderFolderController::class, 'store'])->name('folders.folders.store');

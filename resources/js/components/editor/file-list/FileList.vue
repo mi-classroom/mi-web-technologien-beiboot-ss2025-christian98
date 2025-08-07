@@ -3,20 +3,18 @@ import {Button} from "@/components/ui/button";
 import Icon from "@/components/Icon.vue";
 import FileListItem from "@/components/editor/file-list/FileListItem.vue";
 import {File} from "@/types";
+import {Dialog, DialogTrigger} from "@/components/ui/dialog";
+import AddFilesDialogContent from "@/components/editor/file-list/AddFilesDialogContent.vue";
 
-const props = defineProps<{
+defineProps<{
     files?: File[];
 }>();
 
 const selectedFileIds = defineModel<number[]>('selectedFileIds');
 
-function selectAllFiles() {
-    selectedFileIds.value = props.files?.map(file => file.id) || [];
-}
-
-function deselectAllFiles() {
-    selectedFileIds.value = [];
-}
+defineEmits<{
+    (e: 'selected', files: File[]): void;
+}>();
 </script>
 
 <template>
@@ -27,9 +25,15 @@ function deselectAllFiles() {
         </div>
 
         <div class="flex gap-1">
-            <Button size="icon" title="Add Files">
-                <Icon name="Plus" class="size-4"/>
-            </Button>
+            <Dialog>
+                <DialogTrigger as-child>
+                    <Button size="icon" title="Add Files">
+                        <Icon name="Plus" class="size-4"/>
+                    </Button>
+                </DialogTrigger>
+                <AddFilesDialogContent @selected="f => $emit('selected', f)"/>
+            </Dialog>
+
             <Button size="icon" title="Filter Files">
                 <Icon name="Filter" class="size-4"/>
             </Button>

@@ -12,7 +12,10 @@ class FolderFolderController extends Controller
 {
     public function store(CreateFolderRequest $request, StorageConfig $storageConfig, Folder $folder): RedirectResponse
     {
-        $newFolder = $folder->folders()->create($request->validated());
+        $newFolder = $folder->folders()->create([
+            ...$request->validated(),
+            'storage_config_id' => $storageConfig->id,
+        ]);
 
         $folder->touch();
 

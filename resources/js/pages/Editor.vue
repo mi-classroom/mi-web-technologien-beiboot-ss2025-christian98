@@ -10,7 +10,7 @@ import EditView from "@/components/editor/edit-view/EditView.vue";
 import {cn} from "@/lib/utils";
 import FileList from "@/components/editor/file-list/FileList.vue";
 
-const fileIds = ref<number[]>([3, 5, 15]);
+const fileIds = ref<number[]>([]);
 const {isPending, isFetching, isError, data, error} = useQuery({
     queryKey: ['files', fileIds],
     queryFn: () => fetchApi<{ data: File[] }>(route('api.files.index', {ids: fileIds.value})),
@@ -64,7 +64,7 @@ watch(selectedFiles, (value) => {
                 'grid-cols-[1fr_1fr_0fr]': !selectedTag
             })">
             <div class="grid-item">
-                <FileList :files v-model:selectedFileIds="selectedFileIds"/>
+                <FileList :files v-model:selectedFileIds="selectedFileIds" @selected="f => fileIds.push(...f.map(fi => fi.id))"/>
             </div>
             <div class="grid-item">
                 <AttributeList v-model:selectedTag="selectedTag" v-model:selectedFileIds="selectedFileIds" :allFileIds="fileIds" :selectedFiles :attributes/>
