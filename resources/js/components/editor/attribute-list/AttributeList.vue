@@ -3,16 +3,28 @@ import AttributeListItem from "@/components/editor/attribute-list/AttributeListI
 import {Button} from "@/components/ui/button";
 import Icon from "@/components/Icon.vue";
 import {computed} from "vue";
-import {IptcItem, File} from "@/types";
+import {File, IptcTagDefinition} from "@/types";
 import {SquareMousePointer, FileX} from "lucide-vue-next";
 
 const props = defineProps<{
     selectedFiles: File[];
-    attributes: Map<string, IptcItem[]>;
+    attributes: Map<number, IptcTagDefinition>;
     allFileIds: number[];
 }>();
 
-const selectedTag = defineModel<string | null>('selectedTag');
+const definitionsForSelectedFiles = computed(() => {
+    const definitions = new Map<number, IptcTagDefinition>();
+    props.selectedFiles.forEach(file => {
+        file.meta_data?.iptc_items?.forEach(item => {
+            if (!definitions.has(item.tag.id)) {
+                definitions.set(item.tag.id, item.tag);
+            }
+        });
+    });
+    return definitions;
+});
+
+const selectedTag = defineModel<number | null>('selectedTag');
 const selectedFileIds = defineModel<number[]>('selectedFileIds');
 
 const areFilesSelected = computed(() => props.selectedFiles.length > 0);
@@ -37,10 +49,10 @@ const areFilesSelected = computed(() => props.selectedFiles.length > 0);
         </div>
     </div>
     <ul v-if="areFilesSelected" role="list" class="flex flex-col divide-y divide-gray-100 overflow-auto">
-        <li v-for="[tag, items] in attributes" :key="tag" @click="selectedTag = tag"
-            :aria-selected="tag === selectedTag"
+        <li v-for="[, definition] in definitionsForSelectedFiles" :key="definition.id" @click="selectedTag = definition.id"
+            :aria-selected="definition.id === selectedTag"
             class="relative flex items-center space-x-4 rounded aria-selected:bg-mi-warm-medium/40 hover:bg-mi-warm-medium/50">
-            <AttributeListItem :tag="tag" :items="items" :totalFiles="selectedFiles.length"/>
+            <AttributeListItem :tag-definition="definition" :selectedFiles="selectedFiles"/>
         </li>
     </ul>
     <div v-else class="text-center my-auto">

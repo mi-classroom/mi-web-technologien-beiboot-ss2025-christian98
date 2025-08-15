@@ -34,7 +34,7 @@ class FileController extends Controller
 
         return Inertia::render('File', [
             'storageConfig' => new StorageConfigResource($storageConfig),
-            'file' => new FileResource($file->loadMissing('iptcItems'))->withMetaData(),
+            'file' => new FileResource($file->loadMissing(['iptcItems', 'iptcItems.tagDefinition']))->withMetaData(),
             'breadcrumbs' => BreadcrumbData::collect($folderBreadcrumbs->add([
                 'name' => $file->name,
                 'url' => route('storage.files.show', ['file' => $file, 'storageConfig' => $storageConfig]),

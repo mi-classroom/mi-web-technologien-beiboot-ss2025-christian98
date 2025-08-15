@@ -41,7 +41,7 @@ class FileController extends Controller
     {
         $ids = $request->query('ids', []);
 
-        $files = File::query()->whereIn('id', $ids)->with('iptcItems')->get();
+        $files = File::query()->whereIn('id', $ids)->with(['iptcItems', 'iptcItems.tagDefinition'])->get();
 
         foreach ($files as $file) {
             $this->authorize('view', $file);

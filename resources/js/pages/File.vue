@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {Head, router} from "@inertiajs/vue3";
+import {Head} from "@inertiajs/vue3";
 import AppLayout from "@/layouts/AppLayout.vue";
 import {computed} from "vue";
-import {Folder, File, type StorageConfig} from "@/types";
+import {File, type StorageConfig} from "@/types";
 import {Button} from "@/components/ui/button";
 import Icon from "@/components/Icon.vue";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
@@ -10,7 +10,6 @@ import {Collapsible, CollapsibleContent, CollapsibleTrigger} from "@/components/
 import FileInfoBlock from "@/components/file/FileInfoBlock.vue";
 import FileInfoAttribute from "@/components/file/FileInfoAttribute.vue";
 import DeleteFile from "@/components/file/DeleteFile.vue";
-import {trans} from "laravel-vue-i18n";
 import IptcMetadataContextMenu from "@/components/file/IptcMetadataContextMenu.vue";
 import FilePreview from "@/components/file/FilePreview.vue";
 
@@ -128,7 +127,7 @@ const breadcrumbs = computed(() => {
                                     <FileInfoBlock v-if="props.file.data.meta_data?.iptc_items">
                                         <FileInfoAttribute
                                             v-for="iptcItem in props.file.data.meta_data.iptc_items"
-                                            :label="trans(`iptc_tag.${iptcItem.tag}`)">
+                                            :label="iptcItem.tag.name">
                                             <template #actions>
                                                 <IptcMetadataContextMenu :iptcItem="iptcItem"/>
                                             </template>
