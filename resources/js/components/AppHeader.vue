@@ -71,6 +71,7 @@ const mainNavItems: NavItem[] = [
                 const iconMap = { // TODO: Move to a separate file (duplicated in ProviderIcon.vue)
                     'local': HardDrive,
                     'webdav': Cloud,
+                    'dropbox': Cloud,
                 };
 
                 return ({
