@@ -34,7 +34,10 @@ class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
     {
         $storage ??= $file->folder->storageConfig->getStorage();
 
-        if ($storage instanceof FilesystemAdapter && ! preg_match('/image\/.+/', $storage->mimeType($file->full_path))) {
+        if (
+            $storage instanceof FilesystemAdapter
+            && ! preg_match('/image\/.+/', rescue(fn () => $storage->mimeType($file->full_path), 'application/octet-stream'))
+        ) {
             // If the file is not an image, skip downloading it
             return;
         }

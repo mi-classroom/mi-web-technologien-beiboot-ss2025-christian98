@@ -11,8 +11,6 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 class IndexFolderJob implements ShouldQueue
 {
@@ -65,20 +63,15 @@ class IndexFolderJob implements ShouldQueue
         }
     }
 
-    /**
-     * @param Folder $folder
-     * @param Filesystem|null $storage
-     * @return Collection<Folder>
-     */
-    public static function scanForSubFolders(Folder $folder, ?Filesystem $storage = null): Collection
+    public static function scanForSubFolders(Folder $folder, ?Filesystem $storage = null): void
     {
         $storage ??= $folder->storageConfig->getStorage();
 
-        return collect($storage->directories($folder->full_path))
+        collect($storage->directories($folder->full_path))
             ->reject(function (string $dir) {
                 return in_array($dir, ['.', '..', '.DS_Store', '._.DS_Store'], true);
             })
-            ->map(function (string $dir) use ($folder) {;
+            ->each(function (string $dir) use ($folder) {
                 $name = basename($dir);
 
                 return Folder::updateOrCreate([
@@ -89,26 +82,21 @@ class IndexFolderJob implements ShouldQueue
             });
     }
 
-    /**
-     * @param Folder $folder
-     * @param Filesystem|null $storage
-     * @return Collection<File>
-     */
-    public static function scanForFiles(Folder $folder, ?Filesystem $storage = null): Collection
+    public static function scanForFiles(Folder $folder, ?Filesystem $storage = null): void
     {
         $storage ??= $folder->storageConfig->getStorage();
 
-        return collect($storage->files($folder->full_path))
-            ->map(function (string $file) use ($storage, $folder) {
+        collect($storage->files($folder->full_path))
+            ->each(function (string $file) use ($storage, $folder) {
                 $name = basename($file);
 
-                return File::updateOrCreate([
+                File::updateOrCreate([
                     'name' => $name,
                     'folder_id' => $folder->id,
                 ], [
                     'storage_config_id' => $folder->storageConfig->id,
-                    'size' => $storage->size($file),
-                    'type' => $storage->mimeType($file),
+                    'size' => rescue(fn () => $storage->size($file), 0),
+                    'type' => rescue(fn () => $storage->mimeType($file), 'application/octet-stream'),
                 ]);
             });
     }
