@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\File;
+use App\Models\IptcTagDefinition;
 use App\Services\Image\Image;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -50,12 +51,16 @@ class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
             return;
         }
 
-        $iptcData->collect()->sortKeys()->each(function (array $value, string $tag) use ($file) {
-            $file->iptcItems()->updateOrCreate(
-                ['tag' => $tag],
-                ['value' => $value]
-            );
-        });
+        $iptcData->collect()
+            ->sortKeys()
+            ->each(function (array $value, string $tag) use ($file) {
+                $dbTag = IptcTagDefinition::findByTag($tag, $file->storageConfig->user);
+
+                $file->iptcItems()->updateOrCreate(
+                    ['iptc_tag_definition_id' => $dbTag->id],
+                    ['value' => $value]
+                );
+            });
     }
 
     public function uniqueId(): string

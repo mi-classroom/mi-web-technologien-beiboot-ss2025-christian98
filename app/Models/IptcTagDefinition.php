@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class IptcTagDefinition extends Model
 {
@@ -30,5 +32,32 @@ class IptcTagDefinition extends Model
             'spec' => 'array',
             'is_value_editable' => 'boolean',
         ];
+    }
+
+    public static function findByTag(string $tag, ?User $user = null): IptcTagDefinition
+    {
+        $userId = $user?->id ?? Auth::id();
+
+        return self::where('tag', $tag)
+            ->where(function (Builder $query) use ($userId) {
+                $query->where('user_id', $userId)->orWhereNull('user_id');
+            })
+            ->first()
+            ?? self::updateOrCreate([
+                'tag' => $tag,
+                'user_id' => $userId
+            ], [
+                'name' => __('iptc_tag.' . $tag) ?? "Unknown Tag - $tag",
+                'description' => null,
+                'spec' => [
+                    'data_type' => 'string',
+                    'min_length' => 0,
+                    'max_length' => 255,
+                    'multiple' => true,
+                    'required' => false,
+                    'enum_values' => null,
+                ],
+                'is_value_editable' => true,
+            ]);
     }
 }
