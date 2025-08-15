@@ -130,7 +130,7 @@ export interface StorageConfig {
     name: string;
     status: StorageConfigStatus;
     last_indexed_at: string | null;
-    storage_used: number | null;
+    storage_used: number;
     user_id: number;
     root_folder_id: number;
     provider_type: App.Services.Storage.StorageProvider;
