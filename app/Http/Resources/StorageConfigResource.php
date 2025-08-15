@@ -17,7 +17,7 @@ class StorageConfigResource extends JsonResource
             'name' => $this->name,
             'status' => $this->status,
             'last_indexed_at' => $this->last_indexed_at,
-            'storage_used' => '5.2 GB', // TODO: Calculate actual storage used
+            'storage_used' => $this->size,
             'provider_type' => $this->provider_type,
             'provider_options' => $this->provider_options,
             'is_editable' => $this->is_editable,

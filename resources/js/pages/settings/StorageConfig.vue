@@ -9,6 +9,7 @@ import {RefreshCw, Settings, Trash2} from 'lucide-vue-next';
 import Icon from "@/components/Icon.vue";
 import ProviderIcon from "@/components/pages/settings/index/ProviderIcon.vue";
 import {Button} from "@/components/ui/button";
+import StorageSize from "@/components/pages/settings/index/StorageSize.vue";
 
 interface Props {
     configs: { data: StorageConfig[] }
@@ -106,7 +107,9 @@ function disconnect(provider: StorageConfig) {
                                     </span>
                                 </div>
                                 <div class="flex items-center justify-between gap-4 text-sm text-gray-600">
-                                    <span class="font-medium text-gray-700">{{ provider.storage_used }} used</span>
+                                    <span class="font-medium text-gray-700">
+                                        <StorageSize :size="provider.storage_used"/>
+                                    </span>
                                     <span class="text-gray-500 text-xs">
                                         Last indexed: {{
                                             provider.last_indexed_at ? formatDate(new Date(provider.last_indexed_at)) : 'Never'
