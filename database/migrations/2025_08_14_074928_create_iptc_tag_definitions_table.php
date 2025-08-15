@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\IptcTagDefinition;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Arr;
@@ -16,7 +17,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->json('spec');
             $table->boolean('is_value_editable');
-            $table->foreignId('user_id')->nullable();
+            $table->foreignIdFor(User::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
 
