@@ -13,7 +13,7 @@ return [
             "required" => true,
             "enum_values" => null
         ],
-        "value_editable" => false
+        "is_value_editable" => false
     ],
     [
         "name" => "ObjectTypeReference",
@@ -27,7 +27,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ObjectAttributeReference",
@@ -41,7 +41,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ObjectName",
@@ -55,7 +55,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "EditStatus",
@@ -69,7 +69,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "EditorialUpdate",
@@ -83,7 +83,7 @@ return [
             "required" => false,
             "enum_values" => ["01"]
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Urgency",
@@ -97,7 +97,7 @@ return [
             "required" => false,
             "enum_values" => ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "SubjectReference",
@@ -111,7 +111,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Category",
@@ -125,7 +125,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "SupplementalCategories",
@@ -139,7 +139,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "FixtureIdentifier",
@@ -153,7 +153,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Keywords",
@@ -167,7 +167,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ContentLocationCode",
@@ -181,7 +181,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ContentLocationName",
@@ -195,7 +195,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ReleaseDate",
@@ -209,7 +209,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ReleaseTime",
@@ -223,7 +223,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ExpirationDate",
@@ -237,7 +237,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ExpirationTime",
@@ -251,7 +251,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "SpecialInstructions",
@@ -265,7 +265,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ActionAdvised",
@@ -279,7 +279,7 @@ return [
             "required" => false,
             "enum_values" => ["01", "02", "03", "04"]
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ReferenceService",
@@ -293,7 +293,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ReferenceDate",
@@ -307,7 +307,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ReferenceNumber",
@@ -321,7 +321,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "DateCreated",
@@ -335,7 +335,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "TimeCreated",
@@ -349,7 +349,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "DigitalCreationDate",
@@ -363,7 +363,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "DigitalCreationTime",
@@ -377,7 +377,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "OriginatingProgram",
@@ -391,7 +391,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ProgramVersion",
@@ -405,7 +405,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ObjectCycle",
@@ -419,7 +419,7 @@ return [
             "required" => false,
             "enum_values" => ["a", "b", "p"]
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "By-line",
@@ -433,7 +433,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "By-lineTitle",
@@ -447,7 +447,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "City",
@@ -461,7 +461,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Sub-location",
@@ -475,7 +475,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Province-State",
@@ -489,7 +489,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Country-PrimaryLocationCode",
@@ -503,7 +503,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Country-PrimaryLocationName",
@@ -517,7 +517,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "OriginalTransmissionReference",
@@ -531,7 +531,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Headline",
@@ -545,7 +545,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Credit",
@@ -559,7 +559,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Source",
@@ -573,7 +573,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "CopyrightNotice",
@@ -587,7 +587,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Contact",
@@ -601,7 +601,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Caption-Abstract",
@@ -615,7 +615,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "LocalCaption",
@@ -629,7 +629,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "Writer-Editor",
@@ -643,7 +643,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "RasterizedCaption",
@@ -657,7 +657,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ImageType",
@@ -671,7 +671,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ImageOrientation",
@@ -685,7 +685,7 @@ return [
             "required" => false,
             "enum_values" => ["L", "P", "S"]
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "LanguageIdentifier",
@@ -699,7 +699,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "AudioType",
@@ -713,7 +713,7 @@ return [
             "required" => false,
             "enum_values" => ["0T", "1A", "1C", "1M", "1Q", "1R", "1S", "1V", "1W", "2A", "2C", "2M", "2Q", "2R", "2S", "2V", "2W"]
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "AudioSamplingRate",
@@ -727,7 +727,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "AudioSamplingResolution",
@@ -741,7 +741,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "AudioDuration",
@@ -755,7 +755,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "AudioOutcue",
@@ -769,7 +769,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "JobID",
@@ -783,7 +783,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "MasterDocumentID",
@@ -797,7 +797,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ShortDocumentID",
@@ -811,7 +811,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "UniqueDocumentID",
@@ -825,7 +825,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "OwnerID",
@@ -839,7 +839,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ObjectPreviewFileFormat",
@@ -853,7 +853,7 @@ return [
             "required" => false,
             "enum_values" => ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29"]
         ],
-        "value_editable" => false
+        "is_value_editable" => false
     ],
     [
         "name" => "ObjectPreviewFileVersion",
@@ -867,7 +867,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => false
+        "is_value_editable" => false
     ],
     [
         "name" => "ObjectPreviewData",
@@ -881,7 +881,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => false
+        "is_value_editable" => false
     ],
     [
         "name" => "Prefs",
@@ -895,7 +895,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ClassifyState",
@@ -909,7 +909,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "SimilarityIndex",
@@ -923,7 +923,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "DocumentNotes",
@@ -937,7 +937,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "DocumentHistory",
@@ -951,7 +951,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "ExifCameraInfo",
@@ -965,7 +965,7 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ],
     [
         "name" => "CatalogSets",
@@ -979,6 +979,6 @@ return [
             "required" => false,
             "enum_values" => null
         ],
-        "value_editable" => true
+        "is_value_editable" => true
     ]
 ];
