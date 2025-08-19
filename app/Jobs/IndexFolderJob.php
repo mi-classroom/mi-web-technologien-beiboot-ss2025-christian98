@@ -50,12 +50,16 @@ class IndexFolderJob implements ShouldQueue
      */
     protected function indexSubFolders(): void
     {
-        if ($this->batch() || !$this->batching()) {
+        if ($this->batch() && $this->batching()) {
+            foreach ($this->folder->folders as $subfolder) {
+                $this->batch()?->add(new IndexFolderJob($subfolder, $this->shouldIndexSubFolders));
+            }
+
             return;
         }
 
         foreach ($this->folder->folders as $subfolder) {
-            $this->batch()?->add(new IndexFolderJob($subfolder, $this->shouldIndexSubFolders));
+            Bus::dispatch(new IndexFolderJob($subfolder, $this->shouldIndexSubFolders));
         }
     }
 
