@@ -10,7 +10,6 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Contracts\Queue\ShouldBeUniqueUntilProcessing;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -33,16 +32,14 @@ class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
     public static function indexIptcMetadata(File $file, ?Filesystem $storage = null): void
     {
         $storage ??= $file->folder->storageConfig->getStorage();
+        $storageFile = $storage->file($file->full_path);
 
-        if (
-            $storage instanceof FilesystemAdapter
-            && ! preg_match('/image\/.+/', rescue(fn () => $storage->mimeType($file->full_path), 'application/octet-stream'))
-        ) {
+        if (! preg_match('/image\/.+/', $storageFile?->mimeType() ?? 'application/octet-stream')) {
             // If the file is not an image, skip downloading it
             return;
         }
 
-        $image = Image::fromDisk($file->full_path, $storage);
+        $image = Image::fromProvider($file->full_path, $storage);
 
         if (!$image->type()->supportsIptc()) {
             return;

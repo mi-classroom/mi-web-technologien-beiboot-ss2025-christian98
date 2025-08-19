@@ -9,8 +9,10 @@ use App\Services\Image\ImageType\ImageTypeDetector;
 use App\Services\Image\IPTC\IptcData;
 use App\Services\Image\IPTC\IptcReader;
 use App\Services\Image\IPTC\IptcWriter;
+use App\Services\Storage\Provider\Provider;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
+use RuntimeException;
 
 class Image
 {
@@ -28,6 +30,21 @@ class Image
             TempFile::withFilename($filename)
                 ->write($content)
                 ->setLastModified($disk->lastModified($filename))
+        );
+    }
+
+    public static function fromProvider(string $filename, Provider $provider): static
+    {
+        $file = $provider->file($filename);
+
+        if ($file === null) {
+            throw new RuntimeException("File not found: {$filename}");
+        }
+
+        return new self(
+            TempFile::withFilename($filename)
+                ->write($file->content())
+                ->setLastModified($file->lastModified())
         );
     }
 

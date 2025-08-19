@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\Storage\Provider\Provider;
 use App\Services\Storage\StorageProvider;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -35,7 +35,7 @@ class StorageConfig extends Model
         ];
     }
 
-    public function getStorage(): Filesystem
+    public function getStorage(): Provider
     {
         return $this->provider_type->getBackend($this);
     }
