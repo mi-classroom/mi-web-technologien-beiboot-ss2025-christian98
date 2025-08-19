@@ -58,7 +58,7 @@ class File extends Model implements Responsable
 
     public function iptcItems(): HasMany
     {
-        return $this->hasMany(IptcItem::class)->orderBy('tag');
+        return $this->hasMany(IptcItem::class);
     }
 
     public function sizeForHumans(): Attribute
