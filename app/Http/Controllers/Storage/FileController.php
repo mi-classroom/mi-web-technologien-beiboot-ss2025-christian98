@@ -12,11 +12,9 @@ use App\Models\Folder;
 use App\Models\StorageConfig;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileController extends Controller
 {
@@ -42,9 +40,9 @@ class FileController extends Controller
         ]);
     }
 
-    public function download(StorageConfig $storageConfig, File $file): StreamedResponse
+    public function download(StorageConfig $storageConfig, File $file): File
     {
-        return $storageConfig->getStorage()->download($file->full_path, $file->name);
+        return $file;
     }
 
     public function reIndex(StorageConfig $storageConfig, File $file): RedirectResponse
