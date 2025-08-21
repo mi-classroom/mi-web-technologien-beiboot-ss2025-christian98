@@ -11,7 +11,6 @@ use App\Models\Folder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FileController extends Controller
 {
@@ -41,7 +40,7 @@ class FileController extends Controller
     {
         $ids = $request->query('ids', []);
 
-        $files = File::query()->whereIn('id', $ids)->with('iptcItems')->get();
+        $files = File::query()->whereIn('id', $ids)->with(['iptcItems', 'iptcItems.tagDefinition'])->get();
 
         foreach ($files as $file) {
             $this->authorize('view', $file);
@@ -77,10 +76,8 @@ class FileController extends Controller
     }
     // endregion
 
-    public function preview(File $file): StreamedResponse
+    public function preview(File $file): File
     {
-        $storageConfig = $file->storageConfig;
-
-        return $storageConfig->getStorage()->download($file->full_path, $file->name);
+        return $file;
     }
 }

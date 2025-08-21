@@ -35,7 +35,7 @@ function removeIptcTag() {
         <DialogContent>
             <form class="space-y-6" @submit="removeIptcTag">
                 <DialogHeader class="space-y-3">
-                    <DialogTitle>Are you sure you want to delete {{ props.iptcItem.tag }}?</DialogTitle>
+                    <DialogTitle>Are you sure you want to delete {{ props.iptcItem.tag.tag }}?</DialogTitle>
                 </DialogHeader>
 
                 <DialogFooter class="gap-2">
@@ -44,7 +44,7 @@ function removeIptcTag() {
                     </DialogClose>
 
                     <Button variant="destructive">
-                        <button type="submit">Delete {{ props.iptcItem.tag }}</button>
+                        <button type="submit">Delete {{ props.iptcItem.tag.tag }}</button>
                     </Button>
                 </DialogFooter>
             </form>

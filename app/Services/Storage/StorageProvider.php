@@ -3,8 +3,10 @@
 namespace App\Services\Storage;
 
 use App\Models\StorageConfig;
-use Illuminate\Contracts\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Storage;
+use App\Services\Storage\Provider\Dropbox\DropboxProvider;
+use App\Services\Storage\Provider\Local\LocalProvider;
+use App\Services\Storage\Provider\Provider;
+use App\Services\Storage\Provider\Webdav\WebdavProvider;
 
 enum StorageProvider: string
 {
@@ -13,24 +15,17 @@ enum StorageProvider: string
     // case SFTP = 'sftp';
     // case FTP = 'ftp';
     case WebDAV = 'webdav';
+    case Dropbox = 'dropbox';
 
-    public function getBackend(StorageConfig $storageConfig): Filesystem
+    public function getBackend(StorageConfig $storageConfig): Provider
     {
         return match ($this) {
-            self::Local => Storage::build([
-                'driver' => 'local',
-                'root' => storage_path('app/private' . DIRECTORY_SEPARATOR . 'users' . DIRECTORY_SEPARATOR . $storageConfig->user_id . DIRECTORY_SEPARATOR . 'files'),
-            ]),
+            self::Local => app(LocalProvider::class, ['config' => $storageConfig]),
             // self::S3 => app(S3StorageBackend::class, $parameters),
             // self::SFTP => app(SFTPStorageBackend::class, $parameters),
             // self::FTP => app(FTPStorageBackend::class, $parameters),
-            self::WebDAV => Storage::build([
-                'driver' => 'webdav',
-                'baseUri' => $storageConfig->provider_options['base_uri'] ?? '',
-                'userName' => $storageConfig->provider_options['username'] ?? '',
-                'password' => $storageConfig->provider_options['password'] ?? '',
-                'pathPrefix' => $storageConfig->provider_options['path_prefix'] ?? parse_url($storageConfig->provider_options['base_uri'], PHP_URL_PATH) ?? '',
-            ]),
+            self::WebDAV => app(WebdavProvider::class, ['config' => $storageConfig]),
+            self::Dropbox => app(DropboxProvider::class, ['config' => $storageConfig]),
         };
     }
 }

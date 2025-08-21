@@ -13,7 +13,7 @@ class IptcItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'tag' => $this->tag,
+            'tag' => new IptcTagDefinitionResource($this->whenLoaded('tagDefinition')),
             'value' => $this->value,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

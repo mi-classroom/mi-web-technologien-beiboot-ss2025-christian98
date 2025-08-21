@@ -39,7 +39,7 @@ function closeDialog() {
             <form @submit.prevent="updateMeta" class="grid gap-4">
                 <DialogHeader>
                     <DialogTitle>
-                        Edit IPTC-Meta: <span class="italic">{{ trans(`iptc_tag.${props.iptcItem.tag}`) }}</span>
+                        Edit IPTC-Meta: <span class="italic">{{ props.iptcItem.tag.name }}</span>
                     </DialogTitle>
                 </DialogHeader>
                 <div class="mx-2">

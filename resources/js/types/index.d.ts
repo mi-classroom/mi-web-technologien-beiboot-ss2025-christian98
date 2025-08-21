@@ -96,10 +96,29 @@ export interface Folder {
 
 export interface IptcItem {
     id: number;
-    tag: string;
+    tag: IptcTagDefinition;
     value: string[];
     file_id: number;
     file?: File;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface IptcTagDefinition {
+    id: number;
+    name: string;
+    tag: string;
+    description: string | null;
+    spec: {
+        data_type: "string" | "boolean" | "enum" | "binary",
+        min_length: number,
+        max_length: number,
+        multiple: boolean,
+        required: boolean,
+        enum_values: string[] | number[] | null,
+    },
+    value_editable: boolean,
+    iptcItems?: IptcItem[];
     created_at: string;
     updated_at: string;
 }
@@ -111,7 +130,7 @@ export interface StorageConfig {
     name: string;
     status: StorageConfigStatus;
     last_indexed_at: string | null;
-    storage_used: number | null;
+    storage_used: number;
     user_id: number;
     root_folder_id: number;
     provider_type: App.Services.Storage.StorageProvider;

@@ -13,7 +13,7 @@ class IptcItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'tag',
+        'iptc_tag_definition_id',
         'value',
         'file_id',
     ];
@@ -45,6 +45,14 @@ class IptcItem extends Model
     public function file(): BelongsTo
     {
         return $this->belongsTo(File::class);
+    }
+
+    /**
+     * @return BelongsTo<IptcTagDefinition, self>
+     */
+    public function tagDefinition(): BelongsTo
+    {
+        return $this->belongsTo(IptcTagDefinition::class, 'iptc_tag_definition_id');
     }
 
     public function tagAsEnum(): Attribute

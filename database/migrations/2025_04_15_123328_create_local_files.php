@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignIdFor(Folder::class, 'parent_id')->nullable()
                 ->constrained()->references('id')->on('folders')
                 ->cascadeOnDelete();
-            $table->foreignIdFor(User::class, 'user_id')->nullable();
+            $table->string('full_path');
             $table->timestamps();
         });
 

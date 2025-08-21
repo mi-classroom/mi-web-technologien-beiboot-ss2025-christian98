@@ -9,7 +9,7 @@ import {DropdownMenuPortal} from "reka-ui";
 
 const props = defineProps<{
     file: File;
-    selectedTag: string;
+    selectedTag: number;
 }>();
 
 const emit = defineEmits<{
@@ -18,7 +18,7 @@ const emit = defineEmits<{
 }>();
 
 const item = computed(() => {
-    return props.file.meta_data?.iptc_items?.find(i => i.tag === props.selectedTag);
+    return props.file.meta_data?.iptc_items?.find(i => i.tag.id === props.selectedTag);
 });
 
 const newValue = ref<string[]>(item.value ? [...item.value.value] : []);
@@ -130,7 +130,7 @@ function addValue() {
                 </div>
             </div>
         </div>
-        <div class="mt-2">
+        <div v-if="item?.tag.spec.multiple || newValue.length < 1" class="mt-2">
             <Button variant="outline" class="w-full" @click="addValue">
                 <Icon name="Plus" class="size-4"/>
                 <span>Add Value</span>
@@ -138,7 +138,3 @@ function addValue() {
         </div>
     </li>
 </template>
-
-<style scoped>
-
-</style>

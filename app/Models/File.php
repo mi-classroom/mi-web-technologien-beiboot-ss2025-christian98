@@ -4,14 +4,16 @@ namespace App\Models;
 
 use App\Jobs\IndexFileJob;
 use App\Services\FullPathGenerator;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Bus;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class File extends Model
+class File extends Model implements Responsable
 {
     use HasFactory;
 
@@ -33,10 +35,6 @@ class File extends Model
             $file->storage_config_id ??= $file->folder->storage_config_id;
         });
 
-        static::created(function (self $file) {
-            Bus::dispatch(new IndexFileJob($file));
-        });
-
         static::updating(function (self $file) {
             if ($file->isDirty('folder_id')) {
                 $file->storage_config_id = $file->folder->storage_config_id;
@@ -56,7 +54,7 @@ class File extends Model
 
     public function iptcItems(): HasMany
     {
-        return $this->hasMany(IptcItem::class)->orderBy('tag');
+        return $this->hasMany(IptcItem::class);
     }
 
     public function sizeForHumans(): Attribute
@@ -76,5 +74,10 @@ class File extends Model
     public function downloadUrl(): Attribute
     {
         return Attribute::get(fn() => url('storage/' . $this->path))->shouldCache();
+    }
+
+    public function toResponse($request): ?StreamedResponse
+    {
+        return $this->storageConfig->getStorage()->download($this->full_path, $this->name);
     }
 }

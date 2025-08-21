@@ -11,6 +11,7 @@ const color = computed(() => {
     const colorMap = {
         'local': '#4a5568',
         'webdav': '#0077c2',
+        'dropbox': '#0061fe',
     }
 
     return colorMap[props.config.provider_type] ?? '#4a5568';
@@ -20,6 +21,7 @@ const icon = computed(() => {
     const iconMap = { // TODO: duplicated in AppHeader.vue
         'local': 'HardDrive',
         'webdav': 'Cloud',
+        'dropbox': 'Cloud',
     };
 
     return iconMap[props.config.provider_type] ?? 'Cloud';

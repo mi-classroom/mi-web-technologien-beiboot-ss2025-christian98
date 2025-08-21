@@ -8,12 +8,12 @@ import {fetchApi} from "@/lib/fetchApi";
 import {useTemplateRef} from "vue";
 
 const props = defineProps<{
-    attributes: Map<string, IptcItem[]>;
+    attributes: Map<number, IptcItem[]>;
     selectedFiles: File[];
     fileIds: number[];
 }>();
 
-const selectedTag = defineModel<string | null>('selectedTag');
+const selectedTag = defineModel<number | null>('selectedTag');
 
 const fileRefs = useTemplateRef<(InstanceType<typeof FileEntry>)[]>('fileRefs');
 

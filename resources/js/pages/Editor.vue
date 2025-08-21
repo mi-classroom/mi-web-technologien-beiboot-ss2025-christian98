@@ -2,20 +2,15 @@
 import {computed, ref, watch} from "vue";
 import {Head} from "@inertiajs/vue3";
 import AppLayout from "@/layouts/AppLayout.vue";
-import {useQuery} from '@tanstack/vue-query';
-import {fetchApi} from "@/lib/fetchApi";
-import {type File, IptcItem} from "@/types";
+import {IptcItem} from "@/types";
 import AttributeList from "@/components/editor/attribute-list/AttributeList.vue";
 import EditView from "@/components/editor/edit-view/EditView.vue";
 import {cn} from "@/lib/utils";
 import FileList from "@/components/editor/file-list/FileList.vue";
+import {useEditorData} from "@/composables/useEditorData";
 
 const fileIds = ref<number[]>([]);
-const {isPending, isFetching, isError, data, error} = useQuery({
-    queryKey: ['files', fileIds],
-    queryFn: () => fetchApi<{ data: File[] }>(route('api.files.index', {ids: fileIds.value})),
-});
-const files = computed(() => data.value?.data);
+const {files, tagDefinitions} = useEditorData(fileIds);
 
 const selectedFileIds = ref<number[]>([]);
 const selectedFiles = computed(() => {
@@ -23,28 +18,28 @@ const selectedFiles = computed(() => {
 });
 
 const attributes = computed(() => {
-    const attributes = new Map<string, IptcItem[]>();
+    const attributes = new Map<number, IptcItem[]>();
 
     selectedFiles.value.forEach(file => {
         file.meta_data?.iptc_items?.forEach(item => {
-            if (!attributes.has(item.tag)) {
-                attributes.set(item.tag, []);
+            if (!attributes.has(item.tag.id)) {
+                attributes.set(item.tag.id, []);
             }
 
             item.file = file; // Add the file reference to the item
-            attributes.get(item.tag)?.push(item);
+            attributes.get(item.tag.id)?.push(item);
         });
     });
 
     return attributes;
 });
 
-const selectedTag = ref<string | null>(null);
+const selectedTag = ref<number | null>(null);
 
 watch(selectedFiles, (value) => {
     let tagAvailableInRemainingFiles = false;
     value.forEach(file => {
-        if (file.meta_data?.iptc_items?.some(item => item.tag === selectedTag.value)) {
+        if (file.meta_data?.iptc_items?.some(item => item.tag.id === selectedTag.value)) {
             tagAvailableInRemainingFiles = true;
         }
     });
@@ -67,7 +62,7 @@ watch(selectedFiles, (value) => {
                 <FileList :files v-model:selectedFileIds="selectedFileIds" @selected="f => fileIds.push(...f.map(fi => fi.id))"/>
             </div>
             <div class="grid-item">
-                <AttributeList v-model:selectedTag="selectedTag" v-model:selectedFileIds="selectedFileIds" :allFileIds="fileIds" :selectedFiles :attributes/>
+                <AttributeList v-model:selectedTag="selectedTag" v-model:selectedFileIds="selectedFileIds" :allFileIds="fileIds" :selectedFiles :attributes="tagDefinitions"/>
             </div>
             <div :class="cn('grid-item transition-all duration-300 opacity-100 origin-left', {
                 'opacity-100 scale-x-100': selectedTag,

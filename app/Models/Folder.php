@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Events\FolderCreatedEvent;
+use App\Events\FolderDeletedEvent;
+use App\Events\FolderUpdatedEvent;
 use App\Services\FullPathGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,6 +24,12 @@ class Folder extends Model
         'storage_config_id',
     ];
 
+    protected $dispatchesEvents = [
+        'created' => FolderCreatedEvent::class,
+        'updated' => FolderUpdatedEvent::class,
+        'deleted' => FolderDeletedEvent::class,
+    ];
+
     protected static function booted(): void
     {
         parent::booted();
@@ -28,11 +37,6 @@ class Folder extends Model
         static::creating(function (Folder $folder) {
             $folder->full_path = app(FullPathGenerator::class)->getFullPath($folder->parent, $folder->name);
         });
-
-        static::created(queueable(function (self $folder) {
-            // Create the folder in the storage
-            $folder->storageConfig->getStorage()->makeDirectory($folder->full_path);
-        }));
 
         static::updated(function (self $folder) {
             if ($folder->wasChanged('name', 'parent_id')) {
@@ -55,11 +59,6 @@ class Folder extends Model
                 });
             }
         });
-
-        static::deleted(queueable(function (self $folder) {
-            // Delete the folder from the storage
-            $folder->storageConfig->getStorage()->deleteDirectory($folder->full_path);
-        }));
     }
 
     /**
