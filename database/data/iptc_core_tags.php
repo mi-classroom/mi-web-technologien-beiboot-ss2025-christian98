@@ -202,7 +202,7 @@ return [
         "tag" => "2#030",
         "description" => null,
         "spec" => [
-            "data_type" => "string",
+            "data_type" => "date",
             "min_length" => 8,
             "max_length" => 8,
             "multiple" => false,
@@ -216,7 +216,7 @@ return [
         "tag" => "2#035",
         "description" => null,
         "spec" => [
-            "data_type" => "string",
+            "data_type" => "time",
             "min_length" => 11,
             "max_length" => 11,
             "multiple" => false,
@@ -230,7 +230,7 @@ return [
         "tag" => "2#037",
         "description" => null,
         "spec" => [
-            "data_type" => "string",
+            "data_type" => "date",
             "min_length" => 8,
             "max_length" => 8,
             "multiple" => false,
@@ -244,7 +244,7 @@ return [
         "tag" => "2#038",
         "description" => null,
         "spec" => [
-            "data_type" => "string",
+            "data_type" => "time",
             "min_length" => 11,
             "max_length" => 11,
             "multiple" => false,
@@ -300,7 +300,7 @@ return [
         "tag" => "2#047",
         "description" => null,
         "spec" => [
-            "data_type" => "string",
+            "data_type" => "date",
             "min_length" => 8,
             "max_length" => 8,
             "multiple" => true,
@@ -328,7 +328,7 @@ return [
         "tag" => "2#055",
         "description" => "Designates the date and optionally the time the content of the image was created rather than the date of the creation of the digital representation.",
         "spec" => [
-            "data_type" => "string",
+            "data_type" => "date",
             "min_length" => 8,
             "max_length" => 8,
             "multiple" => false,
@@ -342,7 +342,7 @@ return [
         "tag" => "2#060",
         "description" => null,
         "spec" => [
-            "data_type" => "string",
+            "data_type" => "time",
             "min_length" => 11,
             "max_length" => 11,
             "multiple" => false,
@@ -356,7 +356,7 @@ return [
         "tag" => "2#062",
         "description" => null,
         "spec" => [
-            "data_type" => "string",
+            "data_type" => "date",
             "min_length" => 8,
             "max_length" => 8,
             "multiple" => false,
@@ -370,7 +370,7 @@ return [
         "tag" => "2#063",
         "description" => null,
         "spec" => [
-            "data_type" => "string",
+            "data_type" => "time",
             "min_length" => 11,
             "max_length" => 11,
             "multiple" => false,
