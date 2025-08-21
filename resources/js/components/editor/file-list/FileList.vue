@@ -34,7 +34,7 @@ defineEmits<{
                 <AddFilesDialogContent @selected="f => $emit('selected', f)"/>
             </Dialog>
 
-            <Button size="icon" title="Filter Files">
+            <Button disabled size="icon" title="Filter Files">
                 <Icon name="Filter" class="size-4"/>
             </Button>
         </div>

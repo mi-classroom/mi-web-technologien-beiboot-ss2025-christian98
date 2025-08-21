@@ -40,10 +40,10 @@ const areFilesSelected = computed(() => props.selectedFiles.length > 0);
             <Button size="icon" title="Add Additional Attributes" :disabled="!areFilesSelected">
                 <Icon name="Plus" class="size-4"/>
             </Button>
-            <Button size="icon" title="Apply Template to Selected Files" :disabled="!areFilesSelected">
+            <Button size="icon" title="Apply Template to Selected Files" disabled>
                 <Icon name="FileInput" class="size-4"/>
             </Button>
-            <Button size="icon" title="Filter Attributes" :disabled="!areFilesSelected">
+            <Button size="icon" title="Filter Attributes" disabled>
                 <Icon name="Filter" class="size-4"/>
             </Button>
         </div>

@@ -105,7 +105,7 @@ function handleSaveAll() {
         <div class="flex gap-1">
             <Button title="Suggestions" disabled>
                 <Icon name="Lightbulb" class="size-4"/>
-                <span>Suggestions</span>
+                <span>AI Suggestions</span>
             </Button>
             <Button title="Save Changes" @click="handleSaveAll">
                 <Icon name="Save" class="size-4"/>
@@ -124,19 +124,19 @@ function handleSaveAll() {
             Apply to all selected files
         </span>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 mt-1">
-            <Button class="basis-1/4">
+            <Button class="basis-1/4" disabled>
                 <Icon name="SquareArrowUp" class="size-5"/>
                 Prepend all
             </Button>
-            <Button class="basis-1/4">
+            <Button class="basis-1/4" disabled>
                 <Icon name="SquareArrowDown" class="size-5"/>
                 Append all
             </Button>
-            <Button class="basis-1/4">
+            <Button class="basis-1/4" disabled>
                 <Icon name="SquarePen" class="size-5"/>
                 Overwrite all
             </Button>
-            <Button class="basis-1/4">
+            <Button class="basis-1/4" disabled>
                 <Icon name="SquareX" class="size-5"/>
                 Remove all
             </Button>

@@ -18,8 +18,6 @@ const selectedFilesWithTagCount = computed(() => {
     return selectedFilesWithTag.value.length;
 });
 
-console.log(props.tagDefinition.iptcItems);
-
 function statuses(length: number) {
     if (length === totalFilesCount.value) {
         return 'text-green-400 bg-green-400/10';

@@ -124,9 +124,8 @@ function navigate(item: Folder | File) {
             <!-- Footer -->
             <DialogFooter class="mt-2 flex justify-end gap-2 flex-none">
                 <DialogClose as-child>
-                    <Button variant="secondary">Cancel</Button>
+                    <Button variant="default">Finish</Button>
                 </DialogClose>
-                <Button variant="destructive" type="submit">Add files</Button>
             </DialogFooter>
         </div>
     </DialogContent>
