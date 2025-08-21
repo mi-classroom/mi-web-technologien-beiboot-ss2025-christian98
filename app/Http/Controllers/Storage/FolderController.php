@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Storage;
 
-use App\Data\BreadcrumbData;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FolderResource;
 use App\Http\Resources\StorageConfigResource;
