@@ -6,14 +6,12 @@ use App\Models\File;
 use App\Models\IptcItem;
 use App\Services\Image\Image;
 use App\Services\Image\IPTC\IptcData;
-use App\Services\Image\IPTC\IptcTag;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Storage;
 
 class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
 {
@@ -44,11 +42,13 @@ class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
                 $currentIptc->remove($key);
             }
 
+            // TODO: Maybe get from DB definitions for IPTC tags
+            // and filter out the ones that are not allowed to be set.
             $newIptc->except([
-                IptcTag::Version->toString(),
-                IptcTag::ObjectName->toString(),
                 '1#000',
                 '1#090',
+                '2#000', // IPTC Application Record Version
+                '2#001', // IPTC Object Name
             ])->ray()->each(function (IptcItem $item) use ($currentIptc) {
                 $currentIptc->set($item->tag, $item->value);
             });

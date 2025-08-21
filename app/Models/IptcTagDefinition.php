@@ -34,7 +34,7 @@ class IptcTagDefinition extends Model
         ];
     }
 
-    public static function findByTag(string $tag, ?User $user = null): IptcTagDefinition
+    public static function findByTag(string $tag, ?User $user = null): ?IptcTagDefinition
     {
         $userId = $user?->id ?? Auth::id();
 
@@ -42,7 +42,14 @@ class IptcTagDefinition extends Model
             ->where(function (Builder $query) use ($userId) {
                 $query->where('user_id', $userId)->orWhereNull('user_id');
             })
-            ->first()
+            ->first();
+    }
+
+    public static function findOrCreateByTag(string $tag, ?User $user = null): IptcTagDefinition
+    {
+        $userId = $user?->id ?? Auth::id();
+
+        return self::findByTag($tag, $user)
             ?? self::updateOrCreate([
                 'tag' => $tag,
                 'user_id' => $userId

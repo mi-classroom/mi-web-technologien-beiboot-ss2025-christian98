@@ -2,7 +2,7 @@
 
 namespace App\Rules;
 
-use App\Services\Image\IPTC\IptcTag as IptcTagEnum;
+use App\Models\IptcTagDefinition;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
@@ -32,7 +32,7 @@ class IptcTag implements ValidationRule
 
         // Extract the tag number from the matched value
         $tagNumber = $matches[1];
-        $tag = IptcTagEnum::tryfrom($tagNumber);
+        $tag = IptcTagDefinition::findByTag($tagNumber);
 
         // If the tag is null, it means the tag number is not valid
         if ($tag === null) {
@@ -40,5 +40,7 @@ class IptcTag implements ValidationRule
 
             return;
         }
+
+        // TODO: Add any additional validation logic for the IPTC tag here
     }
 }
