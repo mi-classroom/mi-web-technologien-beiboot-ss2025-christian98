@@ -8,6 +8,8 @@ use Illuminate\Contracts\Filesystem\Filesystem;
 
 abstract class LaravelProvider extends Provider
 {
+    protected ?Filesystem $filesystem = null;
+
     abstract public function buildStorage(): Filesystem;
 
     public function getStorage(): Filesystem
