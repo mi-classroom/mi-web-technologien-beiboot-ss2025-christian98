@@ -15,6 +15,8 @@ abstract class Provider
 
     abstract public function directory(string $path): ?Directory;
 
+    abstract public function makeDirectory(string $path): ?Directory;
+
     /**
      * List the contents of a directory.
      *

@@ -2,6 +2,7 @@
 
 namespace App\Services\Storage\Provider\Laravel;
 
+use App\Services\Storage\Provider\Directory;
 use App\Services\Storage\Provider\Provider;
 use Illuminate\Contracts\Filesystem\Filesystem;
 
@@ -23,6 +24,17 @@ abstract class LaravelProvider extends Provider
         }
 
         return new LaravelDirectory($path, $storage);
+    }
+
+    public function makeDirectory(string $path): ?Directory
+    {
+        $storage = $this->getStorage();
+
+        if (! $storage->exists($path)) {
+            $storage->makeDirectory($path);
+        }
+
+        return $this->directory($path);
     }
 
     public function file(string $path): ?LaravelFile
