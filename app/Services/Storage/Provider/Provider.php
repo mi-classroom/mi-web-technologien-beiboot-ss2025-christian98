@@ -3,7 +3,7 @@
 namespace App\Services\Storage\Provider;
 
 use App\Models\StorageConfig;
-use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class Provider
@@ -19,14 +19,14 @@ abstract class Provider
      * List the contents of a directory.
      *
      * @param string $path
-     * @return Collection<Directory|File>
+     * @return LazyCollection<Directory|File>
      */
-    public function listDirectory(string $path): Collection
+    public function listDirectory(string $path): LazyCollection
     {
         $directory = $this->directory($path);
 
         if ($directory === null) {
-            return collect();
+            return collect()->lazy();
         }
 
         return $directory->children();
