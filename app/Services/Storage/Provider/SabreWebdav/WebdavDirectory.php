@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Services\Storage\Provider\Webdav;
+namespace App\Services\Storage\Provider\SabreWebdav;
 
 use App\Services\Storage\Provider\Directory;
-use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
-use Sabre\DAV\Xml\Property\ResourceType;
+use League\Flysystem\UnableToDeleteDirectory;
+use RuntimeException;
+use Sabre\HTTP\ClientHttpException;
+use Throwable;
 
 class WebdavDirectory extends Directory
 {
@@ -38,7 +40,7 @@ class WebdavDirectory extends Directory
             $path = $this->provider->prefixer->stripPrefix($path);
             $object = $this->normalizeObject($object);
 
-            if ($this->propsIsDirectory($object)) {
+            if (WebdavProvider::propsIsDirectory($object)) {
                 return [$path => new WebdavDirectory($path, $this->provider)];
             }
 
@@ -70,15 +72,20 @@ class WebdavDirectory extends Directory
         return $object;
     }
 
-    private function propsIsDirectory(array $properties): bool
+    public function delete(): void
     {
-        if (isset($properties['{DAV:}resourcetype'])) {
-            /** @var ResourceType $resourceType */
-            $resourceType = $properties['{DAV:}resourcetype'];
+        $location = $this->provider->encodePath($this->provider->prefixer->prefixDirectoryPath($this->fullPath));
 
-            return $resourceType->is('{DAV:}collection');
+        try {
+            $statusCode = $this->provider->client->request('DELETE', $location)['statusCode'];
+
+            if ($statusCode !== 404 && ($statusCode < 200 || $statusCode >= 300)) {
+                throw new RuntimeException('Unexpected status code received while deleting file: ' . $statusCode);
+            }
+        } catch (Throwable $exception) {
+            if ( ! ($exception instanceof ClientHttpException && $exception->getCode() === 404)) {
+                throw UnableToDeleteDirectory::atLocation($this->fullPath, $exception->getMessage(), $exception);
+            }
         }
-
-        return isset($properties['{DAV:}iscollection']) && $properties['{DAV:}iscollection'] === '1';
     }
 }

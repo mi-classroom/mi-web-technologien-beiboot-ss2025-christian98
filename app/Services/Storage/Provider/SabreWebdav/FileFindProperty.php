@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Storage\Provider\Webdav;
+namespace App\Services\Storage\Provider\SabreWebdav;
 
 enum FileFindProperty: string
 {
