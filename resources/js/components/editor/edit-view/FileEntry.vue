@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import {Minus, RotateCcw} from "lucide-vue-next";
 import {Button} from "@/components/ui/button";
-import {IptcItem, File} from "@/types";
+import {IptcItem, File, IptcTagDefinition} from "@/types";
 import {computed, ref, watch} from "vue";
 import Icon from "@/components/Icon.vue";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {DropdownMenuPortal} from "reka-ui";
+import IptcInputFactory from "@/components/editor/edit-view/IptcInputFactory.vue";
 
 const props = defineProps<{
     file: File;
-    selectedTag: number;
+    selectedTag: IptcTagDefinition;
 }>();
 
 const emit = defineEmits<{
@@ -18,7 +19,7 @@ const emit = defineEmits<{
 }>();
 
 const item = computed(() => {
-    return props.file.meta_data?.iptc_items?.find(i => i.tag.id === props.selectedTag);
+    return props.file.meta_data?.iptc_items?.find(i => i.tag.id === props.selectedTag.id);
 });
 
 const newValue = ref<string[]>(item.value ? [...item.value.value] : []);
@@ -99,25 +100,21 @@ function addValue() {
             <div v-for="(_, idx) in newValue" class="flex items-end gap-1 **:data-heading:first:not-sr-only">
                 <div class="flex grow gap-1">
                     <div class="basis-1/2">
-                        <label :for="`iptc-${selectedTag}-${idx}-current`"
+                        <label :for="`iptc-${selectedTag.id}-${idx}-current`"
                                class="px-0.5 text-xs/5 text-gray-500 sr-only"
                                :data-heading="idx === 0 ? true : undefined">
                             Current value
                         </label>
-                        <input :id="`iptc-${selectedTag}-${idx}-current`" :name="`iptc-${selectedTag}-${idx}-current`"
-                               type="text"
-                               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 sm:text-sm/6 cursor-text"
-                               disabled readonly :value="item?.value[idx]" title="Current value"/>
+                        <IptcInputFactory :model-value="item?.value[idx]" :definition="selectedTag" :index="idx"
+                                          title="Current Value" suffix="current" readonly />
                     </div>
                     <div class="basis-1/2">
-                        <label :for="`iptc-${selectedTag}-${idx}-new`" class="text-xs/5 text-gray-500 px-0.5 sr-only"
+                        <label :for="`iptc-${selectedTag.id}-${idx}-new`" class="text-xs/5 text-gray-500 px-0.5 sr-only"
                                :data-heading="idx === 0 ? true : undefined">
                             New value
                         </label>
-                        <input :id="`iptc-${selectedTag}-${idx}-new`" :name="`iptc-${selectedTag}-${idx}-new`"
-                               type="text"
-                               v-model="newValue[idx]"
-                               class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 disabled:outline-gray-200 sm:text-sm/6"/>
+                        <IptcInputFactory v-model="newValue[idx]" :definition="selectedTag" :index="idx"
+                                          title="New/Edited Value" suffix="new" />
                     </div>
                 </div>
                 <div class="flex-none flex gap-1">

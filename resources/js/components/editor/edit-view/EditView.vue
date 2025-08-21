@@ -5,7 +5,7 @@ import {File, IptcItem, Resource} from "@/types";
 import FileEntry from "@/components/editor/edit-view/FileEntry.vue";
 import {useMutation, useQueryClient} from "@tanstack/vue-query";
 import {fetchApi} from "@/lib/fetchApi";
-import {useTemplateRef} from "vue";
+import {computed, useTemplateRef} from "vue";
 
 const props = defineProps<{
     attributes: Map<number, IptcItem[]>;
@@ -14,6 +14,13 @@ const props = defineProps<{
 }>();
 
 const selectedTag = defineModel<number | null>('selectedTag');
+
+const tagDefinition = computed(() => {
+    const tagDefinitionId = selectedTag.value;
+    if (!tagDefinitionId) return null;
+
+    return props.attributes.get(tagDefinitionId)?.[0]?.tag;
+});
 
 const fileRefs = useTemplateRef<(InstanceType<typeof FileEntry>)[]>('fileRefs');
 
@@ -145,9 +152,11 @@ function handleSaveAll() {
 
     <hr class="h-1 border-mi-dark mt-6 mb-2"/>
 
-    <span class="text-xl mx-2 font-bold">Files</span>
-    <ul class="flex flex-col gap-y-1 px-1 divide divide-y divide-mi-dark overflow-auto">
-        <FileEntry v-if="selectedTag" v-for="file in selectedFiles" :key="file.id" ref="fileRefs"
-                   :file :selectedTag @save="handleSave" @remove="handleRemove"/>
-    </ul>
+    <div>
+        <span class="text-xl mx-2 font-bold">Files</span>
+        <ul class="flex flex-col gap-y-1 px-1 divide divide-y divide-mi-dark overflow-auto">
+            <FileEntry v-if="tagDefinition" v-for="file in selectedFiles" :key="file.id" ref="fileRefs"
+                       :file :selectedTag="tagDefinition" @save="handleSave" @remove="handleRemove"/>
+        </ul>
+    </div>
 </template>

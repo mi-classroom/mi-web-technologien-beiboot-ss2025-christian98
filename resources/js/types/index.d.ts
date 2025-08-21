@@ -110,14 +110,14 @@ export interface IptcTagDefinition {
     tag: string;
     description: string | null;
     spec: {
-        data_type: "string" | "boolean" | "enum" | "binary",
+        data_type: "string" | "enum" | "binary" | 'date' | 'time' | 'number',
         min_length: number,
         max_length: number,
         multiple: boolean,
         required: boolean,
         enum_values: string[] | number[] | null,
     },
-    value_editable: boolean,
+    is_value_editable: boolean,
     iptcItems?: IptcItem[];
     created_at: string;
     updated_at: string;
