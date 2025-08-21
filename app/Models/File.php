@@ -35,10 +35,6 @@ class File extends Model implements Responsable
             $file->storage_config_id ??= $file->folder->storage_config_id;
         });
 
-        static::created(function (self $file) {
-            Bus::dispatch(new IndexFileJob($file));
-        });
-
         static::updating(function (self $file) {
             if ($file->isDirty('folder_id')) {
                 $file->storage_config_id = $file->folder->storage_config_id;
