@@ -17,8 +17,10 @@ class FolderFolderController extends Controller
 
     public function store(CreateFolderRequest $request, Folder $folder): FolderResource
     {
-        return new FolderResource(
-            $folder->folders()->create($request->validated())
-        );
+        $newFolder = $folder->folders()->create($request->validated());
+
+        $folder->touch();
+
+        return new FolderResource($newFolder);
     }
 }
