@@ -6,10 +6,11 @@ use App\Data\BreadcrumbData;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FolderResource;
 use App\Http\Resources\StorageConfigResource;
+use App\Jobs\IndexFolderJob;
 use App\Models\Folder;
 use App\Models\StorageConfig;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Bus;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,6 +19,8 @@ class FolderController extends Controller
     public function index(StorageConfig $storageConfig): Response
     {
         $folder = $storageConfig->rootFolder()->with(['files', 'folders'])->firstOrFail();
+
+        Bus::dispatch(new IndexFolderJob($folder));
 
         return Inertia::render('Folder', [
             'storageConfig' => new StorageConfigResource($storageConfig),
@@ -30,22 +33,13 @@ class FolderController extends Controller
     {
         $folder->loadMissing('files', 'folders');
 
+        Bus::dispatch(new IndexFolderJob($folder));
+
         return Inertia::render('Folder', [
             'storageConfig' => new StorageConfigResource($storageConfig),
             'folder' => new FolderResource($folder),
             'breadcrumbs' => FolderResource::collection([...$folder->all_parents, $folder]),
         ]);
-    }
-
-    public function store(StorageConfig $storageConfig): RedirectResponse
-    {
-        $user = Auth::user();
-        $folder = $user->folders()->create([
-            'name' => 'New Folder',
-            'path' => '',
-        ]);
-
-        return redirect()->route('storage.folders.show', ['folder' => $folder, 'storageConfig' => $storageConfig]);
     }
 
     public function destroy(StorageConfig $storageConfig, Folder $folder): RedirectResponse
