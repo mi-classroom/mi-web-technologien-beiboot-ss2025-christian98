@@ -3,7 +3,7 @@ import {Head, InertiaForm} from '@inertiajs/vue3';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
-import {type BreadcrumbItem} from '@/types';
+import {type BreadcrumbItem, Resource, StorageConfig} from '@/types';
 import {Button} from "@/components/ui/button";
 import {
     CreateStorageConfigForm,
@@ -18,18 +18,24 @@ import {Input} from "@/components/ui/input";
 import InputError from "@/components/InputError.vue";
 import {providers} from "@/lib/providers";
 
+interface Props {
+    storageConfig: Resource<StorageConfig>;
+}
+
+const props = defineProps<Props>();
+
 const breadcrumbs: BreadcrumbItem[] = [
     {
         title: 'Storage settings',
         href: '/settings/storage',
     },
     {
-        title: 'Create Storage settings',
-        href: '/settings/storage/create',
+        title: `Update configuration for "${props.storageConfig.data.name}"`,
+        href: route('settings.storage.edit', {config: props.storageConfig.data.id}),
     },
 ];
 
-const form = useCreateStorageConfigForm();
+const form = useCreateStorageConfigForm({...props.storageConfig.data});
 </script>
 
 <template>
@@ -38,9 +44,9 @@ const form = useCreateStorageConfigForm();
 
         <SettingsLayout>
             <div class="flex flex-col space-y-6">
-                <HeadingSmall title="Storage Settings" description="Connect your own Cloud-Storage"/>
+                <HeadingSmall title="Storage Settings" description="Edit your own Cloud-Storage"/>
 
-                <form @submit.prevent="form.post(route('settings.storage.store'))" class="flex flex-col space-y-6">
+                <form @submit.prevent="form.post(route('settings.storage.update', {config: storageConfig.data}))" class="flex flex-col space-y-6">
                     <div>
                         <Label for="name">Name</Label>
                         <Input id="name" name="name" type="text" placeholder="Nextcloud" v-model="form.name"/>
@@ -64,7 +70,7 @@ const form = useCreateStorageConfigForm();
                     </div>
 
                     <div>
-                        <Button onclick="submit">Create</Button>
+                        <Button onclick="submit">Save</Button>
                     </div>
                 </form>
             </div>
