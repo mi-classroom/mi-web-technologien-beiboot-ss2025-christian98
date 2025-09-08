@@ -24,6 +24,7 @@ Route::middleware('auth')->name('settings.')->group(function () {
     Route::get('settings/storage/create', [StorageConfigController::class, 'create'])->name('storage.create');
     Route::get('settings/storage/{config}/edit', [StorageConfigController::class, 'edit'])->name('storage.edit');
     Route::post('settings/storage', [StorageConfigController::class, 'store'])->name('storage.store');
+    Route::put('settings/storage/{config}', [StorageConfigController::class, 'update'])->name('storage.update');
     Route::post('settings/storage/{config}/re-index', [StorageConfigController::class, 'reIndex'])->name('storage.re-index');
     Route::delete('settings/storage/{config}', [StorageConfigController::class, 'destroy'])->name('storage.destroy');
 });
