@@ -117,6 +117,7 @@ export interface IptcTagDefinition {
         required: boolean,
         enum_values: string[] | number[] | null,
     },
+    user_id: number | null;
     is_value_editable: boolean,
     iptcItems?: IptcItem[];
     created_at: string;

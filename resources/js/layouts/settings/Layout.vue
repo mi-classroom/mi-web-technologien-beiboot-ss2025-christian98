@@ -22,6 +22,10 @@ const sidebarNavItems: NavLeafItem[] = [
         title: 'Storage',
         href: '/settings/storage',
     },
+    {
+        title: 'IPTC Tag Definitions',
+        href: '/settings/iptc-tag-definitions',
+    },
 ];
 
 const page = usePage();
