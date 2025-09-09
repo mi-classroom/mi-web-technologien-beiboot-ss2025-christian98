@@ -6,6 +6,8 @@ use App\Http\Requests\IptcTagDefinitionRequest;
 use App\Http\Resources\IptcTagDefinitionResource;
 use App\Models\IptcTagDefinition;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,11 +25,22 @@ class IptcTagDefinitionController extends Controller
         ]);
     }
 
-    public function store(IptcTagDefinitionRequest $request)
+    public function create(): Response
+    {
+        return Inertia::render('settings/iptcTagDefinitions/Create');
+    }
+
+    public function store(IptcTagDefinitionRequest $request): RedirectResponse
     {
         $this->authorize('create', IptcTagDefinition::class);
 
-        return new IptcTagDefinitionResource(IptcTagDefinition::create($request->validated()));
+        Auth::user()->iptcTagDefinitions()->create([
+            'is_value_editable' => true,
+            ...$request->validated(),
+        ]);
+
+        return redirect()->route('settings.iptc-tag-definitions.index')
+            ->with('success', __('The IPTC tag definition has been created.'));
     }
 
     public function show(IptcTagDefinition $iptcTagDefinition)

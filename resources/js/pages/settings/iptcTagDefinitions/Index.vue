@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {Head} from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 import HeadingSmall from '@/components/HeadingSmall.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
@@ -31,7 +31,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                 <div class="flex items-center justify-between">
                     <HeadingSmall title="IPTC Tag definitions"
                                   description="Manage custom and view global IPTC tag definitions"/>
-                    <Button>Add Custom Definition</Button>
+                    <Button :as="Link" :href="route('settings.iptc-tag-definitions.create')">
+                        Add Custom Definition
+                    </Button>
                 </div>
 
                 <!-- Custom IPTC tag definitions -->
