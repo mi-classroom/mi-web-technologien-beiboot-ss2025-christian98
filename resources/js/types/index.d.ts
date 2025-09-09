@@ -1,6 +1,7 @@
 import type {PageProps} from '@inertiajs/core';
 import type {LucideIcon} from 'lucide-vue-next';
 import type {Config} from 'ziggy-js';
+import {dataTypes} from "@/lib/iptc-tag-definition-data_type";
 
 export interface Auth {
     user: User;
@@ -110,13 +111,14 @@ export interface IptcTagDefinition {
     tag: string;
     description: string | null;
     spec: {
-        data_type: "string" | "enum" | "binary" | 'date' | 'time' | 'number',
-        min_length: number,
-        max_length: number,
+        data_type: typeof dataTypes[number],
+        min_length: number | null,
+        max_length: number | null,
         multiple: boolean,
         required: boolean,
         enum_values: string[] | number[] | null,
     },
+    user_id: number | null;
     is_value_editable: boolean,
     iptcItems?: IptcItem[];
     created_at: string;

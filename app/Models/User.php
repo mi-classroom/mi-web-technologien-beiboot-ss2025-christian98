@@ -65,6 +65,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return HasMany<IptcTagDefinition, self>
+     */
+    public function iptcTagDefinitions(): HasMany
+    {
+        return $this->hasMany(IptcTagDefinition::class);
+    }
+
+    /**
      * Get the user's initials
      */
     public function initials(): string
