@@ -24,7 +24,7 @@ const form = useForm({});
 const deleteDefinition = (e: Event) => {
     e.preventDefault();
 
-    form.delete(route('settings.iptc-tag-definitions.destroy', {'iptc-tag-definition': props.definition}), {
+    form.delete(route('settings.iptc-tag-definitions.destroy', {'iptc_tag_definition': props.definition}), {
         preserveScroll: true,
         onSuccess: () => closeModal(),
         onFinish: () => form.reset(),

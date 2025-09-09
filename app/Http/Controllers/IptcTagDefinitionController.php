@@ -59,12 +59,13 @@ class IptcTagDefinitionController extends Controller
         return new IptcTagDefinitionResource($iptcTagDefinition);
     }
 
-    public function destroy(IptcTagDefinition $iptcTagDefinition)
+    public function destroy(IptcTagDefinition $iptcTagDefinition): RedirectResponse
     {
         $this->authorize('delete', $iptcTagDefinition);
 
         $iptcTagDefinition->delete();
 
-        return response()->json();
+        return redirect()->route('settings.iptc-tag-definitions.index')
+            ->with('success', __('The IPTC tag definition has been deleted.'));
     }
 }
