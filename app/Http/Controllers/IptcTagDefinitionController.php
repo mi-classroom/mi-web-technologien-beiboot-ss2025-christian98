@@ -50,7 +50,14 @@ class IptcTagDefinitionController extends Controller
         return new IptcTagDefinitionResource($iptcTagDefinition);
     }
 
-    public function update(IptcTagDefinitionRequest $request, IptcTagDefinition $iptcTagDefinition)
+    public function edit(IptcTagDefinition $iptcTagDefinition): Response
+    {
+        return Inertia::render('settings/iptcTagDefinitions/Edit', [
+            'iptcTagDefinition' => new IptcTagDefinitionResource($iptcTagDefinition),
+        ]);
+    }
+
+    public function update(IptcTagDefinitionRequest $request, IptcTagDefinition $iptcTagDefinition): RedirectResponse
     {
         $this->authorize('update', $iptcTagDefinition);
 
