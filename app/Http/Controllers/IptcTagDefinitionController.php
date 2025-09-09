@@ -56,7 +56,8 @@ class IptcTagDefinitionController extends Controller
 
         $iptcTagDefinition->update($request->validated());
 
-        return new IptcTagDefinitionResource($iptcTagDefinition);
+        return redirect()->route('settings.iptc-tag-definitions.index')
+            ->with('success', __('The IPTC tag definition has been updated.'));
     }
 
     public function destroy(IptcTagDefinition $iptcTagDefinition): RedirectResponse
