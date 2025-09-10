@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {Button} from "@/components/ui/button";
 import Icon from "@/components/Icon.vue";
-import {File, IptcItem, Resource} from "@/types";
+import {File, IptcItem, IptcTagDefinition, Resource} from "@/types";
 import FileEntry from "@/components/editor/edit-view/FileEntry.vue";
 import {useMutation, useQueryClient} from "@tanstack/vue-query";
 import {fetchApi} from "@/lib/fetchApi";
@@ -13,14 +13,7 @@ const props = defineProps<{
     fileIds: number[];
 }>();
 
-const selectedTag = defineModel<number | null>('selectedTag');
-
-const tagDefinition = computed(() => {
-    const tagDefinitionId = selectedTag.value;
-    if (!tagDefinitionId) return null;
-
-    return props.attributes.get(tagDefinitionId)?.[0]?.tag;
-});
+const selectedTag = defineModel<IptcTagDefinition | null>('selectedTag');
 
 const fileRefs = useTemplateRef<(InstanceType<typeof FileEntry>)[]>('fileRefs');
 
@@ -155,8 +148,8 @@ function handleSaveAll() {
     <div>
         <span class="text-xl mx-2 font-bold">Files</span>
         <ul class="flex flex-col gap-y-1 px-1 divide divide-y divide-mi-dark overflow-auto">
-            <FileEntry v-if="tagDefinition" v-for="file in selectedFiles" :key="file.id" ref="fileRefs"
-                       :file :selectedTag="tagDefinition" @save="handleSave" @remove="handleRemove"/>
+            <FileEntry v-if="selectedTag" v-for="file in selectedFiles" :key="file.id" ref="fileRefs"
+                       :file :selectedTag="selectedTag" @save="handleSave" @remove="handleRemove"/>
         </ul>
     </div>
 </template>

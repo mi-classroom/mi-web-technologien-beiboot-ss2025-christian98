@@ -2,7 +2,7 @@
 import {computed, ref, watch} from "vue";
 import {Head} from "@inertiajs/vue3";
 import AppLayout from "@/layouts/AppLayout.vue";
-import {IptcItem} from "@/types";
+import {IptcItem, IptcTagDefinition} from "@/types";
 import AttributeList from "@/components/editor/attribute-list/AttributeList.vue";
 import EditView from "@/components/editor/edit-view/EditView.vue";
 import {cn} from "@/lib/utils";
@@ -34,12 +34,12 @@ const attributes = computed(() => {
     return attributes;
 });
 
-const selectedTag = ref<number | null>(null);
+const selectedTag = ref<IptcTagDefinition | null>(null);
 
 watch(selectedFiles, (value) => {
     let tagAvailableInRemainingFiles = false;
     value.forEach(file => {
-        if (file.meta_data?.iptc_items?.some(item => item.tag.id === selectedTag.value)) {
+        if (file.meta_data?.iptc_items?.some(item => item.tag.id === selectedTag.value?.id)) {
             tagAvailableInRemainingFiles = true;
         }
     });
