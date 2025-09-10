@@ -50,6 +50,9 @@ Halten Sie die Anwendung, gerade in der Anfangsphase möglichst einfach, schlank
    ```
    This will run the backend server, log watcher, and frontend (Vite) concurrently. And start Horizon for queue management in a new terminal.
 
+5. **Register a user:**
+   Visit `http://localhost:8000/register` to create an account.
+
 ### Accessing the App
 - Fronted: http://localhost:8000
 
