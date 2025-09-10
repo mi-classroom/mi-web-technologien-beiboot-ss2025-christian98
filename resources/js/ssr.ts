@@ -4,7 +4,6 @@ import { renderToString } from '@vue/server-renderer';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createSSRApp, h } from 'vue';
 import { route as ziggyRoute } from 'ziggy-js';
-import { i18nVue } from "laravel-vue-i18n";
 import {VueQueryPlugin} from "@tanstack/vue-query";
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -36,13 +35,6 @@ createServer((page) =>
             }
 
             app.use(plugin)
-                .use(i18nVue, {
-                    fallbackLang: "en",
-                    resolve: (lang: string) => {
-                        const langs = import.meta.glob('../../lang/*.json', { eager: true });
-                        return langs[`../../lang/${lang}.json`].default;
-                    },
-                })
                 .use(VueQueryPlugin);
 
             return app;
