@@ -9,6 +9,7 @@ import {Link} from "@inertiajs/vue3";
 
 const props = defineProps<{
     definition: IptcTagDefinition;
+    hideActions?: boolean;
 }>();
 </script>
 
@@ -38,7 +39,7 @@ const props = defineProps<{
                           :title="definition.description">{{ definition.description }}</span>
                 </div>
             </div>
-            <div class="flex items-center space-x-2">
+            <div v-if="!hideActions" class="flex items-center space-x-2">
                 <IptcTagDefinitionDetailsModal :definition="definition"/>
                 <Link
                     v-if="definition.user_id"

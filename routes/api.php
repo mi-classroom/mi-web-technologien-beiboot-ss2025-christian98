@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\FileController;
 use App\Http\Controllers\Api\FolderController;
 use App\Http\Controllers\Api\FolderFolderController;
 use App\Http\Controllers\Api\IptcItemController;
+use App\Http\Controllers\Api\IptcTagDefinitionController;
 use App\Http\Controllers\Api\StorageConfigController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -23,5 +24,7 @@ Route::name('api.')->group(function () {
         // TODO endpoint to fetch various files by id (editor), check needed for permissions
         Route::get('/files', [FileController::class, 'indexRoot'])->name('files.index');
         Route::get('/files/{file}/preview', [FileController::class, 'preview'])->name('files.preview');
+
+        Route::apiResource('iptc-tag-definitions', IptcTagDefinitionController::class);
     });
 });

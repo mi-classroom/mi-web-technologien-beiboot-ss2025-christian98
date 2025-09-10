@@ -2,9 +2,10 @@
 import AttributeListItem from "@/components/editor/attribute-list/AttributeListItem.vue";
 import {Button} from "@/components/ui/button";
 import Icon from "@/components/Icon.vue";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 import {File, IptcTagDefinition} from "@/types";
 import {SquareMousePointer, FileX} from "lucide-vue-next";
+import AddAttributeModal from "@/components/editor/attribute-list/AddAttributeModal.vue";
 
 const props = defineProps<{
     selectedFiles: File[];
@@ -24,10 +25,28 @@ const definitionsForSelectedFiles = computed(() => {
     return definitions;
 });
 
-const selectedTag = defineModel<number | null>('selectedTag');
+const additionalAttributes = ref<IptcTagDefinition[]>([]);
+
+const allAttributeDefinitions = computed(() => {
+    const definitions = new Map<number, IptcTagDefinition>(definitionsForSelectedFiles.value);
+    additionalAttributes.value.forEach(definition => {
+        if (!definitions.has(definition.id)) {
+            definitions.set(definition.id, definition);
+        }
+    });
+
+    return definitions;
+});
+
+const selectedTag = defineModel<IptcTagDefinition | null>('selectedTag');
 const selectedFileIds = defineModel<number[]>('selectedFileIds');
 
 const areFilesSelected = computed(() => props.selectedFiles.length > 0);
+
+function definitionAdded(definition: IptcTagDefinition) {
+    additionalAttributes.value = [...additionalAttributes.value, definition];
+    selectedTag.value = definition;
+}
 </script>
 
 <template>
@@ -37,9 +56,11 @@ const areFilesSelected = computed(() => props.selectedFiles.length > 0);
             <p class="text-xs text-gray-600 dark:text-gray-300">Choose an attribute to edit</p>
         </div>
         <div class="flex gap-1">
-            <Button size="icon" title="Add Additional Attributes" :disabled="!areFilesSelected">
-                <Icon name="Plus" class="size-4"/>
-            </Button>
+            <AddAttributeModal
+                :existing-definitions="[...allAttributeDefinitions.values()]"
+                :disabled="!areFilesSelected"
+                @add="definitionAdded"
+            />
             <Button size="icon" title="Apply Template to Selected Files" disabled>
                 <Icon name="FileInput" class="size-4"/>
             </Button>
@@ -49,8 +70,8 @@ const areFilesSelected = computed(() => props.selectedFiles.length > 0);
         </div>
     </div>
     <ul v-if="areFilesSelected" role="list" class="flex flex-col divide-y divide-gray-100 overflow-auto">
-        <li v-for="[, definition] in definitionsForSelectedFiles" :key="definition.id" @click="selectedTag = definition.id"
-            :aria-selected="definition.id === selectedTag"
+        <li v-for="[, definition] in allAttributeDefinitions" :key="definition.id" @click="selectedTag = definition"
+            :aria-selected="definition.id === selectedTag?.id"
             class="relative flex items-center space-x-4 rounded aria-selected:bg-mi-warm-medium/40 hover:bg-mi-warm-medium/50">
             <AttributeListItem :tag-definition="definition" :selectedFiles="selectedFiles"/>
         </li>

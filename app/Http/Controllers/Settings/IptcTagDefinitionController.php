@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Settings;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\IptcTagDefinitionRequest;
 use App\Http\Resources\IptcTagDefinitionResource;
 use App\Models\IptcTagDefinition;
