@@ -23,16 +23,22 @@ class FolderFileController extends Controller
 
         $files = $request->validated('files');
 
-        $folder->files()->createMany(
-            collect($files)->map(function (array $file) {
+        $dbFiles = $folder->files()->createMany(
+            collect($files)->map(function (array $file) use ($folder) {
                 /** @var ?UploadedFile $uploadedFile */
                 $uploadedFile = $file['file'];
 
+                $folder->storageConfig->getStorage()
+                    ->upload(
+                        $folder->full_path . '/' . $uploadedFile->getClientOriginalName(),
+                        $uploadedFile->get()
+                    );
+
                 return [
                     'name' => $file['name'] ?? $uploadedFile->getClientOriginalName(),
-                    'path' => $uploadedFile->storeAS('files', $uploadedFile->getClientOriginalName(), 'public'),
                     'size' => $uploadedFile->getSize(),
                     'type' => $uploadedFile->getMimeType(),
+                    'storage_config_id' => $folder->storage_config_id,
                 ];
             })
         );
