@@ -4,8 +4,12 @@ namespace App\Http\Controllers\Storage;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateFileRequest;
+use App\Models\File;
 use App\Models\Folder;
 use App\Models\StorageConfig;
+use App\Services\Session\Toast\LinkAction;
+use App\Services\Session\Toast\Toast;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\UploadedFile;
 
@@ -31,7 +35,23 @@ class FolderFileController extends Controller
 
         $folder->touch();
 
-        return redirect()->route('storage.folders.show', ['folder' => $folder, 'storageConfig' => $storageConfig])
-            ->with('success', 'File uploaded successfully.');
+        if (count($dbFiles) === 1) {
+            Toast::success('File uploaded successfully.')
+                ->action(LinkAction::make(
+                    'Got to file',
+                    route('storage.files.show', [
+                        'file' => $dbFiles[0],
+                        'storageConfig' => $storageConfig
+                    ])
+                ))
+                ->flash();
+        } else {
+            Toast::success(count($dbFiles) . ' files uploaded successfully.')->flash();
+        }
+
+        return redirect()->route(
+            'storage.folders.show',
+            ['folder' => $folder, 'storageConfig' => $storageConfig]
+        );
     }
 }

@@ -3,6 +3,7 @@ import AppContent from '@/components/AppContent.vue';
 import AppHeader from '@/components/AppHeader.vue';
 import AppShell from '@/components/AppShell.vue';
 import type { BreadcrumbItemType } from '@/types';
+import TheToastProvider from "@/components/ui/toast/TheToastProvider.vue";
 
 interface Props {
     breadcrumbs?: BreadcrumbItemType[];
@@ -20,4 +21,5 @@ withDefaults(defineProps<Props>(), {
             <slot />
         </AppContent>
     </AppShell>
+    <TheToastProvider/>
 </template>

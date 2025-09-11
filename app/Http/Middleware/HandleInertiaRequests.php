@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Http\Resources\StorageConfigResource;
+use App\Services\Session\Toast\Toast;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -55,6 +56,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'storageConfigs' => $request->user() ? StorageConfigResource::collection($request->user()->storageConfigs()->get()) : null,
+            'messages' => Toast::all(),
         ];
     }
 }

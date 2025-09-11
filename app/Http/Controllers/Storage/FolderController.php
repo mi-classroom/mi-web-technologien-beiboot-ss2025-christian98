@@ -43,9 +43,17 @@ class FolderController extends Controller
 
     public function destroy(StorageConfig $storageConfig, Folder $folder): RedirectResponse
     {
-        $folder->delete();
+        $this->authorize('delete', $folder);
 
-        return redirect()->route('storage.folders.index', ['storageConfig' => $storageConfig])
-            ->with('success', 'Folder has been deleted.');
+        if ($folder->parent) {
+            Toast::success('Folder has been deleted.')->flash();
+            $folder->delete();
+
+            return redirect()->route('storage.folders.show', ['folder' => $folder->parent, 'storageConfig' => $storageConfig]);
+        }
+
+        Toast::error('The root folder cannot be deleted.')->flash();
+
+        return redirect()->route('storage.folders.show', ['folder' => $folder, 'storageConfig' => $storageConfig]);
     }
 }

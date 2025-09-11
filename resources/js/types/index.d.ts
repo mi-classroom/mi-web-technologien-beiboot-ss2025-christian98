@@ -49,7 +49,20 @@ export interface SharedData extends PageProps {
     ziggy: Config & { location: string };
     sidebarOpen: boolean;
     storageConfigs?: { data: StorageConfig[] };
+    messages: Toast[];
 }
+
+export interface Toast {
+    id: string;
+    type: 'success' | 'error' | 'info' | 'warning';
+    title: string;
+    description?: string;
+    duration?: number; // in milliseconds
+    actions: ToastAction[];
+    timestamp: string;
+}
+
+export type ToastAction = { href: string, label: string };
 
 // region Models/Resources
 export interface Resource<T> {
