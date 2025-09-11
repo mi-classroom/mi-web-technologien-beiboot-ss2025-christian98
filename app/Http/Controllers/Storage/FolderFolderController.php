@@ -13,8 +13,12 @@ use Illuminate\Http\RedirectResponse;
 
 class FolderFolderController extends Controller
 {
+    use AuthorizesRequests;
+
     public function store(CreateFolderRequest $request, StorageConfig $storageConfig, Folder $folder): RedirectResponse
     {
+        $this->authorize('create', [Folder::class, $folder]);
+
         $newFolder = $folder->folders()->create([
             ...$request->validated(),
             'storage_config_id' => $storageConfig->id,

@@ -16,6 +16,7 @@ class FolderController extends Controller
     public function index(): FolderResource
     {
         $rootFolder = auth()->user()->rootFolder;
+        $this->authorize('view', $rootFolder);
 
         return new FolderResource($rootFolder);
     }

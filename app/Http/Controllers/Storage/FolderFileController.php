@@ -15,8 +15,12 @@ use Illuminate\Http\UploadedFile;
 
 class FolderFileController extends Controller
 {
+    use AuthorizesRequests;
+
     public function store(CreateFileRequest $request, StorageConfig $storageConfig, Folder $folder): RedirectResponse
     {
+        $this->authorize('create', [File::class, $folder]);
+
         $files = $request->validated('files');
 
         $folder->files()->createMany(
