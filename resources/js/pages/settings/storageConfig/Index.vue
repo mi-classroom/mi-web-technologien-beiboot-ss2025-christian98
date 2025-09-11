@@ -76,7 +76,7 @@ function disconnect(provider: StorageConfig) {
                     <div
                         v-for="provider in props.configs.data"
                         :key="provider.id"
-                        class="flex flex-col items-center p-4 mb-3 bg-gray-50 border border-gray-200 rounded-lg hover:shadow-md transition-all duration-200"
+                        class="flex flex-col items-center p-4 mb-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-500 rounded-lg hover:shadow-md transition-all duration-200"
                     >
                         <div class="flex items-center justify-between w-full">
                             <!-- Provider Icon -->
@@ -85,9 +85,9 @@ function disconnect(provider: StorageConfig) {
                             <!-- Provider Info -->
                             <div class="flex-1 min-w-0">
                                 <div class="flex justify-between">
-                                    <div class="text-lg font-semibold text-gray-900 mb-1">
+                                    <div class="text-lg font-semibold text-gray-900 dark:text-gray-200 mb-1">
                                         {{ provider.name }}
-                                        <span class="text-gray-500 text-sm ml-2">
+                                        <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">
                                             {{ provider.provider_type }}
                                         </span>
                                     </div>
@@ -107,10 +107,10 @@ function disconnect(provider: StorageConfig) {
                                     </span>
                                 </div>
                                 <div class="flex items-center justify-between gap-4 text-sm text-gray-600">
-                                    <span class="font-medium text-gray-700">
+                                    <span class="font-medium text-gray-700 dark:text-gray-500">
                                         <StorageSize :size="provider.storage_used"/>
                                     </span>
-                                    <span class="text-gray-500 text-xs">
+                                    <span class="text-gray-500 dark:text-gray-400 text-xs">
                                         Last indexed: {{
                                             provider.last_indexed_at ? formatDate(new Date(provider.last_indexed_at)) : 'Never'
                                         }}

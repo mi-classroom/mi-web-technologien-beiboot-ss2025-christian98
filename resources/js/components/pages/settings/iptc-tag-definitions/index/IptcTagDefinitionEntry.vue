@@ -14,27 +14,27 @@ const props = defineProps<{
 </script>
 
 <template>
-    <div class="px-6 py-4 hover:bg-gray-50 transition-colors">
+    <div class="px-6 py-4 hover:bg-gray-50 dark:bg-gray-800 hover:dark:bg-gray-700 transition-colors">
         <div class="flex items-center justify-between">
             <div class="flex-1 min-w-0">
                 <div class="flex items-center space-x-3">
-                    <h4 class="text-sm font-medium text-gray-900 truncate">{{ definition.name }}</h4>
+                    <h4 class="text-sm font-medium text-gray-900 dark:text-gray-200 truncate">{{ definition.name }}</h4>
                     <DataTypeBadge :definition="definition" />
                     <span v-if="definition.spec.multiple"
-                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-600 text-indigo-800 dark:text-indigo-100">
                         Multiple
                     </span>
                     <span v-if="definition.spec.required"
-                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                          class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100">
                         Required
                     </span>
                     <span v-if="!definition.user_id"
-                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-100">
                         Global
                     </span>
                 </div>
-                <div class="mt-1 flex items-center space-x-4 text-sm text-gray-500">
-                    <span>Tag: <code class="bg-gray-100 px-1 py-0.5 rounded text-xs">{{ definition.tag }}</code></span>
+                <div class="mt-1 flex items-center space-x-4 text-sm text-gray-500 dark:text-gray-300">
+                    <span>Tag: <code class="bg-gray-100 dark:bg-gray-600 px-1 py-0.5 rounded text-xs">{{ definition.tag }}</code></span>
                     <span v-if="definition.description" class="line-clamp-2"
                           :title="definition.description">{{ definition.description }}</span>
                 </div>

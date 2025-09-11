@@ -37,13 +37,13 @@ const breadcrumbs: BreadcrumbItem[] = [
                 </div>
 
                 <!-- Custom IPTC tag definitions -->
-                <div class="bg-white rounded-lg border border-gray-200">
-                    <div class="px-6 py-4 border-b border-gray-200">
-                        <h3 class="text-lg font-semibold text-gray-900">Custom IPTC Tag Definitions</h3>
-                        <p class="text-sm text-gray-600 mt-1">Definitions you can edit and delete</p>
+                <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
+                    <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-50">Custom IPTC Tag Definitions</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Definitions you can edit and delete</p>
                     </div>
 
-                    <div v-if="customDefinitions.data.length === 0" class="px-6 py-8 text-center text-gray-500">
+                    <div v-if="customDefinitions.data.length === 0" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
                         <div class="text-gray-400 mb-2">
                             <svg class="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -54,7 +54,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <p class="text-sm">Create your first custom IPTC tag definition to get started</p>
                     </div>
 
-                    <div v-else class="divide-y divide-gray-200">
+                    <div v-else class="divide-y divide-gray-200 dark:divide-gray-700">
                         <IptcTagDefinitionEntry v-for="definition in customDefinitions.data"
                                                 :key="definition.id"
                                                 :definition="definition"/>
@@ -63,13 +63,13 @@ const breadcrumbs: BreadcrumbItem[] = [
             </div>
 
             <!-- Global IPTC tag definitions -->
-            <div class="bg-white rounded-lg border border-gray-200">
-                <div class="px-6 py-4 border-b border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-900">Global IPTC Tag Definitions</h3>
-                    <p class="text-sm text-gray-600 mt-1">Standard definitions (read-only)</p>
+            <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-600">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-50">Global IPTC Tag Definitions</h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-300 mt-1">Standard definitions (read-only)</p>
                 </div>
 
-                <div class="divide-y divide-gray-200">
+                <div class="divide-y divide-gray-200 dark:divide-gray-700">
                     <IptcTagDefinitionEntry
                         v-for="definition in globalDefinitions.data"
                         :key="definition.id"
