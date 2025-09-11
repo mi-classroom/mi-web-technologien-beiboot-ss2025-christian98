@@ -29,7 +29,9 @@ class IptcItemController extends Controller
         $this->authorize('create', [IptcItem::class, $file]);
 
         $iptcItem = $file->iptcItems()->updateOrCreate(
-            $request->only('tag'),
+            [
+                'iptc_tag_definition_id' => $request->validated('tag')
+            ],
             $request->except('tag')
         );
         $file->touch();
