@@ -7,7 +7,6 @@ import {Input} from "@/components/ui/input";
 import {useCloned} from "@vueuse/core";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
-import {trans} from "laravel-vue-i18n";
 
 const props = defineProps<{
     iptcItem: IptcItem;

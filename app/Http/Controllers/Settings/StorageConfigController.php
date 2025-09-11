@@ -7,18 +7,20 @@ use App\Http\Requests\StorageConfigRequest;
 use App\Http\Resources\StorageConfigResource;
 use App\Jobs\IndexStorageJob;
 use App\Models\StorageConfig;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class StorageConfigController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(): Response
     {
-        Gate::authorize('view-any', StorageConfig::class);
+        $this->authorize('view-any', StorageConfig::class);
 
         return Inertia::render('settings/storageConfig/Index', [
             'configs' => StorageConfigResource::collection(auth()->user()->storageConfigs()->get()),
@@ -27,14 +29,14 @@ class StorageConfigController extends Controller
 
     public function create(): Response
     {
-        Gate::authorize('create', StorageConfig::class);
+        $this->authorize('create', StorageConfig::class);
 
         return Inertia::render('settings/storageConfig/Create');
     }
 
     public function store(StorageConfigRequest $request): RedirectResponse
     {
-        Gate::authorize('create', StorageConfig::class);
+        $this->authorize('create', StorageConfig::class);
 
         $storage = Auth::user()->storageConfigs()->create([
             ...$request->validated(),
@@ -49,7 +51,7 @@ class StorageConfigController extends Controller
 
     public function edit(StorageConfig $config): Response
     {
-        Gate::authorize('update', $config);
+        $this->authorize('update', $config);
 
         return Inertia::render('settings/storageConfig/Update', [
             'storageConfig' => new StorageConfigResource($config),
@@ -58,7 +60,7 @@ class StorageConfigController extends Controller
 
     public function update(StorageConfigRequest $request, StorageConfig $config): RedirectResponse
     {
-        Gate::authorize('update', $config);
+        $this->authorize('update', $config);
 
         $config->update($request->validated());
 
@@ -68,7 +70,7 @@ class StorageConfigController extends Controller
 
     public function destroy(StorageConfig $config): RedirectResponse
     {
-        Gate::authorize('delete', $config);
+        $this->authorize('delete', $config);
 
         $config->delete();
 
@@ -78,6 +80,8 @@ class StorageConfigController extends Controller
 
     public function reIndex(StorageConfig $config): RedirectResponse
     {
+        $this->authorize('view', $config);
+
         Bus::dispatch(new IndexStorageJob($config));
         $config->update(['status' => 'indexing']);
 

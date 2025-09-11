@@ -2,7 +2,7 @@
 import IptcInput from "@/components/editor/edit-view/IptcInput.vue";
 import {IptcTagDefinition} from "@/types";
 
-defineModel<string|undefined>();
+const model = defineModel<string|undefined>();
 
 defineProps<{
     definition: IptcTagDefinition;
@@ -14,5 +14,5 @@ defineProps<{
 </script>
 
 <template>
-    <IptcInput v-bind:model-value="modelValue" type="text" :readonly :title :definition :index :suffix/>
+    <IptcInput v-model="model" type="text" :readonly :title :definition :index :suffix/>
 </template>

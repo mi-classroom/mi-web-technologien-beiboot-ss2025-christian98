@@ -10,6 +10,8 @@ use App\Jobs\IndexFileJob;
 use App\Models\File;
 use App\Models\Folder;
 use App\Models\StorageConfig;
+use App\Services\Session\Toast\Toast;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Str;
@@ -18,8 +20,12 @@ use Inertia\Response;
 
 class FileController extends Controller
 {
+    use AuthorizesRequests;
+
     public function show(StorageConfig $storageConfig, File $file): Response
     {
+        $this->authorize('view', $file);
+
         $folderBreadcrumbs = collect([...$file->folder->all_parents, $file->folder])
             ->map(function (Folder $folder) use ($storageConfig) {
                 return [
@@ -42,22 +48,30 @@ class FileController extends Controller
 
     public function download(StorageConfig $storageConfig, File $file): File
     {
+        $this->authorize('view', $file);
+
         return $file;
     }
 
     public function reIndex(StorageConfig $storageConfig, File $file): RedirectResponse
     {
+        $this->authorize('view', File::class);
+
         Bus::dispatch(new IndexFileJob($file));
 
-        return redirect()->route('storage.files.show', ['file' => $file, 'storageConfig' => $storageConfig])
-            ->with('success', 'File re-indexed successfully.');
+        Toast::success('File re-indexed successfully.')->flash();
+
+        return redirect()->route('storage.files.show', ['file' => $file, 'storageConfig' => $storageConfig]);
     }
 
     public function destroy(StorageConfig $storageConfig, File $file): RedirectResponse
     {
+        $this->authorize('delete', $file);
+
         $file->delete();
 
-        return redirect()->route('storage.folders.show', ['path' => $file->folder, 'storageConfig' => $storageConfig])
-            ->with('success', 'File deleted successfully.');
+        Toast::success('File deleted successfully.')->flash();
+
+        return redirect()->route('storage.folders.show', ['path' => $file->folder, 'storageConfig' => $storageConfig]);
     }
 }

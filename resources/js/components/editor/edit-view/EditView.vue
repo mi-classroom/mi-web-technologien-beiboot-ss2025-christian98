@@ -25,7 +25,7 @@ const createMutation = useMutation({
         return await fetchApi<Resource<IptcItem>>(route('api.files.iptc.store', {file: data.file}), {
             method: 'POST',
             body: JSON.stringify({
-                tag: selectedTag.value,
+                tag: selectedTag.value?.id,
                 value: data.newValue,
             }),
         });

@@ -78,6 +78,8 @@ class FileController extends Controller
 
     public function preview(File $file): File
     {
+        $this->authorize('view', $file);
+
         return $file;
     }
 }

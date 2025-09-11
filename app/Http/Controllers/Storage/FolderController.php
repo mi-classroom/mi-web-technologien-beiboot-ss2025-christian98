@@ -8,6 +8,8 @@ use App\Http\Resources\StorageConfigResource;
 use App\Jobs\IndexFolderJob;
 use App\Models\Folder;
 use App\Models\StorageConfig;
+use App\Services\Session\Toast\Toast;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Bus;
 use Inertia\Inertia;
@@ -15,8 +17,12 @@ use Inertia\Response;
 
 class FolderController extends Controller
 {
+    use AuthorizesRequests;
+
     public function index(StorageConfig $storageConfig): Response
     {
+        $this->authorize('viewAny', Folder::class);
+
         $folder = $storageConfig->rootFolder()->with(['files', 'folders'])->firstOrFail();
 
         Bus::dispatch(new IndexFolderJob($folder));
@@ -30,6 +36,8 @@ class FolderController extends Controller
 
     public function show(StorageConfig $storageConfig, Folder $folder): Response
     {
+        $this->authorize('view', $folder);
+
         $folder->loadMissing('files', 'folders');
 
         Bus::dispatch(new IndexFolderJob($folder));
@@ -43,9 +51,17 @@ class FolderController extends Controller
 
     public function destroy(StorageConfig $storageConfig, Folder $folder): RedirectResponse
     {
-        $folder->delete();
+        $this->authorize('delete', $folder);
 
-        return redirect()->route('storage.folders.index', ['storageConfig' => $storageConfig])
-            ->with('success', 'Folder has been deleted.');
+        if ($folder->parent) {
+            Toast::success('Folder has been deleted.')->flash();
+            $folder->delete();
+
+            return redirect()->route('storage.folders.show', ['folder' => $folder->parent, 'storageConfig' => $storageConfig]);
+        }
+
+        Toast::error('The root folder cannot be deleted.')->flash();
+
+        return redirect()->route('storage.folders.show', ['folder' => $folder, 'storageConfig' => $storageConfig]);
     }
 }

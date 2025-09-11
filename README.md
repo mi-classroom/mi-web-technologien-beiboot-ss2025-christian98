@@ -12,3 +12,49 @@ Hier ein paar ADR Beispiele aus dem letzten Semestern:
 - https://github.com/mi-classroom/mi-web-technologien-beiboot-ss2022-twobiers/tree/main/adr
 
 Halten Sie die Anwendung, gerade in der Anfangsphase möglichst einfach, schlank und leichtgewichtig (KISS).
+
+
+## Local Development Setup
+
+### Prerequisites
+- PHP ^8.4
+- Composer
+- Node.js & npm (latest LTS)
+- MySQL (recommended for parallel access)
+- Redis (required for Horizon queues)
+
+### Setup Instructions
+
+1. **Install dependencies:**
+   ```bash
+   composer install
+   npm install
+   ```
+
+2. **Configure environment:**
+   ```bash
+   cp .env.example .env
+   # Edit `.env` for MySQL and Redis settings
+   ```
+
+3. **Prepare application:**
+   ```bash
+   php artisan key:generate
+   php artisan migrate
+   ```
+
+4. **Start all services for development:**
+   ```bash
+   composer dev
+   php artisan horizon
+   ```
+   This will run the backend server, log watcher, and frontend (Vite) concurrently. And start Horizon for queue management in a new terminal.
+
+5. **Register a user:**
+   Visit `http://localhost:8000/register` to create an account.
+
+### Accessing the App
+- Fronted: http://localhost:8000
+
+### Notes
+- Ensure MySQL and Redis are running and configured in `.env`.

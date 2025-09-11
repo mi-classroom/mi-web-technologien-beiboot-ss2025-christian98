@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Services\Session\Toast\Toast;
 use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use League\Flysystem\Filesystem;
@@ -19,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->registerMacros();
     }
 
     /**
@@ -42,5 +44,26 @@ class AppServiceProvider extends ServiceProvider
 
             return new FilesystemAdapter(new Filesystem($adapter, $config), $adapter, $config);
         });
+    }
+
+    public function registerMacros(): void
+    {
+        RedirectResponse::macro(
+            'withSuccess',
+            function (string $message) {
+                Toast::success($message)->flash();
+
+                return $this;
+            }
+        );
+
+        RedirectResponse::macro(
+            'withError',
+            function (string $message) {
+                Toast::error($message)->flash();
+
+                return $this;
+            }
+        );
     }
 }
