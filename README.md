@@ -1,22 +1,29 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/cBV3pX2A)
+
 # Web Technologien // begleitendes Projekt Sommersemester 2025
-Zum Modul Web Technologien gibt es ein begleitendes Projekt. Im Rahmen dieses Projekts werden wir von Veranstaltung zu Veranstaltung ein Projekt sukzessive weiter entwickeln und uns im Rahmen der Veranstaltung den Fortschritt anschauen, Code Reviews machen und Entwicklungsschritte vorstellen und diskutieren.
 
-Als organisatorischen Rahmen für das Projekt nutzen wir GitHub Classroom. Inhaltlich befassen wir uns mit einer  Client-Server Anwendung mit deren Hilfe IPTC Metadaten von Bildern schnell und einfach gepflegt werden können.
+Zum Modul Web Technologien gibt es ein begleitendes Projekt. Im Rahmen dieses Projekts werden wir von Veranstaltung zu
+Veranstaltung ein Projekt sukzessive weiter entwickeln und uns im Rahmen der Veranstaltung den Fortschritt anschauen,
+Code Reviews machen und Entwicklungsschritte vorstellen und diskutieren.
 
-Dokumentieren Sie in diesem Beibootprojekt Ihre Entscheidungen gewissenhaft unter Zuhilfenahme von [Architectual Decision Records](https://adr.github.io) (ADR).
+Als organisatorischen Rahmen für das Projekt nutzen wir GitHub Classroom. Inhaltlich befassen wir uns mit einer
+Client-Server Anwendung mit deren Hilfe IPTC Metadaten von Bildern schnell und einfach gepflegt werden können.
+
+Dokumentieren Sie in diesem Beibootprojekt Ihre Entscheidungen gewissenhaft unter Zuhilfenahme
+von [Architectual Decision Records](https://adr.github.io) (ADR).
 
 Hier ein paar ADR Beispiele aus dem letzten Semestern:
+
 - https://github.com/mi-classroom/mi-web-technologien-beiboot-ss2022-Moosgloeckchen/tree/main/docs/decisions
 - https://github.com/mi-classroom/mi-web-technologien-beiboot-ss2022-mweiershaeuser/tree/main/adr
 - https://github.com/mi-classroom/mi-web-technologien-beiboot-ss2022-twobiers/tree/main/adr
 
 Halten Sie die Anwendung, gerade in der Anfangsphase möglichst einfach, schlank und leichtgewichtig (KISS).
 
-
 ## Local Development Setup
 
 ### Prerequisites
+
 - PHP ^8.4
 - Composer
 - Node.js & npm (latest LTS)
@@ -48,13 +55,42 @@ Halten Sie die Anwendung, gerade in der Anfangsphase möglichst einfach, schlank
    composer dev
    php artisan horizon
    ```
-   This will run the backend server, log watcher, and frontend (Vite) concurrently. And start Horizon for queue management in a new terminal.
+   This will run the backend server, log watcher, and frontend (Vite) concurrently. And start Horizon for queue
+   management in a new terminal.
 
 5. **Register a user:**
    Visit `http://localhost:8000/register` to create an account.
 
 ### Accessing the App
+
 - Fronted: http://localhost:8000
 
 ### Notes
+
 - Ensure MySQL and Redis are running and configured in `.env`.
+
+## Time-Tracking
+
+| Aufgabe                                                                                       | Zeitaufwand |
+|-----------------------------------------------------------------------------------------------|-------------|
+| mi-master-wt-beiboot-2025-1: Kernfunktion im Backend erstellen                                | 17 h 6 min  |
+| Translation                                                                                   | 3 h 15 min  |
+| Dashboard (Hier stecken auch viele andere Dinge mit drin, die ich nicht mehr einzeln weiß)    | 2 Tage 6 h  |
+| Dropbox (Hier steckt auch die eigentliche Implementierung der externen Storage-Provider drin) | 16 h 47 min |
+| mi-web-technologien-beiboot-ss2025-christian98-6: Storage-Configs anlegen                     | 1 h 22 min  |
+| mi-web-technologien-beiboot-ss2025-christian98-7: Storage-Configs bearbeiten                  | 31 min 23 s |
+| mi-web-technologien-beiboot-ss2025-christian98-8: IPTC-Tag-Definitions anlegen                | 3 h 2 min   |
+| mi-web-technologien-beiboot-ss2025-christian98-9: IPTC-Tag-Definition bearbeiten              | 9 min 56 s  |
+| mi-web-technologien-beiboot-ss2025-christian98-10: Ein IPTC-Tag zu einer Datei hinzufügen     | 1 h 56 min  |
+| mi-web-technologien-beiboot-ss2025-christian98-11: Deployment Doku                            | 5 h 56 min  |
+| Default task (Hier stecken viele Dinge mit drin, die ich nicht mehr einzeln weiß)             | 19 h 55 min |
+
+> Die Zeitangaben stammen aus meiner IDE Zeiterfassung (JetBrains IDE). Ich bin mir nicht sicher wie genau die ist, aber
+> sie gibt mir zumindest einen groben Überblick über den Zeitaufwand.
+
+### Gesamtsumme
+
+**Gesamtzeit:**
+
+- In Stunden: **124 h 21 min**
+- In Tagen (à 8 h): ca. **15,5 Arbeitstage**
