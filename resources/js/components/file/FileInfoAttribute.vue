@@ -19,7 +19,6 @@ const props = defineProps<{
             </dd>
         </div>
         <div class="flex items-center justify-end gap-2 w-full py-2">
-            <!-- TODO Convert to meatball menu -->
             <slot name="actions"/>
         </div>
     </div>

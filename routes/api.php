@@ -21,7 +21,6 @@ Route::name('api.')->group(function () {
         Route::post('/folders/{folder}/folders', [FolderFolderController::class, 'store'])->name('folders.folders.store');
         Route::apiResource('folders.files', FileController::class)->shallow();
         Route::apiResource('files.iptc', IptcItemController::class)->shallow();
-        // TODO endpoint to fetch various files by id (editor), check needed for permissions
         Route::get('/files', [FileController::class, 'indexRoot'])->name('files.index');
         Route::get('/files/{file}/preview', [FileController::class, 'preview'])->name('files.preview');
 
