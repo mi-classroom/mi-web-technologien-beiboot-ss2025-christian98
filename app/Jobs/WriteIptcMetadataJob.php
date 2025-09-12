@@ -32,8 +32,8 @@ class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
                 $currentIptc = new IptcData();
             }
 
-            $newIptc = $this->file->iptcItems
-                ->mapWithKeys(fn(IptcItem $iptcItem) => [$iptcItem->tag => $iptcItem])
+            $newIptc = $this->file->iptcItems()->with('tagDefinition')->get()
+                ->mapWithKeys(fn(IptcItem $iptcItem) => [$iptcItem->tagDefinition->tag => $iptcItem])
                 ->sortKeys();
 
             $toBeDeleted = $currentIptc->collect()->diffKeys($newIptc);
@@ -50,7 +50,7 @@ class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
                 '2#000', // IPTC Application Record Version
                 '2#001', // IPTC Object Name
             ])->ray()->each(function (IptcItem $item) use ($currentIptc) {
-                $currentIptc->set($item->tag, $item->value);
+                $currentIptc->set($item->tagDefinition->tag, $item->value);
             });
 
             // Save the IPTC data back to the image
