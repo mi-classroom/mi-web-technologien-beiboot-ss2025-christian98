@@ -32,6 +32,7 @@ import {
 } from 'lucide-vue-next';
 import {computed, ref} from 'vue';
 import {NavigationMenuSub, PopoverRoot, PopoverTrigger} from "reka-ui";
+import {providerIconMap} from "@/lib/providers";
 
 interface Props {
     breadcrumbs?: BreadcrumbItem[];
@@ -66,18 +67,13 @@ const mainNavItems: NavItem[] = [
         title: 'Cloud Storage',
         href: '/storage',
         icon: HardDrive,
+        hideOverview: true,
         items: [
             ...(page.props.storageConfigs?.data ?? []).map((config) => {
-                const iconMap = { // TODO: Move to a separate file (duplicated in ProviderIcon.vue)
-                    'local': HardDrive,
-                    'webdav': Cloud,
-                    'dropbox': Cloud,
-                };
-
                 return ({
                     title: config.name,
                     href: route('storage.folders.index', {storageConfig: config,}),
-                    icon: iconMap[config.provider_type] || 'Cloud',
+                    icon: providerIconMap[config.provider_type] || 'Cloud',
                 });
             }),
             {
@@ -175,7 +171,7 @@ const rightNavItems: NavLeafItem[] = [
                                     <NavigationMenuContent>
                                         <NavigationMenuSub default-value="overview">
                                             <NavigationMenuList class="flex flex-col items-start">
-                                                <NavigationMenuItem v-if="item.hideOverview !== false" value="overview"
+                                                <NavigationMenuItem v-if="item.hideOverview !== true" value="overview"
                                                                     class="relative w-full">
                                                     <NavigationMenuLink as-child
                                                                         :class="[navigationMenuTriggerStyle(), activeItemStyles(item.href), 'h-9 min-w-full cursor-pointer px-3 items-start']"
