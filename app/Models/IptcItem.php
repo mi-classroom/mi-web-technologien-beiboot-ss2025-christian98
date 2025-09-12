@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Events\IptcItem\IptcItemCreatedEvent;
+use App\Events\IptcItem\IptcItemDeletedEvent;
+use App\Events\IptcItem\IptcItemUpdatedEvent;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,22 +23,11 @@ class IptcItem extends Model
         'value' => 'array',
     ];
 
-    protected static function booted(): void
-    {
-        parent::booted();
-
-        static::created(function (self $item) {
-            // TODO WriteIptcMetadataJob::dispatch($item->file);
-        });
-
-        static::updated(function (self $item) {
-            // TODO WriteIptcMetadataJob::dispatch($item->file);
-        });
-
-        static::deleted(function (self $item) {
-            // TODO WriteIptcMetadataJob::dispatch($item->file);
-        });
-    }
+    protected $dispatchesEvents = [
+        'created' => IptcItemCreatedEvent::class,
+        'updated' => IptcItemUpdatedEvent::class,
+        'deleted' => IptcItemDeletedEvent::class,
+    ];
 
     /**
      * @return BelongsTo<File, self>
