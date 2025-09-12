@@ -22,7 +22,7 @@ class IptcTagDefinitionController extends Controller
 
         return Inertia::render('settings/iptcTagDefinitions/Index', [
             'globalDefinitions' => IptcTagDefinitionResource::collection(IptcTagDefinition::whereNull('user_id')->get()),
-            'customDefinitions' => IptcTagDefinitionResource::collection(IptcTagDefinition::whereNotNull('user_id')->get()),
+            'customDefinitions' => IptcTagDefinitionResource::collection(IptcTagDefinition::where('user_id', auth()->id())->get()),
         ]);
     }
 
