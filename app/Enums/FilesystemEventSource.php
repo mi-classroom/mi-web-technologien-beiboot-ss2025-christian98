@@ -2,8 +2,6 @@
 
 namespace App\Enums;
 
-use RuntimeException;
-
 enum FilesystemEventSource
 {
     case UI;
@@ -11,14 +9,14 @@ enum FilesystemEventSource
 
     public static function detect(): FilesystemEventSource
     {
-        if (request()) {
-            return self::UI;
-        }
-
+        // The order matters here!
+        // Somehow Laravel also injects a Request instance when running in console
         if (app()->runningInConsole()) {
             return self::Import;
         }
 
-        throw new RuntimeException('Unable to detect source for FileCreatedEvent');
+        // We have no other way to detect the source of the event
+        // We always get a request instance here
+        return self::UI;
     }
 }
