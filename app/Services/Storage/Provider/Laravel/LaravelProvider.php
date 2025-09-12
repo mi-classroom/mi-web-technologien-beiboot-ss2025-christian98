@@ -21,7 +21,7 @@ abstract class LaravelProvider extends Provider
     {
         $storage = $this->getStorage();
 
-        if (!$storage->exists($path)) {
+        if (! $storage->exists($path)) {
             return null;
         }
 
@@ -43,7 +43,7 @@ abstract class LaravelProvider extends Provider
     {
         $storage = $this->getStorage();
 
-        if (!$storage->exists($path)) {
+        if (! $storage->exists($path)) {
             return null;
         }
 

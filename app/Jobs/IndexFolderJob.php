@@ -18,14 +18,12 @@ use Illuminate\Support\Facades\Log;
 
 class IndexFolderJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public function __construct(
         private readonly Folder $folder,
-        private readonly bool   $shouldIndexSubFolders = false
-    )
-    {
-    }
+        private readonly bool $shouldIndexSubFolders = false
+    ) {}
 
     public function handle(): void
     {
@@ -81,10 +79,6 @@ class IndexFolderJob implements ShouldQueue
         }
     }
 
-    /**
-     * @param FilesystemItem $item
-     * @return void
-     */
     public function importFilesystemItem(FilesystemItem $item): void
     {
         if ($item instanceof ProviderFile) {
@@ -92,14 +86,10 @@ class IndexFolderJob implements ShouldQueue
         } elseif ($item instanceof Directory) {
             $this->importDirectory($item);
         } else {
-            Log::warning("Unexpected FilesystemItem type: " . get_class($item) . " in folder: " . $this->folder->full_path);
+            Log::warning('Unexpected FilesystemItem type: '.get_class($item).' in folder: '.$this->folder->full_path);
         }
     }
 
-    /**
-     * @param ProviderFile $file
-     * @return void
-     */
     private function importFile(ProviderFile $file): void
     {
         File::updateOrCreate([
@@ -112,10 +102,6 @@ class IndexFolderJob implements ShouldQueue
         ]);
     }
 
-    /**
-     * @param Directory $directory
-     * @return void
-     */
     private function importDirectory(Directory $directory): void
     {
         Folder::updateOrCreate([

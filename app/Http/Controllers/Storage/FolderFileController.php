@@ -30,7 +30,7 @@ class FolderFileController extends Controller
 
                 $folder->storageConfig->getStorage()
                     ->upload(
-                        $folder->full_path . '/' . $uploadedFile->getClientOriginalName(),
+                        $folder->full_path.'/'.$uploadedFile->getClientOriginalName(),
                         $uploadedFile->get()
                     );
 
@@ -51,12 +51,12 @@ class FolderFileController extends Controller
                     'Got to file',
                     route('storage.files.show', [
                         'file' => $dbFiles[0],
-                        'storageConfig' => $storageConfig
+                        'storageConfig' => $storageConfig,
                     ])
                 ))
                 ->flash();
         } else {
-            Toast::success(count($dbFiles) . ' files uploaded successfully.')->flash();
+            Toast::success(count($dbFiles).' files uploaded successfully.')->flash();
         }
 
         return redirect()->route(

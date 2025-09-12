@@ -49,7 +49,6 @@ class FileController extends Controller
         return new FileResourceCollection($files);
     }
 
-
     public function show(File $file): FileResource
     {
         $this->authorize('view', $file);

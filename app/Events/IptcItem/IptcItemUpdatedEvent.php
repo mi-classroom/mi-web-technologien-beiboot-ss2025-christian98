@@ -16,7 +16,7 @@ class IptcItemUpdatedEvent
 
     public function __construct(
         public readonly IptcItem $iptcItem,
-        ?FilesystemEventSource   $source = null,
+        ?FilesystemEventSource $source = null,
     ) {
         $this->source = $source ?? FilesystemEventSource::detect();
     }

@@ -6,7 +6,6 @@ use App\Models\File;
 use App\Services\Image\Image;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Str;
 
 /** @mixin File */
 class FileResource extends JsonResource

@@ -17,6 +17,7 @@ use Throwable;
 class WebdavProvider extends Provider
 {
     public readonly Client $client;
+
     public readonly PathPrefixer $prefixer;
 
     public function __construct(StorageConfig $config)
@@ -53,7 +54,7 @@ class WebdavProvider extends Provider
             $statusCode = $response['statusCode'];
 
             if ($statusCode < 200 || $statusCode >= 300) {
-                throw new RuntimeException('Unexpected status code received: ' . $statusCode);
+                throw new RuntimeException('Unexpected status code received: '.$statusCode);
             }
         } catch (Throwable $exception) {
             throw UnableToWriteFile::atLocation($path, $exception->getMessage(), $exception);
@@ -61,10 +62,7 @@ class WebdavProvider extends Provider
     }
 
     /**
-     * @param string $path
-     * @param array<int, string> $property
-     * @param int $depth
-     * @return array
+     * @param  array<int, string>  $property
      */
     public function propFind(string $path, array $property, int $depth = 0): array
     {
@@ -96,7 +94,7 @@ class WebdavProvider extends Provider
 
             $directoryParts[] = $directory;
             $directoryPath = implode('/', $directoryParts);
-            $location = $this->encodePath($directoryPath) . '/';
+            $location = $this->encodePath($directoryPath).'/';
 
             // TODO: Implement the logic to make the directory in the storage
             if ($this->directoryExists($this->prefixer->stripDirectoryPrefix($directoryPath))) {
@@ -114,7 +112,7 @@ class WebdavProvider extends Provider
             }
 
             if ($response['statusCode'] !== 201) {
-                throw UnableToCreateDirectory::atLocation($path, 'Failed to create directory at: ' . $location);
+                throw UnableToCreateDirectory::atLocation($path, 'Failed to create directory at: '.$location);
             }
         }
     }

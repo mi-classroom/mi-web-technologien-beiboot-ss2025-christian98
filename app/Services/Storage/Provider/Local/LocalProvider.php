@@ -12,7 +12,7 @@ class LocalProvider extends LaravelProvider
     {
         return Storage::build([
             'driver' => 'local',
-            'root' => storage_path('app/private' . DIRECTORY_SEPARATOR . 'users' . DIRECTORY_SEPARATOR . $this->config->user_id . DIRECTORY_SEPARATOR . 'files'),
+            'root' => storage_path('app/private'.DIRECTORY_SEPARATOR.'users'.DIRECTORY_SEPARATOR.$this->config->user_id.DIRECTORY_SEPARATOR.'files'),
         ]);
     }
 }

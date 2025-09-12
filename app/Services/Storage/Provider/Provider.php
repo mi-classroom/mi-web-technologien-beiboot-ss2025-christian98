@@ -10,8 +10,7 @@ abstract class Provider
 {
     public function __construct(
         public readonly StorageConfig $config,
-    ) {
-    }
+    ) {}
 
     abstract public function directory(string $path): ?Directory;
 
@@ -20,7 +19,6 @@ abstract class Provider
     /**
      * List the contents of a directory.
      *
-     * @param string $path
      * @return LazyCollection<Directory|File>
      */
     public function listDirectory(string $path): LazyCollection
@@ -36,9 +34,6 @@ abstract class Provider
 
     /**
      * Retrieve a file by its path.
-     *
-     * @param string $path
-     * @return File|null
      */
     abstract public function file(string $path): ?File;
 

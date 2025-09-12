@@ -17,12 +17,12 @@ class DashboardController extends Controller
             ->limit(10);
 
         return Inertia::render('Dashboard', [
-            'recentlyEditedFiles' => Inertia::defer(function () use ($baseQuery, $storageConfigs) {
+            'recentlyEditedFiles' => Inertia::defer(function () use ($baseQuery) {
                 return new FileResourceCollection(
                     $baseQuery->clone()->orderByDesc('updated_at')->get()
                 );
             }, 'recentlyEditedFiles'),
-            'recentlyAddedFiles' => Inertia::defer(function () use ($baseQuery, $storageConfigs) {
+            'recentlyAddedFiles' => Inertia::defer(function () use ($baseQuery) {
                 return new FileResourceCollection(
                     $baseQuery->clone()->orderByDesc('created_at')->get()
                 );

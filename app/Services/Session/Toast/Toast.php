@@ -10,22 +10,20 @@ use Illuminate\Support\Str;
 final class Toast implements Arrayable
 {
     private const string SESSION_KEY = 'status';
+
     public readonly string $id;
+
     public readonly CarbonImmutable $timestamp;
 
     /**
-     * @param string $title
-     * @param string|null $description
-     * @param ToastType $type
-     * @param int $duration
-     * @param array<LinkAction> $actions
+     * @param  array<LinkAction>  $actions
      */
     public function __construct(
-        public readonly string    $title,
+        public readonly string $title,
         public readonly ToastType $type,
-        public readonly ?int       $duration,
-        public readonly ?string   $description = null,
-        public readonly array     $actions = [],
+        public readonly ?int $duration,
+        public readonly ?string $description = null,
+        public readonly array $actions = [],
     ) {
         $this->id = Str::uuid()->toString();
         $this->timestamp = CarbonImmutable::now();
@@ -43,7 +41,7 @@ final class Toast implements Arrayable
         }
 
         if (is_array($sessionValue)) {
-            return array_filter(array_map(fn($item) => $item instanceof self ? $item : null, $sessionValue));
+            return array_filter(array_map(fn ($item) => $item instanceof self ? $item : null, $sessionValue));
         }
 
         /**
@@ -104,7 +102,7 @@ final class Toast implements Arrayable
             'description' => $this->description,
             'type' => $this->type->value,
             'duration' => $this->duration,
-            'actions' => array_map(fn(Action $action) => $action->toArray(), $this->actions),
+            'actions' => array_map(fn (Action $action) => $action->toArray(), $this->actions),
             'timestamp' => $this->timestamp->toIso8601String(),
         ];
     }

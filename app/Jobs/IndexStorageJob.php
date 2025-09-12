@@ -18,9 +18,7 @@ class IndexStorageJob implements ShouldQueue
 
     public function __construct(
         public readonly StorageConfig $storageConfig,
-    )
-    {
-    }
+    ) {}
 
     public function handle(): void
     {
@@ -35,7 +33,7 @@ class IndexStorageJob implements ShouldQueue
 
         $storageConfig = $this->storageConfig;
         Bus::batch([new IndexFolderJob($rootFolder, true)])
-            ->name('Indexing storage: ' . $this->storageConfig->name)
+            ->name('Indexing storage: '.$this->storageConfig->name)
             ->allowFailures()
             ->before(function () use ($storageConfig) {
                 $storageConfig->update([

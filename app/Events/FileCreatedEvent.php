@@ -7,7 +7,6 @@ use App\Models\File;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use RuntimeException;
 
 class FileCreatedEvent
 {
@@ -16,7 +15,7 @@ class FileCreatedEvent
     public readonly FilesystemEventSource $source;
 
     public function __construct(
-        public readonly File   $file,
+        public readonly File $file,
         ?FilesystemEventSource $source = null,
     ) {
         $this->source = $source ?? FilesystemEventSource::detect();

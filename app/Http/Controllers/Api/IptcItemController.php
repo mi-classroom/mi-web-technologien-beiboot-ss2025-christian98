@@ -30,7 +30,7 @@ class IptcItemController extends Controller
 
         $iptcItem = $file->iptcItems()->updateOrCreate(
             [
-                'iptc_tag_definition_id' => $request->validated('tag')
+                'iptc_tag_definition_id' => $request->validated('tag'),
             ],
             $request->except('tag')
         );

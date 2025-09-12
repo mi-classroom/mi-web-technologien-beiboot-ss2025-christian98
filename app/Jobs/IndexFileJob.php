@@ -16,11 +16,9 @@ use Illuminate\Queue\SerializesModels;
 
 class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public readonly File $file)
-    {
-    }
+    public function __construct(public readonly File $file) {}
 
     public function handle(): void
     {
@@ -41,7 +39,7 @@ class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 
         $image = Image::fromProvider($file->full_path, $storage);
 
-        if (!$image->type()->supportsIptc()) {
+        if (! $image->type()->supportsIptc()) {
             return;
         }
 

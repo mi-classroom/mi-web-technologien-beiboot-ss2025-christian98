@@ -68,9 +68,6 @@ class Folder extends Model
         return $this->belongsTo(StorageConfig::class);
     }
 
-    /**
-     * @return BelongsTo
-     */
     public function parent(): BelongsTo
     {
         return $this->belongsTo(__CLASS__, 'parent_id');

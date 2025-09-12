@@ -3,7 +3,6 @@
 namespace App\Services\Storage\Provider\SabreWebdav;
 
 use App\Services\Storage\Provider\File;
-use League\Flysystem\UnableToRetrieveMetadata;
 use RuntimeException;
 use Sabre\DAV\Client;
 use Sabre\HTTP\Request;
@@ -78,7 +77,7 @@ class WebdavFile extends File
         $response = $this->client()->send(new Request('GET', $url));
 
         if ($response->getStatus() !== 200) {
-            throw new RuntimeException('Failed to retrieve file content: ' . $response->getBodyAsString());
+            throw new RuntimeException('Failed to retrieve file content: '.$response->getBodyAsString());
         }
 
         return $response;

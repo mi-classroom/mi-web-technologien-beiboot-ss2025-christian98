@@ -3,7 +3,6 @@
 namespace Tests\Unit\Services\Image;
 
 use App\Services\Image\Image;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ImageTest extends TestCase

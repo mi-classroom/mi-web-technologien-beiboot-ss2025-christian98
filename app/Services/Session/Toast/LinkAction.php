@@ -7,8 +7,7 @@ readonly class LinkAction implements Action
     public function __construct(
         public string $label,
         public string $href,
-    ) {
-    }
+    ) {}
 
     public static function make(string $label, string $href): LinkAction
     {

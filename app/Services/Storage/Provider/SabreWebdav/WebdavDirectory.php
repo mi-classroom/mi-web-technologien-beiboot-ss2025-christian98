@@ -26,7 +26,7 @@ class WebdavDirectory extends Directory
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function children(): LazyCollection
     {
@@ -80,10 +80,10 @@ class WebdavDirectory extends Directory
             $statusCode = $this->provider->client->request('DELETE', $location)['statusCode'];
 
             if ($statusCode !== 404 && ($statusCode < 200 || $statusCode >= 300)) {
-                throw new RuntimeException('Unexpected status code received while deleting file: ' . $statusCode);
+                throw new RuntimeException('Unexpected status code received while deleting file: '.$statusCode);
             }
         } catch (Throwable $exception) {
-            if ( ! ($exception instanceof ClientHttpException && $exception->getCode() === 404)) {
+            if (! ($exception instanceof ClientHttpException && $exception->getCode() === 404)) {
                 throw UnableToDeleteDirectory::atLocation($this->fullPath, $exception->getMessage(), $exception);
             }
         }

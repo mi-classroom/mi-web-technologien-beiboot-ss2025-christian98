@@ -9,7 +9,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class LaravelFile extends File
 {
     public function __construct(
-        string     $fullPath,
+        string $fullPath,
         public readonly Filesystem $filesystem,
     ) {
         parent::__construct($fullPath);

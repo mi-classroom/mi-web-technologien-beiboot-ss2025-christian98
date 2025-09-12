@@ -7,13 +7,12 @@ use Illuminate\Auth\Events\Registered;
 
 /**
  * Listener to automatically mark all newly registered users as verified.
+ *
  * @todo Remove this listener when email verification is implemented.
  */
 class MakeAllNewUserVerifiedListener
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(Registered $event): void
     {

@@ -9,11 +9,11 @@ class ImageTypeDetector
 {
     public function detect(string $filename): ImageType
     {
-        if (!file_exists($filename)) {
+        if (! file_exists($filename)) {
             throw new InvalidArgumentException('File does not exist');
         }
 
-        if (!is_readable($filename)) {
+        if (! is_readable($filename)) {
             throw new InvalidArgumentException('File is not readable');
         }
 

@@ -9,9 +9,7 @@ use Illuminate\Support\Facades\Bus;
 
 class CreateFileInStorageListener
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(FileCreatedEvent $event): void
     {

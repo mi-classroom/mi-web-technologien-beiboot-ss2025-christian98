@@ -52,7 +52,7 @@ class IptcTagDefinition extends Model
         return self::findByTag($tag, $user)
             ?? self::updateOrCreate([
                 'tag' => $tag,
-                'user_id' => $userId
+                'user_id' => $userId,
             ], [
                 'name' => "Unknown Tag - $tag",
                 'description' => null,

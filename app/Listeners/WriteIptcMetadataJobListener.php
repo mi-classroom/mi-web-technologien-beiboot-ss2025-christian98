@@ -10,9 +10,7 @@ use App\Jobs\WriteIptcMetadataJob;
 
 class WriteIptcMetadataJobListener
 {
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function handle(IptcItemCreatedEvent|IptcItemUpdatedEvent|IptcItemDeletedEvent $event): void
     {

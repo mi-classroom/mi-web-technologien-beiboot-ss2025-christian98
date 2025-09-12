@@ -9,7 +9,7 @@ use Illuminate\Support\LazyCollection;
 class LaravelDirectory extends Directory
 {
     public function __construct(
-        string      $fullPath,
+        string $fullPath,
         public readonly Filesystem $filesystem,
     ) {
         parent::__construct($fullPath);
@@ -21,7 +21,7 @@ class LaravelDirectory extends Directory
             return new LaravelDirectory($dir, $this->filesystem);
         });
 
-        $files = collect($this->filesystem->files($this->fullPath))->lazy()->map(function (string $file) {;
+        $files = collect($this->filesystem->files($this->fullPath))->lazy()->map(function (string $file) {
             return new LaravelFile($file, $this->filesystem);
         });
 

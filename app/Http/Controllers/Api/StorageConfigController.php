@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StorageConfigRequest;
 use App\Http\Resources\StorageConfigResource;
 use App\Models\StorageConfig;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;

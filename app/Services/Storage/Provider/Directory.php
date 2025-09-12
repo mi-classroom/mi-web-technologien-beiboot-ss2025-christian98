@@ -6,7 +6,6 @@ use Illuminate\Support\LazyCollection;
 
 abstract class Directory extends FilesystemItem
 {
-
     /**
      * @return LazyCollection<File|Directory>
      */

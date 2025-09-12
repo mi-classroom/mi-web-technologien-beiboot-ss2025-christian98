@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Jobs\IndexFileJob;
 use App\Services\FullPathGenerator;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -10,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Bus;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class File extends Model implements Responsable
@@ -67,13 +65,13 @@ class File extends Model implements Responsable
                 $bytes /= 1024;
             }
 
-            return round($bytes, 2) . ' ' . $units[$i];
+            return round($bytes, 2).' '.$units[$i];
         })->shouldCache();
     }
 
     public function downloadUrl(): Attribute
     {
-        return Attribute::get(fn() => url('storage/' . $this->path))->shouldCache();
+        return Attribute::get(fn () => url('storage/'.$this->path))->shouldCache();
     }
 
     public function toResponse($request): ?StreamedResponse

@@ -11,31 +11,38 @@ class FolderPolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny(User $user): bool {
+    public function viewAny(User $user): bool
+    {
         return $user->hasVerifiedEmail();
     }
 
-    public function view(User $user, Folder $folder): bool {
+    public function view(User $user, Folder $folder): bool
+    {
         return $folder->storageConfig->user_id === $user->id;
     }
 
-    public function create(User $user, Folder $folder): bool {
+    public function create(User $user, Folder $folder): bool
+    {
         return $user->hasVerifiedEmail() && Gate::forUser($user)->allows('update', $folder);
     }
 
-    public function update(User $user, Folder $folder): bool {
+    public function update(User $user, Folder $folder): bool
+    {
         return $folder->storageConfig->user_id === $user->id;
     }
 
-    public function delete(User $user, Folder $folder): bool {
+    public function delete(User $user, Folder $folder): bool
+    {
         return $folder->storageConfig->user_id === $user->id && $folder->parent !== null;
     }
 
-    public function restore(User $user, Folder $folder): bool {
+    public function restore(User $user, Folder $folder): bool
+    {
         return $folder->storageConfig->user_id === $user->id;
     }
 
-    public function forceDelete(User $user, Folder $folder): bool {
+    public function forceDelete(User $user, Folder $folder): bool
+    {
         return $folder->storageConfig->user_id === $user->id && $folder->parent !== null;
     }
 }

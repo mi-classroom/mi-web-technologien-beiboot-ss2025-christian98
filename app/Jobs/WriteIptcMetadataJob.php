@@ -17,9 +17,7 @@ class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct(public readonly File $file)
-    {
-    }
+    public function __construct(public readonly File $file) {}
 
     public function handle(): void
     {
@@ -29,11 +27,11 @@ class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
             $currentIptc = $image->iptcReader()->read();
 
             if ($currentIptc === null) {
-                $currentIptc = new IptcData();
+                $currentIptc = new IptcData;
             }
 
             $newIptc = $this->file->iptcItems()->with('tagDefinition')->get()
-                ->mapWithKeys(fn(IptcItem $iptcItem) => [$iptcItem->tagDefinition->tag => $iptcItem])
+                ->mapWithKeys(fn (IptcItem $iptcItem) => [$iptcItem->tagDefinition->tag => $iptcItem])
                 ->sortKeys();
 
             $toBeDeleted = $currentIptc->collect()->diffKeys($newIptc);
@@ -67,9 +65,6 @@ class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
         return $this->file->id;
     }
 
-    /**
-     * @return string
-     */
     private function diskName(): string
     {
         return 'public';

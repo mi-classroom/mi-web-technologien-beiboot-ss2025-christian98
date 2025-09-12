@@ -2,12 +2,12 @@
 
 use App\Models\IptcItem;
 use App\Models\IptcTagDefinition;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     public function up(): void
     {
         Schema::table('iptc_items', function (Blueprint $table) {
