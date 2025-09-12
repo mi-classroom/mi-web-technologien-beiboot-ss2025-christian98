@@ -23,7 +23,7 @@ Route::middleware(['auth', 'verified'])->prefix('storage/{storageConfig}')->name
     // Folders
     Route::resource('folders', FolderController::class)->only(['index', 'destroy']);
     Route::get('/folders/{folder}', [FolderController::class, 'show'])->name('folders.show');
-    Route::post('/folders/{folder}', [FolderFolderController::class, 'store'])->name('folders.folders.store');
+    Route::post('/folders/{folder}/folders', [FolderFolderController::class, 'store'])->name('folders.folders.store');
     Route::resource('folders.files', FolderFileController::class)->only(['store']);
 
     Route::resource('files', FileController::class)->only(['show', 'update', 'destroy']);
