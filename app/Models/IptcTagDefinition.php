@@ -54,7 +54,7 @@ class IptcTagDefinition extends Model
                 'tag' => $tag,
                 'user_id' => $userId
             ], [
-                'name' => __('iptc_tag.' . $tag) ?? "Unknown Tag - $tag",
+                'name' => "Unknown Tag - $tag",
                 'description' => null,
                 'spec' => [
                     'data_type' => 'string',
