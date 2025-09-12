@@ -22,8 +22,8 @@ class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 
     public function handle(): void
     {
-        // Index creation time
-        // Index last modified time
+        // TODO: Index creation time
+        // TODO: Index last modified time
         self::indexIptcMetadata($this->file);
     }
 
