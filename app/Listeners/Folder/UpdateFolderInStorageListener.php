@@ -3,7 +3,7 @@
 namespace App\Listeners\Folder;
 
 use App\Enums\FilesystemEventSource;
-use App\Events\FolderUpdatedEvent;
+use App\Events\Folder\FolderUpdatedEvent;
 
 /**
  * This listener is responsible for updating the folder in the storage when the folder is updated.

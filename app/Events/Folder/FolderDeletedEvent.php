@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Folder;
 
 use App\Enums\FilesystemEventSource;
 use App\Models\Folder;

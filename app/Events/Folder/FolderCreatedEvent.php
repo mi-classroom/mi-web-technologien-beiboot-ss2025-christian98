@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\Events\Folder;
 
 use App\Enums\FilesystemEventSource;
 use App\Models\Folder;
@@ -8,7 +8,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class FolderUpdatedEvent
+class FolderCreatedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

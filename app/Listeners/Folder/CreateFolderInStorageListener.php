@@ -3,7 +3,7 @@
 namespace App\Listeners\Folder;
 
 use App\Enums\FilesystemEventSource;
-use App\Events\FolderCreatedEvent;
+use App\Events\Folder\FolderCreatedEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class CreateFolderInStorageListener implements ShouldQueue

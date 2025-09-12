@@ -3,7 +3,7 @@
 namespace App\Listeners\Folder;
 
 use App\Enums\FilesystemEventSource;
-use App\Events\FolderDeletedEvent;
+use App\Events\Folder\FolderDeletedEvent;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class DeleteFolderInStorageListener implements ShouldQueue

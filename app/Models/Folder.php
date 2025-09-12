@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Events\FolderCreatedEvent;
-use App\Events\FolderDeletedEvent;
-use App\Events\FolderUpdatedEvent;
+use App\Events\Folder\FolderCreatedEvent;
+use App\Events\Folder\FolderDeletedEvent;
+use App\Events\Folder\FolderUpdatedEvent;
 use App\Services\FullPathGenerator;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\DB;
-use function Illuminate\Events\queueable;
 
 class Folder extends Model
 {
