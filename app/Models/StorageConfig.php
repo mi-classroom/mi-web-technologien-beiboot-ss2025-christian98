@@ -41,6 +41,14 @@ class StorageConfig extends Model
     }
 
     /**
+     * @return BelongsTo<User, self>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
      * @return BelongsTo<Folder, self>
      */
     public function rootFolder(): BelongsTo
