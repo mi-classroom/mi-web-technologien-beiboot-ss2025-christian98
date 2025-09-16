@@ -1,7 +1,7 @@
-import type {PageProps} from '@inertiajs/core';
-import type {LucideIcon} from 'lucide-vue-next';
-import type {Config} from 'ziggy-js';
-import {dataTypes} from "@/lib/iptc-tag-definition-data_type";
+import type { PageProps } from '@inertiajs/core';
+import type { LucideIcon } from 'lucide-vue-next';
+import type { Config } from 'ziggy-js';
+import { dataTypes } from '@/lib/iptc-tag-definition-data_type';
 
 export interface Auth {
     user: User;
@@ -62,7 +62,7 @@ export interface Toast {
     timestamp: string;
 }
 
-export type ToastAction = { href: string, label: string };
+export type ToastAction = { href: string; label: string };
 
 // region Models/Resources
 export interface Resource<T> {
@@ -124,15 +124,15 @@ export interface IptcTagDefinition {
     tag: string;
     description: string | null;
     spec: {
-        data_type: typeof dataTypes[number],
-        min_length: number | null,
-        max_length: number | null,
-        multiple: boolean,
-        required: boolean,
-        enum_values: string[] | number[] | null,
-    },
+        data_type: (typeof dataTypes)[number];
+        min_length: number | null;
+        max_length: number | null;
+        multiple: boolean;
+        required: boolean;
+        enum_values: string[] | number[] | null;
+    };
     user_id: number | null;
-    is_value_editable: boolean,
+    is_value_editable: boolean;
     iptcItems?: IptcItem[];
     created_at: string;
     updated_at: string;

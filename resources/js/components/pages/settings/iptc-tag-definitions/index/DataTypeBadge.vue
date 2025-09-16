@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {IptcTagDefinition} from "@/types";
-import {computed} from "vue";
+import { IptcTagDefinition } from '@/types';
+import { computed } from 'vue';
 
 const props = defineProps<{
     definition: IptcTagDefinition;
@@ -22,13 +22,19 @@ const getDataTypeBadgeColor = computed(() => {
         time: 'bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-100',
         number: 'bg-orange-100 dark:bg-orange-800 text-orange-800 dark:text-orange-100',
     };
-    return colors[dataType as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+    return (
+        colors[dataType as keyof typeof colors] || 'bg-gray-100 text-gray-800'
+    );
 });
 </script>
 
 <template>
     <span
-        :class="['inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium', getDataTypeBadgeColor, props.class]">
+        :class="[
+            'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+            getDataTypeBadgeColor,
+            props.class,
+        ]">
         {{ formatDataType }}
     </span>
 </template>

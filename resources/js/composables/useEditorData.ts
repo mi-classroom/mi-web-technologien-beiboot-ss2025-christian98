@@ -1,12 +1,15 @@
-import {useQuery} from "@tanstack/vue-query";
-import {fetchApi} from "@/lib/fetchApi";
-import type {File, IptcTagDefinition} from "@/types";
-import {computed, reactive, ref, Ref} from "vue";
+import { useQuery } from '@tanstack/vue-query';
+import { fetchApi } from '@/lib/fetchApi';
+import type { File, IptcTagDefinition } from '@/types';
+import { computed, reactive, ref, Ref } from 'vue';
 
 export function useEditorData(fileIds: Ref<number[], number[]>) {
-    const {isPending, isFetching, isError, data, error} = useQuery({
+    const { isPending, isFetching, isError, data, error } = useQuery({
         queryKey: ['files', fileIds],
-        queryFn: () => fetchApi<{ data: File[] }>(route('api.files.index', {ids: fileIds.value})),
+        queryFn: () =>
+            fetchApi<{ data: File[] }>(
+                route('api.files.index', { ids: fileIds.value }),
+            ),
     });
     const tagDefinitions = ref(new Map<number, IptcTagDefinition>());
 
@@ -20,13 +23,18 @@ export function useEditorData(fileIds: Ref<number[], number[]>) {
                     // Add to map if not already present (ensures uniqueness by ID)
                     if (tagDefinitions.value.has(iptcItem.tag.id)) {
                         // If the tag already exists, update the reference in the iptcItem
-                        iptcItem.tag = tagDefinitions.value.get(iptcItem.tag.id)!;
+                        iptcItem.tag = tagDefinitions.value.get(
+                            iptcItem.tag.id,
+                        )!;
                     } else {
                         tagDefinitions.value.set(iptcItem.tag.id, iptcItem.tag);
                     }
 
                     // Ensure iptcItems array exists and push the current item once
-                    iptcItem.tag.iptcItems = iptcItem.tag.iptcItems?.filter((item) => item.id !== iptcItem.id) || [];
+                    iptcItem.tag.iptcItems =
+                        iptcItem.tag.iptcItems?.filter(
+                            (item) => item.id !== iptcItem.id,
+                        ) || [];
                     (iptcItem.tag.iptcItems ??= []).push(iptcItem);
                 }
             }
@@ -35,5 +43,5 @@ export function useEditorData(fileIds: Ref<number[], number[]>) {
         return data.value?.data;
     });
 
-    return {files, tagDefinitions} as const;
+    return { files, tagDefinitions } as const;
 }

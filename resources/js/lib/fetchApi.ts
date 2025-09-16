@@ -1,6 +1,9 @@
-import {getCookie} from "@/lib/cookie/getCookie";
+import { getCookie } from '@/lib/cookie/getCookie';
 
-export async function fetchApi<T = unknown>(input: RequestInfo, init?: RequestInit): Promise<T> {
+export async function fetchApi<T = unknown>(
+    input: RequestInfo,
+    init?: RequestInit,
+): Promise<T> {
     await fetch('/sanctum/csrf-cookie');
 
     const token = decodeURIComponent(getCookie('XSRF-TOKEN'));
@@ -9,12 +12,12 @@ export async function fetchApi<T = unknown>(input: RequestInfo, init?: RequestIn
         credentials: 'include',
         ...init,
         headers: {
-            'Accept': 'application/json, text/plain, */*',
+            Accept: 'application/json, text/plain, */*',
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest',
             'X-XSRF-TOKEN': token,
-            ...init?.headers
-        }
+            ...init?.headers,
+        },
     });
 
     if (!response.ok) {

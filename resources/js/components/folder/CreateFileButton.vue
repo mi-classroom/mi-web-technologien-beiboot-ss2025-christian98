@@ -5,15 +5,15 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-    DialogFooter
-} from "@/components/ui/dialog";
-import {Button} from "@/components/ui/button";
-import {Input} from "@/components/ui/input";
-import {router} from "@inertiajs/vue3";
-import {Folder, StorageConfig} from "@/types";
-import {reactive, ref} from "vue";
-import Icon from "@/components/Icon.vue";
-import FilePreview from "@/components/folder/FilePreview.vue";
+    DialogFooter,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { router } from '@inertiajs/vue3';
+import { Folder, StorageConfig } from '@/types';
+import { reactive, ref } from 'vue';
+import Icon from '@/components/Icon.vue';
+import FilePreview from '@/components/folder/FilePreview.vue';
 
 export interface FileInput {
     name: string;
@@ -21,11 +21,11 @@ export interface FileInput {
 }
 
 const props = defineProps<{
-    folder: Folder,
-    storageConfig: StorageConfig,
+    folder: Folder;
+    storageConfig: StorageConfig;
 }>();
 const form = reactive<{
-    files: FileInput[],
+    files: FileInput[];
 }>({
     files: [],
 });
@@ -44,7 +44,13 @@ function uploadFiles(event: Event) {
 }
 
 function handleCreate() {
-    router.post(route('storage.folders.files.store', {folder: props.folder, storageConfig: props.storageConfig}), form);
+    router.post(
+        route('storage.folders.files.store', {
+            folder: props.folder,
+            storageConfig: props.storageConfig,
+        }),
+        form,
+    );
     dialogOpen.value = false;
 }
 </script>
@@ -60,26 +66,40 @@ function handleCreate() {
                     <DialogTitle>Upload Files</DialogTitle>
                 </DialogHeader>
                 <div class="col-span-full">
-                    <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                    <div
+                        class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
                         <div class="text-center">
-                            <Icon name="image" class="mx-auto size-12 text-gray-300" />
+                            <Icon
+                                name="image"
+                                class="mx-auto size-12 text-gray-300" />
                             <div class="mt-4 flex text-sm/6 text-gray-600">
                                 <label
                                     for="file-upload"
-                                    class="relative cursor-pointer rounded-md bg-white font-semibold text-primary focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 focus-within:outline-hidden"
-                                >
+                                    class="text-primary focus-within:ring-primary relative cursor-pointer rounded-md bg-white font-semibold focus-within:ring-2 focus-within:ring-offset-2 focus-within:outline-hidden">
                                     <span>Upload a file</span>
-                                    <Input @change="uploadFiles" id="file-upload" type="file" multiple class="sr-only"/>
+                                    <Input
+                                        @change="uploadFiles"
+                                        id="file-upload"
+                                        type="file"
+                                        multiple
+                                        class="sr-only" />
                                 </label>
                                 <p class="pl-1">or drag and drop</p>
                             </div>
-                            <p class="text-xs/5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                            <p class="text-xs/5 text-gray-600">
+                                PNG, JPG, GIF up to 10MB
+                            </p>
                         </div>
                     </div>
                 </div>
 
-                <ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-                    <li v-for="file in form.files" :key="file.name" class="relative">
+                <ul
+                    role="list"
+                    class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
+                    <li
+                        v-for="file in form.files"
+                        :key="file.name"
+                        class="relative">
                         <FilePreview :file="file" />
                     </li>
                 </ul>

@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import {File} from '@/types';
-import {computed} from "vue";
-import Icon from "@/components/Icon.vue";
+import { File } from '@/types';
+import { computed } from 'vue';
+import Icon from '@/components/Icon.vue';
 
 const props = defineProps<{
     file: File;
 }>();
 
 const isText = computed(() => {
-    return props.file.type.startsWith('text/') || props.file.type === 'application/pdf';
+    return (
+        props.file.type.startsWith('text/') ||
+        props.file.type === 'application/pdf'
+    );
 });
 
 const isArchive = computed(() => {
@@ -31,12 +34,17 @@ const iconName = computed(() => {
     <img
         v-if="file.type.startsWith('image/')"
         v-bind="$attrs"
-        :src="route('storage.files.download', {file, storageConfig: file.storage_config_id})"
-        :alt="file.name"
-    />
-    <Icon v-else
-          :name="iconName"
-          v-bind="$attrs"
-          class="w-full h-full object-contain"
-          :title="file.name"/>
+        :src="
+            route('storage.files.download', {
+                file,
+                storageConfig: file.storage_config_id,
+            })
+        "
+        :alt="file.name" />
+    <Icon
+        v-else
+        :name="iconName"
+        v-bind="$attrs"
+        class="h-full w-full object-contain"
+        :title="file.name" />
 </template>
