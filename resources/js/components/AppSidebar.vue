@@ -9,11 +9,19 @@ import {
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
-    SidebarMenuItem
+    SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import {NavGroupItem, type NavLeafItem} from '@/types';
-import {Link} from '@inertiajs/vue3';
-import {BookOpen, Cloud, Folder, FolderGit2, LayoutGrid, Plus, NotebookPen} from 'lucide-vue-next';
+import { NavGroupItem, type NavLeafItem } from '@/types';
+import { Link } from '@inertiajs/vue3';
+import {
+    BookOpen,
+    Cloud,
+    Folder,
+    FolderGit2,
+    LayoutGrid,
+    Plus,
+    NotebookPen,
+} from 'lucide-vue-next';
 import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavGroupItem[] = [
@@ -81,7 +89,7 @@ const footerNavItems: NavLeafItem[] = [
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
                         <Link :href="route('dashboard')">
-                            <AppLogo/>
+                            <AppLogo />
                         </Link>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -89,13 +97,13 @@ const footerNavItems: NavLeafItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems"/>
+            <NavMain :items="mainNavItems" />
         </SidebarContent>
 
         <SidebarFooter>
-            <NavFooter :items="footerNavItems"/>
-            <NavUser/>
+            <NavFooter :items="footerNavItems" />
+            <NavUser />
         </SidebarFooter>
     </Sidebar>
-    <slot/>
+    <slot />
 </template>

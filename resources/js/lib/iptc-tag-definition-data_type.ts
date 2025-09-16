@@ -1,8 +1,8 @@
 export const dataTypes = [
-    "string",
-    "enum",
-    "binary",
+    'string',
+    'enum',
+    'binary',
     'date',
     'time',
-    'number'
+    'number',
 ] as const;
