@@ -1,24 +1,24 @@
 <script setup lang="ts">
-import IptcInput from "@/components/editor/edit-view/IptcInput.vue";
-import {IptcTagDefinition} from "@/types";
+import IptcInput from '@/components/editor/edit-view/IptcInput.vue';
+import { IptcTagDefinition } from '@/types';
 
-function toIptcFormat(date?: string): string|undefined {
+function toIptcFormat(date?: string): string | undefined {
     if (!date) return undefined;
-    return date.split("-").join(''); // Convert to YYYYMMDD format
+    return date.split('-').join(''); // Convert to YYYYMMDD format
 }
 
-function fromIptcFormat(date?: string): string|undefined {
+function fromIptcFormat(date?: string): string | undefined {
     if (!date) return undefined;
     return `${date.slice(0, 4)}-${date.slice(4, 6)}-${date.slice(6, 8)}`; // Convert to YYYY-MM-DD format
 }
 
-const [model, modifiers] = defineModel<string|undefined>({
+const [model, modifiers] = defineModel<string | undefined>({
     get(value) {
-        return fromIptcFormat(value)
+        return fromIptcFormat(value);
     },
     set(value) {
-        return toIptcFormat(value)
-    }
+        return toIptcFormat(value);
+    },
 });
 
 defineProps<{
@@ -31,5 +31,12 @@ defineProps<{
 </script>
 
 <template>
-    <IptcInput v-model="model" type="date" :readonly :title :definition :index :suffix/>
+    <IptcInput
+        v-model="model"
+        type="date"
+        :readonly
+        :title
+        :definition
+        :index
+        :suffix />
 </template>

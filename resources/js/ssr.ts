@@ -4,7 +4,7 @@ import { renderToString } from '@vue/server-renderer';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createSSRApp, h } from 'vue';
 import { route as ziggyRoute } from 'ziggy-js';
-import {VueQueryPlugin} from "@tanstack/vue-query";
+import { VueQueryPlugin } from '@tanstack/vue-query';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -13,7 +13,11 @@ createServer((page) =>
         page,
         render: renderToString,
         title: (title) => `${title} - ${appName}`,
-        resolve: (name) => resolvePageComponent(`./pages/${name}.vue`, import.meta.glob('./pages/**/*.vue')),
+        resolve: (name) =>
+            resolvePageComponent(
+                `./pages/${name}.vue`,
+                import.meta.glob('./pages/**/*.vue'),
+            ),
         setup({ App, props, plugin }) {
             const app = createSSRApp({ render: () => h(App, props) });
 
@@ -24,7 +28,8 @@ createServer((page) =>
             };
 
             // Create route function...
-            const route = (name: string, params?: any, absolute?: boolean) => ziggyRoute(name, params, absolute, ziggyConfig);
+            const route = (name: string, params?: any, absolute?: boolean) =>
+                ziggyRoute(name, params, absolute, ziggyConfig);
 
             // Make route function available globally...
             app.config.globalProperties.route = route;
@@ -34,8 +39,7 @@ createServer((page) =>
                 global.route = route;
             }
 
-            app.use(plugin)
-                .use(VueQueryPlugin);
+            app.use(plugin).use(VueQueryPlugin);
 
             return app;
         },

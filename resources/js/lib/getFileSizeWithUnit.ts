@@ -1,8 +1,8 @@
-const units = ["Byte", "KB", "MB", "GB", "TB", "PB"];
+const units = ['Byte', 'KB', 'MB', 'GB', 'TB', 'PB'];
 
 export function getFileSizeWithUnit(
     size: number,
-    floating: number = 1
+    floating: number = 1,
 ): [number, string] | [] {
     for (let i = 0; i < units.length; i += 1) {
         if (size < 1024 ** (i + 1)) {
@@ -14,6 +14,6 @@ export function getFileSizeWithUnit(
         }
     }
 
-    console.error("[getFileSizeWithUnit]: too large file size");
+    console.error('[getFileSizeWithUnit]: too large file size');
     return [];
 }
