@@ -1,0 +1,389 @@
+stages:
+  - install
+  - prepare
+  - building
+  - test
+  - security
+  - docker
+  - summary
+  - release
+  - deploy
+
+#include:
+#  - template: Code-Quality.gitlab-ci.yml
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_TAG
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH == "main"
+
+cache:
+  key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
+
+composer:
+  stage: install
+  image: lorisleiva/laravel-docker:8.4
+  before_script:
+    - install-php-extensions sockets
+    - echo $COMPOSER_FLAGS
+  script:
+    - php -v
+    - composer --version
+    - composer install $COMPOSER_FLAGS
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+      variables:
+        COMPOSER_FLAGS: "--prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader"
+    - if: $CI_COMMIT_TAG
+      variables:
+        COMPOSER_FLAGS: "--prefer-dist --no-ansi --no-interaction --no-progress --no-scripts --optimize-autoloader --no-dev "
+  artifacts:
+    paths:
+      - vendor/
+    expire_in: 1 days
+    when: always
+  cache:
+    key:
+      files:
+        - composer.lock
+    paths:
+      - vendor/
+  interruptible: true
+
+npm:
+  stage: install
+  image: node:22.18.0
+  script:
+    - npm --version
+    - npm ci --cache .npm --prefer-offline
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 days
+    when: always
+  cache:
+    key: npm-cache
+    paths:
+      - .npm/
+  interruptible: true
+
+setup:
+  stage: prepare
+  image: lorisleiva/laravel-docker:8.4
+  script:
+    - echo $ENV_FILE
+    - cp $ENV_FILE .env
+    - php artisan key:generate
+    - php artisan vendor:publish --tag=laravel-assets --ansi --force
+  needs:
+    - composer
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+      variables:
+        ENV_FILE: '.env.ci'
+    - if: $CI_COMMIT_TAG
+      variables:
+        ENV_FILE: '.env.deploy'
+  artifacts:
+    paths:
+      - .env
+      - ./public/vendor
+    expire_in: 1 days
+    when: always
+  interruptible: true
+
+build:csr:
+  stage: building
+  image: node:22.18.0
+  # Download the artifacts for these jobs
+  needs:
+    - npm
+    - setup
+  script:
+    - npm --version
+    - npm run prod:csr
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+    - if: $CI_COMMIT_TAG
+      variables:
+        APP_VERSION: $CI_COMMIT_TAG
+  artifacts:
+    paths:
+      - public/*
+    expire_in: 1 days
+    when: always
+  interruptible: true
+
+phpunit:
+  stage: test
+  services:
+    - mysql:8.4
+  image: lorisleiva/laravel-docker:8.4
+  variables:
+    # Set the composer process timeout to the max pipeline run time
+    COMPOSER_PROCESS_TIMEOUT: 3600
+    XDEBUG_MODE: coverage
+    MYSQL_ROOT_PASSWORD: root
+    MYSQL_USER: laravel
+    MYSQL_PASSWORD: secret
+    MYSQL_DATABASE: blog
+  # Download the artifacts for these jobs
+  needs:
+    - composer
+    - npm
+    - setup
+    - build:csr
+  script:
+    - php -v
+    - composer --version
+    - composer test -- --version
+    - npx start-test 'npm run start:ssr' 13714 'php artisan test --coverage-text=coverage.txt --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml'
+  after_script:
+    - head -n 10 coverage.txt
+  coverage: '/^\s*Lines:\s*(\d+.\d+\%)/'
+  artifacts:
+    reports:
+      junit: junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.cobertura.xml
+    paths:
+      - ./storage/logs # for debugging
+    expire_in: 1 days
+    when: on_failure
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  interruptible: true
+
+jest:
+  stage: test
+  image: node:22.18.0
+  needs:
+    - npm
+    - setup
+  script:
+    - npm run test:ci
+  coverage: /All\sfiles.*?\s+(\d+.\d+)/
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  interruptible: true
+
+codestyle:
+  stage: test
+  image: lorisleiva/laravel-docker:8.3
+  script:
+    - composer cs-fix -- --dry-run
+  needs:
+    - composer
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  interruptible: true
+
+prettier:
+  stage: test
+  image: node:22.18.0
+  script:
+    - npm run prettier:check
+  needs:
+    - npm
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  interruptible: true
+
+eslint:
+  stage: test
+  image: node:22.18.0
+  script:
+    - npm run eslint -- --format gitlab
+  artifacts:
+    when: always
+    reports:
+      codequality: gl-codequality.json
+  needs:
+    - npm
+    - setup
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  interruptible: true
+
+phpcpd:
+  stage: test
+  image: lorisleiva/laravel-docker:8.4
+  script:
+    - test -f phpcpd.phar || curl -L https://phar.phpunit.de/phpcpd.phar -o phpcpd.phar
+    - php phpcpd.phar app/ --min-lines=50
+  needs: [ ]
+  cache:
+    paths:
+      - phpcpd.phar
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  interruptible: true
+
+larastan:
+  stage: test
+  image: lorisleiva/laravel-docker:8.4
+  script:
+    - composer phpstan -- --no-progress --error-format gitlab | tee phpstan.json
+  artifacts:
+    when: always
+    reports:
+      codequality: phpstan.json
+  needs:
+    - composer
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  interruptible: true
+
+security:composer:
+  stage: security
+  image: lorisleiva/laravel-docker:8.4
+  script:
+    - php vendor/bin/security-checker security:check composer.lock
+  # Needs composer install as the security check is part of enligthn
+  needs:
+    - composer
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  # allow_failure: true
+  interruptible: true
+
+security:npm:
+  stage: security
+  image: node:22.18.0
+  script:
+    - node scripts/audit-badge.js
+    - npm audit
+  needs:
+    - npm
+  allow_failure: true
+  interruptible: true
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  artifacts:
+    paths:
+      - audit.badge.svg
+    when: always
+    expire_in: 4 weeks
+
+.docker:
+  image: docker:26.1.4
+  services:
+    - docker:26.1.4-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_VERIFY: 1
+    DOCKER_TLS_CERTDIR: /certs
+    DOCKER_CERT_PATH: /certs/client
+    PUSH_DOCKER_IMAGE: 'false'
+  before_script:
+    - docker --version
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $DOCKER_IMAGE:development || true
+  interruptible: true
+
+docker:php:
+  extends:
+    - .docker
+  stage: docker
+  variables:
+    DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/laravel"
+  needs:
+    - composer
+    - build:csr
+  script:
+    - sh scripts/docker-build.sh -i $DOCKER_IMAGE -f docker/Dockerfile -v $CI_COMMIT_REF_NAME -t $DOCKER_TAG -p $PUSH_DOCKER_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+      variables:
+        DOCKER_TAG: "$DOCKER_IMAGE:$CI_COMMIT_REF_SLUG"
+    - if: $CI_COMMIT_TAG
+      variables:
+        DOCKER_TAG: "$DOCKER_IMAGE:$CI_COMMIT_TAG"
+        PUSH_DOCKER_IMAGE: "true"
+
+docker:nginx:
+  extends:
+    - .docker
+  stage: docker
+  variables:
+    DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/nginx"
+  needs:
+    - composer
+    - build:csr
+  script:
+    - sh scripts/docker-build.sh -i $DOCKER_IMAGE -f docker/Nginx.Dockerfile -v $CI_COMMIT_REF_NAME -t $DOCKER_TAG -p $PUSH_DOCKER_IMAGE
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+      variables:
+        DOCKER_TAG: "$DOCKER_IMAGE:$CI_COMMIT_REF_SLUG"
+    - if: $CI_COMMIT_TAG
+      variables:
+        DOCKER_TAG: "$DOCKER_IMAGE:$CI_COMMIT_TAG"
+        PUSH_DOCKER_IMAGE: "true"
+
+docker:validate-compose-file:
+  stage: docker
+  image: docker:26.1.4
+  services:
+    - docker:26.1.4-dind
+  variables:
+    APP_VERSION: "v0.0.0"
+    MYSQL_ROOT_PASSWORD: "change-me-root-password"
+  needs:
+    - setup
+  script:
+    - docker compose -f docker/docker-compose.yml --env-file=.env config
+  rules:
+    - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
+  interruptible: true
+
+release:
+  stage: release
+  image: node:22.18.0
+  variables:
+    GIT_STRATEGY: clone
+  before_script:
+    - npm i -g semantic-release @semantic-release/git @semantic-release/gitlab
+  script:
+    - npx semantic-release
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+  #needs:
+  #  - job: docker:php
+  #  - job: docker:nginx
+  #  - job: docker:ssr
+  #  - job: pest
+  #    optional: true
+
+deploy:
+  stage: deploy
+  variables:
+    APP_VERSION: $CI_COMMIT_TAG
+  before_script:
+    - docker --version
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - echo "Deploying version $APP_VERSION"
+    - cp docker/docker-compose.yml /opt/iptc-editor/docker-compose.yml
+    - cd /opt/iptc-editor
+    - docker compose pull
+    - docker compose up -d
+  rules:
+    - if: $CI_COMMIT_TAG
+  tags:
+    - deploy
+    - gimbli
+  environment: gimli
