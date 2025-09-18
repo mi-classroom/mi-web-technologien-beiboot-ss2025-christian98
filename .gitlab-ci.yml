@@ -95,7 +95,7 @@ setup:
     when: always
   interruptible: true
 
-build:csr:
+build:
   stage: building
   image: node:22.18.0
   # Download the artifacts for these jobs
@@ -104,7 +104,7 @@ build:csr:
     - setup
   script:
     - npm --version
-    - npm run prod:csr
+    - npm run build
   rules:
     - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
     - if: $CI_COMMIT_TAG
@@ -135,7 +135,7 @@ phpunit:
     - composer
     - npm
     - setup
-    - build:csr
+    - build
   script:
     - php -v
     - composer --version
@@ -299,7 +299,7 @@ docker:php:
     DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/laravel"
   needs:
     - composer
-    - build:csr
+    - build
   script:
     - sh scripts/docker-build.sh -i $DOCKER_IMAGE -f docker/Dockerfile -v $CI_COMMIT_REF_NAME -t $DOCKER_TAG -p $PUSH_DOCKER_IMAGE
   rules:
@@ -319,7 +319,7 @@ docker:nginx:
     DOCKER_IMAGE: "$CI_REGISTRY_IMAGE/nginx"
   needs:
     - composer
-    - build:csr
+    - build
   script:
     - sh scripts/docker-build.sh -i $DOCKER_IMAGE -f docker/Nginx.Dockerfile -v $CI_COMMIT_REF_NAME -t $DOCKER_TAG -p $PUSH_DOCKER_IMAGE
   rules:
