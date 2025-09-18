@@ -250,10 +250,7 @@ security:composer:
   stage: security
   image: lorisleiva/laravel-docker:8.4
   script:
-    - php vendor/bin/security-checker security:check composer.lock
-  # Needs composer install as the security check is part of enligthn
-  needs:
-    - composer
+    - composer audit --locked
   rules:
     - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
   # allow_failure: true
