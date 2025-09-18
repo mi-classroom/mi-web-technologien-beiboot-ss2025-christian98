@@ -181,7 +181,7 @@ jest:
 
 codestyle:
   stage: test
-  image: lorisleiva/laravel-docker:8.3
+  image: lorisleiva/laravel-docker:8.4
   script:
     - php ./vendor/bin/pint --test
   needs:
