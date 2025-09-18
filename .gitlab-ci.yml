@@ -194,7 +194,7 @@ prettier:
   stage: test
   image: node:22.18.0
   script:
-    - npm run prettier:check
+    - npm run format:check
   needs:
     - npm
   rules:
