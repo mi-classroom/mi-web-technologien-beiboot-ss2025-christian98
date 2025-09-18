@@ -101,6 +101,7 @@ build:
   # Download the artifacts for these jobs
   needs:
     - npm
+    - composer
     - setup
   script:
     - npm --version
