@@ -183,7 +183,7 @@ codestyle:
   stage: test
   image: lorisleiva/laravel-docker:8.3
   script:
-    - composer cs-fix -- --dry-run
+    - php ./vendor/bin/pint --test
   needs:
     - composer
   rules:
