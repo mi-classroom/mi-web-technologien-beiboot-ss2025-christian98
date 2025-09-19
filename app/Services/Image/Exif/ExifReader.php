@@ -5,7 +5,7 @@ namespace App\Services\Image\Exif;
 use App\Services\Image\AbstractReader;
 use InvalidArgumentException;
 
-class ExifReader extends AbstractReader
+final class ExifReader extends AbstractReader
 {
     /**
      * @param  string|resource  $filename
@@ -24,7 +24,7 @@ class ExifReader extends AbstractReader
             throw new InvalidArgumentException('File is not readable');
         }
 
-        return new static($filename);
+        return new ExifReader($filename);
     }
 
     public static function fromResource($resource): static
@@ -33,7 +33,7 @@ class ExifReader extends AbstractReader
             throw new InvalidArgumentException('Invalid resource');
         }
 
-        return new static($resource);
+        return new ExifReader($resource);
     }
 
     public function read(): ?ExifData

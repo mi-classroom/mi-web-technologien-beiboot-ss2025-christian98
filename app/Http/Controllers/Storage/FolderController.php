@@ -21,7 +21,7 @@ class FolderController extends Controller
 
     public function index(StorageConfig $storageConfig): Response
     {
-        $this->authorize('viewAny', Folder::class);
+        $this->authorize('viewAny', [Folder::class, $storageConfig]);
 
         $folder = $storageConfig->rootFolder()->with(['files', 'folders'])->firstOrFail();
 

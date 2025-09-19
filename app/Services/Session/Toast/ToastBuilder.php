@@ -59,12 +59,17 @@ class ToastBuilder
 
     public function flash(): void
     {
-        new Toast(
+        $this->build()->flash();
+    }
+
+    public function build(): Toast
+    {
+        return new Toast(
             title: $this->title,
             type: $this->type,
             duration: $this->duration,
             description: $this->description,
             actions: $this->actions,
-        )->flash();
+        );
     }
 }

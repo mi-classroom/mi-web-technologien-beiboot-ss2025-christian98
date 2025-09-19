@@ -25,15 +25,12 @@ class StorageConfig extends Model
         'last_indexed_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'provider_type' => StorageProvider::class,
-            'provider_options' => 'encrypted:array',
-            'is_editable' => 'boolean',
-            'last_indexed_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'provider_type' => StorageProvider::class,
+        'provider_options' => 'encrypted:array',
+        'is_editable' => 'boolean',
+        'last_indexed_at' => 'datetime',
+    ];
 
     public function getStorage(): Provider
     {
@@ -41,7 +38,7 @@ class StorageConfig extends Model
     }
 
     /**
-     * @return BelongsTo<User, self>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -49,7 +46,7 @@ class StorageConfig extends Model
     }
 
     /**
-     * @return BelongsTo<Folder, self>
+     * @return BelongsTo<Folder, $this>
      */
     public function rootFolder(): BelongsTo
     {
@@ -57,7 +54,7 @@ class StorageConfig extends Model
     }
 
     /**
-     * @return HasMany<Folder, self>
+     * @return HasMany<Folder, $this>
      */
     public function allFolders(): HasMany
     {
@@ -65,14 +62,17 @@ class StorageConfig extends Model
     }
 
     /**
-     * @return HasMany<File, self>
+     * @return HasMany<File, $this>
      */
     public function allFiles(): HasMany
     {
         return $this->hasMany(File::class, 'storage_config_id');
     }
 
-    public function size(): Attribute
+    /**
+     * @return Attribute<float|int|numeric-string, void>
+     */
+    protected function size(): Attribute
     {
         return Attribute::get(function () {
             // Calculate the total size of all files in this storage config

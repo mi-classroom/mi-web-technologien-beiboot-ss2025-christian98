@@ -3,6 +3,7 @@
 namespace App\Services\Storage\Provider\SabreWebdav;
 
 use App\Services\Storage\Provider\Directory;
+use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use League\Flysystem\UnableToDeleteDirectory;
 use RuntimeException;
@@ -28,14 +29,14 @@ class WebdavDirectory extends Directory
     /**
      * {@inheritDoc}
      */
-    public function children(): LazyCollection
+    public function children(): Collection
     {
         $response = $this->provider->propFind($this->fullPath, self::FIND_PROPERTIES, 1);
 
         // This is the directory itself, the files are subsequent entries.
         array_shift($response);
 
-        return collect($response)->lazy()->mapWithKeys(function (mixed $object, string $path) {
+        return collect($response)->mapWithKeys(function (mixed $object, string $path) {
             $path = (string) parse_url(rawurldecode($path), PHP_URL_PATH);
             $path = $this->provider->prefixer->stripPrefix($path);
             $object = $this->normalizeObject($object);

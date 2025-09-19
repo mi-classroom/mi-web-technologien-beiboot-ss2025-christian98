@@ -16,7 +16,7 @@ final class Toast implements Arrayable
     public readonly CarbonImmutable $timestamp;
 
     /**
-     * @param  array<LinkAction>  $actions
+     * @param  array<Action>  $actions
      */
     public function __construct(
         public readonly string $title,
@@ -50,7 +50,7 @@ final class Toast implements Arrayable
          * without noticing any difference.
          */
         if (is_string($sessionValue)) {
-            return [self::info($sessionValue)];
+            return [self::info($sessionValue)->build()];
         }
 
         return [];

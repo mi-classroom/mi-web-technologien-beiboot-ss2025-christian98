@@ -60,6 +60,7 @@ class WebdavFile extends File
     public function write(string $content): ?File
     {
         // TODO: Implement write() method.
+        throw new RuntimeException('Not implemented yet.');
     }
 
     public function client(): Client

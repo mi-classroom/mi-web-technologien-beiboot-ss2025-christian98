@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateFolderRequest;
 use App\Http\Resources\FolderResource;
 use App\Models\Folder;
+use App\Models\StorageConfig;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\JsonResponse;
 
@@ -13,12 +14,13 @@ class FolderController extends Controller
 {
     use AuthorizesRequests;
 
-    public function index(): FolderResource
+    public function index(StorageConfig $storageConfig): FolderResource
     {
-        $rootFolder = auth()->user()->rootFolder;
-        $this->authorize('view', $rootFolder);
+        $this->authorize('viewAny', [Folder::class, $storageConfig]);
 
-        return new FolderResource($rootFolder);
+        $folder = $storageConfig->rootFolder()->with(['files', 'folders'])->firstOrFail();
+
+        return new FolderResource($folder);
     }
 
     public function show(Folder $folder): FolderResource

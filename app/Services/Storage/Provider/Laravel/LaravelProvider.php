@@ -57,4 +57,14 @@ abstract class LaravelProvider extends Provider
 
         return new LaravelFile($path, $storage);
     }
+
+    public function move(mixed $oldPath, mixed $newPath): bool
+    {
+        return $this->getStorage()->move($oldPath, $newPath);
+    }
+
+    public function exists(mixed $oldPath): bool
+    {
+        return $this->getStorage()->exists($oldPath);
+    }
 }

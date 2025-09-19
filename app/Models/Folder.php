@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class Folder extends Model
@@ -61,20 +62,23 @@ class Folder extends Model
     }
 
     /**
-     * @return BelongsTo<StorageConfig, self>
+     * @return BelongsTo<StorageConfig, $this>
      */
     public function storageConfig(): BelongsTo
     {
         return $this->belongsTo(StorageConfig::class);
     }
 
+    /**
+     * @return BelongsTo<Folder, $this>
+     */
     public function parent(): BelongsTo
     {
         return $this->belongsTo(__CLASS__, 'parent_id');
     }
 
     /**
-     * @return HasMany<Folder, self>
+     * @return HasMany<Folder, $this>
      */
     public function folders(): HasMany
     {
@@ -82,25 +86,28 @@ class Folder extends Model
     }
 
     /**
-     * @return HasMany<File, self>
+     * @return HasMany<File, $this>
      */
     public function files(): HasMany
     {
         return $this->hasMany(File::class);
     }
 
-    public function allParents(): Attribute
+    /**
+     * @return Attribute<Collection<int, static>, never>
+     */
+    protected function allParents(): Attribute
     {
         return Attribute::get(function () {
-            $parents = collect([]);
-            $currentFolder = $this->parent;
-
-            while ($currentFolder) {
-                $parents->push($currentFolder);
-                $currentFolder = $currentFolder->parent;
+            if (! $this->parent) {
+                /** @var Collection<int, static> */
+                return collect([$this]);
             }
 
-            return $parents->reverse();
+            /** @var Collection<int, static> $chain */
+            $chain = $this->parent->all_parents;
+
+            return $chain->prepend($this);
         });
     }
 }

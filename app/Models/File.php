@@ -40,22 +40,34 @@ class File extends Model implements Responsable
         });
     }
 
+    /**
+     * @return BelongsTo<Folder, $this>
+     */
     public function folder(): BelongsTo
     {
         return $this->belongsTo(Folder::class);
     }
 
+    /**
+     * @return BelongsTo<StorageConfig, $this>
+     */
     public function storageConfig(): BelongsTo
     {
         return $this->belongsTo(StorageConfig::class);
     }
 
+    /**
+     * @return HasMany<IptcItem, $this>
+     */
     public function iptcItems(): HasMany
     {
         return $this->hasMany(IptcItem::class);
     }
 
-    public function sizeForHumans(): Attribute
+    /**
+     * @return Attribute<non-falsy-string&uppercase-string, void>
+     */
+    protected function sizeForHumans(): Attribute
     {
         return Attribute::get(function () {
             $bytes = $this->size;
@@ -67,11 +79,6 @@ class File extends Model implements Responsable
 
             return round($bytes, 2).' '.$units[$i];
         })->shouldCache();
-    }
-
-    public function downloadUrl(): Attribute
-    {
-        return Attribute::get(fn () => url('storage/'.$this->path))->shouldCache();
     }
 
     public function toResponse($request): ?StreamedResponse

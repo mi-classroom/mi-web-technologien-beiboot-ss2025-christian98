@@ -163,15 +163,10 @@ export interface User {
     created_at: string;
     updated_at: string;
 
-    folders_count: number;
     notifications_count: number;
     read_notifications_count: number;
-    root_folder_count: number;
     tokens_count: number;
     unread_notifications_count: number;
-
-    folders: Folder[];
-    rootFolder: Folder;
 }
 
 // endregion

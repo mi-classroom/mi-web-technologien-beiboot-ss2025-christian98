@@ -56,6 +56,8 @@ class WebdavProvider extends Provider
             if ($statusCode < 200 || $statusCode >= 300) {
                 throw new RuntimeException('Unexpected status code received: '.$statusCode);
             }
+
+            return $this->file($path);
         } catch (Throwable $exception) {
             throw UnableToWriteFile::atLocation($path, $exception->getMessage(), $exception);
         }
@@ -63,6 +65,7 @@ class WebdavProvider extends Provider
 
     /**
      * @param  array<int, string>  $property
+     * @param  0|1  $depth
      */
     public function propFind(string $path, array $property, int $depth = 0): array
     {
@@ -89,7 +92,7 @@ class WebdavProvider extends Provider
 
         foreach ($parts as $directory) {
             if ($directory === '.' || $directory === '') {
-                return;
+                return null;
             }
 
             $directoryParts[] = $directory;
@@ -97,7 +100,7 @@ class WebdavProvider extends Provider
             $location = $this->encodePath($directoryPath).'/';
 
             // TODO: Implement the logic to make the directory in the storage
-            if ($this->directoryExists($this->prefixer->stripDirectoryPrefix($directoryPath))) {
+            if ($this->exists($directoryPath)) {
                 continue;
             }
 
@@ -115,6 +118,8 @@ class WebdavProvider extends Provider
                 throw UnableToCreateDirectory::atLocation($path, 'Failed to create directory at: '.$location);
             }
         }
+
+        return null;
     }
 
     public static function propsIsDirectory(array $properties): bool
@@ -127,5 +132,19 @@ class WebdavProvider extends Provider
         }
 
         return isset($properties['{DAV:}iscollection']) && $properties['{DAV:}iscollection'] === '1';
+    }
+
+    public function exists(mixed $oldPath): bool
+    {
+        // TODO: Implement exists() method.
+
+        throw new RuntimeException('Not implemented');
+    }
+
+    public function move(mixed $oldPath, mixed $newPath): bool
+    {
+        // TODO: Implement move() method.
+
+        throw new RuntimeException('Not implemented');
     }
 }

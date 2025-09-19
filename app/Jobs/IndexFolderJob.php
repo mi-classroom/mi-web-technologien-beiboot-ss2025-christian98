@@ -27,7 +27,7 @@ class IndexFolderJob implements ShouldQueue
 
     public function handle(): void
     {
-        $storage ??= $this->folder->storageConfig->getStorage();
+        $storage = $this->folder->storageConfig->getStorage();
         $dir = $storage->directory($this->folder->full_path);
 
         $dir?->children()
@@ -48,9 +48,9 @@ class IndexFolderJob implements ShouldQueue
      */
     protected function indexSubFolders(): void
     {
-        if ($this->batch() && $this->batching()) {
+        if (($batch = $this->batch()) && $this->batching()) {
             foreach ($this->folder->folders as $subfolder) {
-                $this->batch()?->add(new IndexFolderJob($subfolder, $this->shouldIndexSubFolders));
+                $batch->add(new IndexFolderJob($subfolder, $this->shouldIndexSubFolders));
             }
 
             return;

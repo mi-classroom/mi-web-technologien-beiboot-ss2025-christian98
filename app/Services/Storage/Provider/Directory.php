@@ -2,14 +2,14 @@
 
 namespace App\Services\Storage\Provider;
 
-use Illuminate\Support\LazyCollection;
+use Illuminate\Support\Collection;
 
 abstract class Directory extends FilesystemItem
 {
     /**
-     * @return LazyCollection<File|Directory>
+     * @return Collection<File|Directory>
      */
-    abstract public function children(): LazyCollection;
+    abstract public function children(): Collection;
 
     abstract public function delete(): void;
 }

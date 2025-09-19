@@ -19,15 +19,10 @@ class UserResource extends JsonResource
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 
-            'folders_count' => $this->folders_count,
             'notifications_count' => $this->notifications_count,
             'read_notifications_count' => $this->read_notifications_count,
-            'root_folder_count' => $this->root_folder_count,
             'tokens_count' => $this->tokens_count,
             'unread_notifications_count' => $this->unread_notifications_count,
-
-            'folders' => FolderResource::collection($this->whenLoaded('folders')),
-            'rootFolder' => new FolderResource($this->whenLoaded('rootFolder')),
         ];
     }
 }

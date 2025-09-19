@@ -30,7 +30,7 @@ class IptcItem extends Model
     ];
 
     /**
-     * @return BelongsTo<File, self>
+     * @return BelongsTo<File, $this>
      */
     public function file(): BelongsTo
     {
@@ -38,7 +38,7 @@ class IptcItem extends Model
     }
 
     /**
-     * @return BelongsTo<IptcTagDefinition, self>
+     * @return BelongsTo<IptcTagDefinition, $this>
      */
     public function tagDefinition(): BelongsTo
     {

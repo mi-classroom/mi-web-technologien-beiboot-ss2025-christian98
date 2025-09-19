@@ -21,22 +21,22 @@ class IptcTagDefinition extends Model
         'user_id',
     ];
 
+    protected $casts = [
+        'spec' => 'array',
+        'is_value_editable' => 'boolean',
+    ];
+
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    protected function casts(): array
-    {
-        return [
-            'spec' => 'array',
-            'is_value_editable' => 'boolean',
-        ];
-    }
-
     public static function findByTag(string $tag, ?User $user = null): ?IptcTagDefinition
     {
-        $userId = $user?->id ?? Auth::id();
+        $userId = $user->id ?? Auth::id();
 
         return self::where('tag', $tag)
             ->where(function (Builder $query) use ($userId) {
@@ -47,7 +47,7 @@ class IptcTagDefinition extends Model
 
     public static function findOrCreateByTag(string $tag, ?User $user = null): IptcTagDefinition
     {
-        $userId = $user?->id ?? Auth::id();
+        $userId = $user->id ?? Auth::id();
 
         return self::findByTag($tag, $user)
             ?? self::updateOrCreate([

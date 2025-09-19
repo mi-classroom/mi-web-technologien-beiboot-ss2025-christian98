@@ -16,7 +16,7 @@ use RuntimeException;
 
 class Image
 {
-    public function __construct(
+    final public function __construct(
         protected readonly TempFile $tempFile,
     ) {}
 
@@ -26,7 +26,7 @@ class Image
         $disk = $disk instanceof Filesystem ? $disk : Storage::disk($disk);
         $content = $disk->get($filename);
 
-        return new self(
+        return new static(
             TempFile::withFilename($filename)
                 ->write($content)
                 ->setLastModified($disk->lastModified($filename))
@@ -41,7 +41,7 @@ class Image
             throw new RuntimeException("File not found: {$filename}");
         }
 
-        return new self(
+        return new static(
             TempFile::withFilename($filename)
                 ->write($file->content())
                 ->setLastModified($file->lastModified())
@@ -50,7 +50,7 @@ class Image
 
     public static function fromContent(string $content): static
     {
-        return new self(TempFile::withRandomName()->write($content));
+        return new static(TempFile::withRandomName()->write($content));
     }
 
     /**
@@ -58,7 +58,7 @@ class Image
      */
     public static function fromPath(string $path, mixed $streamContext = null): static
     {
-        return new self(TempFile::withFilename($path)->copyFrom($path, $streamContext));
+        return new static(TempFile::withFilename($path)->copyFrom($path, $streamContext));
     }
 
     public function exifReader(): ExifReader

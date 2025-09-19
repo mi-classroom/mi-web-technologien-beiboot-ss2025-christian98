@@ -13,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use function DI\string;
 
 class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 {
@@ -63,6 +64,6 @@ class IndexFileJob implements ShouldBeUniqueUntilProcessing, ShouldQueue
 
     public function uniqueId(): string
     {
-        return $this->file->id;
+        return (string) $this->file->id;
     }
 }

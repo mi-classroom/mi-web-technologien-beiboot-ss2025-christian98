@@ -65,7 +65,7 @@ class IptcData implements Arrayable
     }
 
     /**
-     * @return Collection<string, array<int, string>>>
+     * @return Collection<string, array<int, string>>
      */
     public function collect(): Collection
     {

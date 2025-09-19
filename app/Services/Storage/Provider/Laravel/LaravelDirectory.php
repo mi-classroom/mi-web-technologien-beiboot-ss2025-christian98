@@ -4,6 +4,7 @@ namespace App\Services\Storage\Provider\Laravel;
 
 use App\Services\Storage\Provider\Directory;
 use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 
 class LaravelDirectory extends Directory
@@ -15,17 +16,20 @@ class LaravelDirectory extends Directory
         parent::__construct($fullPath);
     }
 
-    public function children(): LazyCollection
+    public function children(): Collection
     {
-        $dirs = collect($this->filesystem->directories($this->fullPath))->lazy()->map(function (string $dir) {
+        $dirs = collect($this->filesystem->directories($this->fullPath))->map(function (string $dir) {
             return new LaravelDirectory($dir, $this->filesystem);
         });
 
-        $files = collect($this->filesystem->files($this->fullPath))->lazy()->map(function (string $file) {
+        $files = collect($this->filesystem->files($this->fullPath))->map(function (string $file) {
             return new LaravelFile($file, $this->filesystem);
         });
 
-        return $dirs->merge($files);
+        /** @var Collection<LaravelDirectory|LaravelFile> $result */
+        $result = collect();
+
+        return $result->combine($dirs)->combine($files);
     }
 
     public function delete(): void

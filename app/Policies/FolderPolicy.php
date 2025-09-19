@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Folder;
+use App\Models\StorageConfig;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Support\Facades\Gate;
@@ -11,9 +12,9 @@ class FolderPolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny(User $user): bool
+    public function viewAny(User $user, StorageConfig $storageConfig): bool
     {
-        return $user->hasVerifiedEmail();
+        return Gate::forUser($user)->allows('view', $storageConfig);
     }
 
     public function view(User $user, Folder $folder): bool
@@ -23,7 +24,7 @@ class FolderPolicy
 
     public function create(User $user, Folder $folder): bool
     {
-        return $user->hasVerifiedEmail() && Gate::forUser($user)->allows('update', $folder);
+        return Gate::forUser($user)->allows('update', $folder);
     }
 
     public function update(User $user, Folder $folder): bool

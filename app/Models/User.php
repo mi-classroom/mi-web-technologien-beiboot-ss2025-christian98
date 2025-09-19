@@ -57,7 +57,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany<StorageConfig, self>
+     * @return HasMany<StorageConfig, $this>
      */
     public function storageConfigs(): HasMany
     {
@@ -65,7 +65,7 @@ class User extends Authenticatable
     }
 
     /**
-     * @return HasMany<IptcTagDefinition, self>
+     * @return HasMany<IptcTagDefinition, $this>
      */
     public function iptcTagDefinitions(): HasMany
     {

@@ -3,6 +3,7 @@
 namespace App\Services\Storage\Provider;
 
 use App\Models\StorageConfig;
+use Illuminate\Support\Collection;
 use Illuminate\Support\LazyCollection;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -19,14 +20,14 @@ abstract class Provider
     /**
      * List the contents of a directory.
      *
-     * @return LazyCollection<Directory|File>
+     * @return Collection<Directory|File>
      */
-    public function listDirectory(string $path): LazyCollection
+    public function listDirectory(string $path): Collection
     {
         $directory = $this->directory($path);
 
         if ($directory === null) {
-            return collect()->lazy();
+            return collect();
         }
 
         return $directory->children();
@@ -54,4 +55,8 @@ abstract class Provider
 
         return $this->upload($path, $content);
     }
+
+    abstract public function exists(mixed $oldPath): bool;
+
+    abstract public function move(mixed $oldPath, mixed $newPath): bool;
 }

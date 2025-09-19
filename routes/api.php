@@ -16,7 +16,7 @@ Route::name('api.')->group(function () {
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('storage-config', StorageConfigController::class)->only(['index', 'show']);
-        Route::apiResource('folders', FolderController::class)->only(['index', 'show', 'update', 'destroy']);
+        Route::apiResource('storage-config.folders', FolderController::class)->only(['index', 'show', 'update', 'destroy'])->shallow();
         Route::get('/folders/{folder}/folders', [FolderFolderController::class, 'index'])->name('folders.folders.index');
         Route::post('/folders/{folder}/folders', [FolderFolderController::class, 'store'])->name('folders.folders.store');
         Route::apiResource('folders.files', FileController::class)->shallow();

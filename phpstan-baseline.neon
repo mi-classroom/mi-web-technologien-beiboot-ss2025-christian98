@@ -1,0 +1,19 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$read_notifications_count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$unread_notifications_count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Method App\\Services\\Image\\Exif\\File\\ExifFileData\:\:sectionsFound\(\) should return array\|null but returns int\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Image/Exif/File/ExifFileData.php

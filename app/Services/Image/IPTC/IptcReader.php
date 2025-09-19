@@ -5,7 +5,7 @@ namespace App\Services\Image\IPTC;
 use App\Services\Image\AbstractReader;
 use InvalidArgumentException;
 
-class IptcReader extends AbstractReader
+final class IptcReader extends AbstractReader
 {
     protected function __construct(
         protected string $filename
@@ -21,7 +21,7 @@ class IptcReader extends AbstractReader
             throw new InvalidArgumentException('File is not readable');
         }
 
-        return new static($filename);
+        return new IptcReader($filename);
     }
 
     public function read(): ?IptcData

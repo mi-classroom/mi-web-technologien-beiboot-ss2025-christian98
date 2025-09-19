@@ -62,11 +62,6 @@ class WriteIptcMetadataJob implements ShouldBeUnique, ShouldQueue
 
     public function uniqueId(): string
     {
-        return $this->file->id;
-    }
-
-    private function diskName(): string
-    {
-        return 'public';
+        return (string) $this->file->id;
     }
 }
