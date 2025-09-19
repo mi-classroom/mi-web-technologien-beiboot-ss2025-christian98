@@ -141,9 +141,7 @@ phpunit:
     - php -v
     - composer --version
     - composer test -- --version
-    - npx start-test 'npm run start:ssr' 13714 'php artisan test --coverage-text=coverage.txt --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml'
-  after_script:
-    - head -n 10 coverage.txt
+    - php artisan test --ansi --coverage-text --coverage-cobertura=coverage.cobertura.xml --log-junit junit.xml
   coverage: '/^\s*Lines:\s*(\d+.\d+\%)/'
   artifacts:
     reports:
