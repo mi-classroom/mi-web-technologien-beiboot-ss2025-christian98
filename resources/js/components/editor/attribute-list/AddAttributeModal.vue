@@ -23,7 +23,7 @@ const props = defineProps<{
 
 const open = ref(false);
 
-const { isPending, isFetching, isError, data, error } = useQuery({
+const { data } = useQuery({
     queryKey: ['iptc-tag-definitions'],
     queryFn: () =>
         fetchApi<Resource<IptcTagDefinition[]>>(

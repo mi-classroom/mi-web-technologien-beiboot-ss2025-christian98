@@ -39,20 +39,16 @@ import { Link, usePage } from '@inertiajs/vue3';
 import {
     BookOpen,
     Bug,
-    Cloud,
-    Cog,
-    Folder,
     FolderGit2,
     HardDrive,
     LayoutGrid,
     Menu,
     NotebookPen,
-    Plus,
     Search,
     Settings,
 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
-import { NavigationMenuSub, PopoverRoot, PopoverTrigger } from 'reka-ui';
+import { NavigationMenuSub } from 'reka-ui';
 import { providerIconMap } from '@/lib/providers';
 
 interface Props {

@@ -102,6 +102,7 @@ function submitForm() {
                             </option>
                             <option
                                 v-for="dataType in dataTypes"
+                                :key="dataType"
                                 :value="dataType">
                                 {{
                                     dataType.charAt(0).toUpperCase() +

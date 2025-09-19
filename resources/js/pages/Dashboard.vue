@@ -36,7 +36,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         </template>
                         <ul
                             class="divide-mi-warm-light flex flex-col gap-y-2 divide-y overflow-auto">
-                            <li v-for="file in recentlyEditedFiles?.data">
+                            <li v-for="file in recentlyEditedFiles?.data" :key="file.id">
                                 <FileListItem
                                     :file="file"
                                     timestamp-label="Last modified"
@@ -57,7 +57,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         </template>
                         <ul
                             class="divide-mi-warm-light flex flex-col gap-y-2 divide-y overflow-auto">
-                            <li v-for="file in recentlyAddedFiles?.data">
+                            <li v-for="file in recentlyAddedFiles?.data" :key="file.id">
                                 <FileListItem
                                     :file="file"
                                     timestamp-label="Added at"

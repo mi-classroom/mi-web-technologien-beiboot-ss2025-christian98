@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { IptcTagDefinition } from '@/types';
 
-const props = defineProps<{
+defineProps<{
     modelValue?: string | number;
     definition: IptcTagDefinition;
     index: number;

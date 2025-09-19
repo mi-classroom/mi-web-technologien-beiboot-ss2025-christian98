@@ -12,7 +12,7 @@ interface Props {
     customDefinitions: Resource<IptcTagDefinition[]>;
 }
 
-const props = defineProps<Props>();
+defineProps<Props>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     {

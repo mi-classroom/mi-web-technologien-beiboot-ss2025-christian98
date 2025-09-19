@@ -9,7 +9,7 @@ import {
 import { IptcTagDefinition } from '@/types';
 import DataTypeBadge from '@/components/pages/settings/iptc-tag-definitions/index/DataTypeBadge.vue';
 
-const props = defineProps<{
+defineProps<{
     definition: IptcTagDefinition;
 }>();
 </script>

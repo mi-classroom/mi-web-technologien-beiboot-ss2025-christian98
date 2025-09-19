@@ -5,7 +5,7 @@ import { File, IptcItem, IptcTagDefinition, Resource } from '@/types';
 import FileEntry from '@/components/editor/edit-view/FileEntry.vue';
 import { useMutation, useQueryClient } from '@tanstack/vue-query';
 import { fetchApi } from '@/lib/fetchApi';
-import { computed, useTemplateRef } from 'vue';
+import { useTemplateRef } from 'vue';
 
 const props = defineProps<{
     attributes: Map<number, IptcItem[]>;
@@ -33,11 +33,11 @@ const createMutation = useMutation({
             },
         );
     },
-    onSuccess: (data, variables, context) => {
+    onSuccess: () => {
         // Handle success, e.g., show a notification
         queryClient.invalidateQueries({ queryKey: ['files', props.fileIds] });
     },
-    onError: (error) => {
+    onError: () => {
         // Handle error, e.g., show an error message
     },
 });
@@ -59,7 +59,7 @@ const updateMutation = useMutation({
         // Handle success, e.g., show a notification
         queryClient.invalidateQueries({ queryKey: ['files', props.fileIds] });
     },
-    onError: (error) => {
+    onError: () => {
         // Handle error, e.g., show an error message
     },
 });
@@ -75,7 +75,7 @@ const destroyMutation = useMutation({
         // Handle success, e.g., show a notification
         queryClient.invalidateQueries({ queryKey: ['files', props.fileIds] });
     },
-    onError: (error) => {
+    onError: () => {
         // Handle error, e.g., show an error message
     },
 });
@@ -160,9 +160,9 @@ function handleSaveAll() {
     <div>
         <span class="mx-2 text-xl font-bold">Files</span>
         <ul
+            v-if="selectedTag"
             class="divide divide-mi-dark flex flex-col gap-y-1 divide-y overflow-auto px-1">
             <FileEntry
-                v-if="selectedTag"
                 v-for="file in selectedFiles"
                 :key="file.id"
                 ref="fileRefs"

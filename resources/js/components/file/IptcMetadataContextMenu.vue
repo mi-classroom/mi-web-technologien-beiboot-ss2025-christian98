@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Icon from '@/components/Icon.vue';
 import { router } from '@inertiajs/vue3';
-import { File, IptcItem } from '@/types';
+import { IptcItem } from '@/types';
 import UpdateIptcMeta from '@/components/file/UpdateIptcMeta.vue';
 import { ref } from 'vue';
 import {

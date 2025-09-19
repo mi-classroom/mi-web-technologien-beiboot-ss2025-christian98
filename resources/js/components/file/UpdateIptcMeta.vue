@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import Icon from '@/components/Icon.vue';
 import { Button } from '@/components/ui/button';
-import { File, IptcItem } from '@/types';
+import { IptcItem } from '@/types';
 import {
     Dialog,
     DialogContent,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { useCloned } from '@vueuse/core';
@@ -62,7 +61,7 @@ function closeDialog() {
                 </DialogHeader>
                 <div class="mx-2">
                     <ul>
-                        <li v-for="(l, index) in iptcMeta" class="list-decimal">
+                        <li v-for="(l, index) in iptcMeta" class="list-decimal" :key="index">
                             <div class="ml-2 flex gap-2">
                                 <Input
                                     :model-value="l"

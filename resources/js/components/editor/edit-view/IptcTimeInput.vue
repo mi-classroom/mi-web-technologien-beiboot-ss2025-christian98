@@ -12,7 +12,7 @@ function fromIptcFormat(date?: string): string | undefined {
     return `${date.slice(0, 2)}:${date.slice(2, 4)}:${date.slice(4, 6)}`; // Convert to HH:mm:ss format
 }
 
-const [model, modifiers] = defineModel<string | undefined>({
+const [model] = defineModel<string | undefined>({
     get(value) {
         return fromIptcFormat(value);
     },

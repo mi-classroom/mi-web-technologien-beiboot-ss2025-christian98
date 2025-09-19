@@ -146,24 +146,28 @@ const breadcrumbs = computed(() => {
                             <Card>
                                 <CardHeader>Exif</CardHeader>
                                 <CardContent class="space-y-6">
-                                    <FileInfoBlock
-                                        v-if="props.file.data.meta_data?.exif"
-                                        v-for="[
-                                            blockHeader,
-                                            metaBlock,
-                                        ] in Object.entries(
-                                            props.file.data.meta_data.exif,
-                                        )"
-                                        :header="blockHeader">
-                                        <FileInfoAttribute
+                                    <template
+                                        v-if="props.file.data.meta_data?.exif">
+                                        <FileInfoBlock
                                             v-for="[
-                                                label,
-                                                attribute,
-                                            ] in Object.entries(metaBlock)"
-                                            :label="label">
-                                            {{ attribute }}
-                                        </FileInfoAttribute>
-                                    </FileInfoBlock>
+                                                blockHeader,
+                                                metaBlock,
+                                            ] in Object.entries(
+                                                props.file.data.meta_data.exif,
+                                            )"
+                                            :key="blockHeader"
+                                            :header="blockHeader">
+                                            <FileInfoAttribute
+                                                v-for="[
+                                                    label,
+                                                    attribute,
+                                                ] in Object.entries(metaBlock)"
+                                                :key="label"
+                                                :label="label">
+                                                {{ attribute }}
+                                            </FileInfoAttribute>
+                                        </FileInfoBlock>
+                                    </template>
                                     <div
                                         v-else
                                         class="flex w-full items-center justify-center">
@@ -185,13 +189,18 @@ const breadcrumbs = computed(() => {
                                         <FileInfoAttribute
                                             v-for="iptcItem in props.file.data
                                                 .meta_data.iptc_items"
+                                            :key="iptcItem.id"
                                             :label="iptcItem.tag.name">
                                             <template #actions>
                                                 <IptcMetadataContextMenu
                                                     :iptcItem="iptcItem" />
                                             </template>
                                             <ul class="list-disc">
-                                                <li v-for="e in iptcItem.value">
+                                                <li
+                                                    v-for="(
+                                                        e, idx
+                                                    ) in iptcItem.value"
+                                                    :key="idx">
                                                     {{ e }}
                                                 </li>
                                             </ul>
@@ -221,9 +230,9 @@ const breadcrumbs = computed(() => {
                                         <CardContent class="text-sm">
                                             <pre class="text-wrap">
                                                 <span
-                                                    v-for="line in JSON.stringify(props.file.data.meta_data, undefined, 2).split('\n')">{{
-                                                        line
-                                                    }}</span>
+                                                    v-for="(line, idx) in JSON.stringify(props.file.data.meta_data, undefined, 2).split('\n')" :key="idx">
+                                                    {{ line }}
+                                                </span>
                                             </pre>
                                         </CardContent>
                                     </CollapsibleContent>

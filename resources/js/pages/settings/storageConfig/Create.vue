@@ -68,6 +68,7 @@ const form = useCreateStorageConfigForm();
                             </option>
                             <option
                                 v-for="provider in providers"
+                                :key="provider.value"
                                 :value="provider.value">
                                 {{ provider.label }}
                             </option>
@@ -80,14 +81,14 @@ const form = useCreateStorageConfigForm();
                     <div class="flex flex-col space-y-4">
                         <CreateWebDavForm
                             v-if="form.provider_type === 'webdav'"
-                            :form="
+                            v-model="
                                 form as unknown as InertiaForm<
                                     CreateStorageConfigForm<CreateWebDavFormData>
                                 >
                             " />
                         <CreateDropboxForm
                             v-if="form.provider_type === 'dropbox'"
-                            :form="
+                            v-model="
                                 form as unknown as InertiaForm<
                                     CreateStorageConfigForm<CreateDropboxFormData>
                                 >

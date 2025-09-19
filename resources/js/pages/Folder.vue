@@ -131,6 +131,7 @@ function navigate(item: Folder | File) {
                                 </tr>
                                 <tr
                                     v-for="item in items"
+                                    :key="item.id"
                                     @click="navigate(item)"
                                     class="border-border cursor-pointer border-t hover:bg-gray-100 dark:hover:bg-gray-700">
                                     <td

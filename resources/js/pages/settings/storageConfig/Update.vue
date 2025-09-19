@@ -52,7 +52,7 @@ const form = useCreateStorageConfigForm({ ...props.storageConfig.data });
 
                 <form
                     @submit.prevent="
-                        form.post(
+                        form.put(
                             route('settings.storage.update', {
                                 config: storageConfig.data,
                             }),
@@ -82,6 +82,7 @@ const form = useCreateStorageConfigForm({ ...props.storageConfig.data });
                             </option>
                             <option
                                 v-for="provider in providers"
+                                :key="provider.value"
                                 :value="provider.value">
                                 {{ provider.label }}
                             </option>
@@ -94,14 +95,14 @@ const form = useCreateStorageConfigForm({ ...props.storageConfig.data });
                     <div class="flex flex-col space-y-4">
                         <CreateWebDavForm
                             v-if="form.provider_type === 'webdav'"
-                            :form="
+                            v-model="
                                 form as unknown as InertiaForm<
                                     CreateStorageConfigForm<CreateWebDavFormData>
                                 >
                             " />
                         <CreateDropboxForm
                             v-if="form.provider_type === 'dropbox'"
-                            :form="
+                            v-model="
                                 form as unknown as InertiaForm<
                                     CreateStorageConfigForm<CreateDropboxFormData>
                                 >

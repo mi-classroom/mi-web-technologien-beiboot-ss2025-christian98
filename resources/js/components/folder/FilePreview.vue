@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { Button } from '@/components/ui/button';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
 import { FileInput } from '@/components/folder/CreateFileButton.vue';
 
 const props = defineProps<{

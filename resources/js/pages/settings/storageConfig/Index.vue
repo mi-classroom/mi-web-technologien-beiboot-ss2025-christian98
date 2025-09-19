@@ -58,7 +58,7 @@ function formatDate(date: Date) {
 
 function reconnect(provider: StorageConfig) {
     // TODO: Implement reconnect logic
-    alert('Reconnect functionality is not implemented yet.');
+    alert(`Reconnect functionality is not implemented yet for ${provider.name}.`);
 }
 
 function disconnect(provider: StorageConfig) {

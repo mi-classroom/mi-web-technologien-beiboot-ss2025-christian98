@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import { File, Folder } from '@/types';
+import { Folder } from '@/types';
 
 // Components
 import { Button } from '@/components/ui/button';

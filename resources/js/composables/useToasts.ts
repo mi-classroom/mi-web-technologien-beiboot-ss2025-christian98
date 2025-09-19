@@ -1,5 +1,5 @@
 import { ref, watch } from 'vue';
-import { SharedData, Toast as ToastType, ToastAction } from '@/types';
+import { SharedData, Toast as ToastType } from '@/types';
 import { usePage } from '@inertiajs/vue3';
 
 const messages = ref<ToastType[]>([]);

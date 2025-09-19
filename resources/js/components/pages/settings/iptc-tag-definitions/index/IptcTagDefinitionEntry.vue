@@ -5,7 +5,7 @@ import IptcTagDefinitionDetailsModal from '@/components/pages/settings/iptc-tag-
 import DataTypeBadge from '@/components/pages/settings/iptc-tag-definitions/index/DataTypeBadge.vue';
 import { Link } from '@inertiajs/vue3';
 
-const props = defineProps<{
+defineProps<{
     definition: IptcTagDefinition;
     hideActions?: boolean;
 }>();

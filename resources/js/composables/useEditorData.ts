@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/vue-query';
 import { fetchApi } from '@/lib/fetchApi';
 import type { File, IptcTagDefinition } from '@/types';
-import { computed, reactive, ref, Ref } from 'vue';
+import { computed, ref, Ref } from 'vue';
 
 export function useEditorData(fileIds: Ref<number[], number[]>) {
-    const { isPending, isFetching, isError, data, error } = useQuery({
+    const { data } = useQuery({
         queryKey: ['files', fileIds],
         queryFn: () =>
             fetchApi<{ data: File[] }>(

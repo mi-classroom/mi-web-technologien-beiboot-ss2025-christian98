@@ -115,6 +115,7 @@ function addValue() {
         <div class="mt-2 flex flex-col gap-1">
             <div
                 v-for="(_, idx) in newValue"
+                :key="idx"
                 class="flex items-end gap-1 **:data-heading:first:not-sr-only">
                 <div class="flex grow gap-1">
                     <div class="basis-1/2">

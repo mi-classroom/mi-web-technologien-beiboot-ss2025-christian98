@@ -5,9 +5,9 @@ import { CreateWebDavFormData } from '@/components/pages/settings/storageConfig/
 import { Input } from '@/components/ui/input';
 import InputError from '@/components/InputError.vue';
 
-const props = defineProps<{
-    form: InertiaForm<CreateStorageConfigForm<CreateWebDavFormData>>;
-}>();
+const form = defineModel<InertiaForm<CreateStorageConfigForm<CreateWebDavFormData>>>({
+    required: true,
+});
 </script>
 
 <template>
