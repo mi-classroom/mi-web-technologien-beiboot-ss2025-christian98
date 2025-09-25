@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(Folder::class, 'root_folder_id')->nullable()->constrained()->nullOnUpdate()->nullOnDelete();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('provider_type');
-            $table->json('provider_options');
+            $table->text('provider_options');
             $table->boolean('is_editable');
             $table->timestamps();
         });
