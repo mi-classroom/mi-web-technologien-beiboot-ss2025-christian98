@@ -300,7 +300,7 @@ docker:php:
     - composer
     - build
   script:
-    - sh scripts/docker-build.sh -i $DOCKER_IMAGE -f docker/Dockerfile -v $CI_COMMIT_REF_NAME -t $DOCKER_TAG -p $PUSH_DOCKER_IMAGE
+    - sh scripts/docker-build.sh -i $DOCKER_IMAGE -f .docker/Dockerfile -v $CI_COMMIT_REF_NAME -t $DOCKER_TAG -p $PUSH_DOCKER_IMAGE
   rules:
     - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
       variables:
@@ -320,7 +320,7 @@ docker:nginx:
     - composer
     - build
   script:
-    - sh scripts/docker-build.sh -i $DOCKER_IMAGE -f docker/Nginx.Dockerfile -v $CI_COMMIT_REF_NAME -t $DOCKER_TAG -p $PUSH_DOCKER_IMAGE
+    - sh scripts/docker-build.sh -i $DOCKER_IMAGE -f .docker/Nginx.Dockerfile -v $CI_COMMIT_REF_NAME -t $DOCKER_TAG -p $PUSH_DOCKER_IMAGE
   rules:
     - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
       variables:
@@ -341,7 +341,7 @@ docker:validate-compose-file:
   needs:
     - setup
   script:
-    - docker compose -f docker/docker-compose.yml --env-file=.env config
+    - docker compose -f .docker/docker-compose.yml --env-file=.env config
   rules:
     - if: $CI_COMMIT_BRANCH || $CI_MERGE_REQUEST_ID
   interruptible: true
