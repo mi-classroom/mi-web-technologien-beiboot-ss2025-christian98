@@ -1,0 +1,124 @@
+services:
+    laravel: &laravel
+        image: registry.gitlab.com/pyramine/iptc-editor/iptc-editor/laravel:${APP_VERSION:?err}
+        restart: unless-stopped
+        entrypoint: ["/bin/sh", "/var/www/entrypoint-php.sh"]
+        environment:
+            APP_NAME: IPTC-Editor
+            APP_ENV: ${APP_ENV:-production}
+            APP_KEY: ${APP_KEY:?err}
+            APP_DEBUG: ${APP_DEBUG:-false}
+            APP_URL: https://iptc-editor.pyramine.de
+            CACHE_DRIVER: redis
+            QUEUE_CONNECTION: redis
+            LOG_LEVEL: info
+            DB_CONNECTION: mysql
+            DB_HOST: db
+            DB_PORT: 3306
+            DB_DATABASE: iptc-editor
+            DB_USERNAME: ${DB_USERNAME:?err}
+            DB_PASSWORD: ${DB_PASSWORD:?err}
+            REDIS_HOST: redis
+            REDIS_PASSWORD: ${REDIS_PASSWORD:?err}
+            SESSION_DRIVER: database
+            SESSION_SECURE_COOKIE: 'true'
+            MAIL_MAILER: ${MAIL_MAILER:?err}
+            MAIL_HOST: ${MAIL_HOST:?err}
+            MAIL_USERNAME: ${MAIL_USERNAME:?err}
+            MAIL_PASSWORD: ${MAIL_PASSWORD:?err}
+            MAIL_FROM_ADDRESS: no-reply@christian-hollaender.de
+            SENTRY_LARAVEL_DSN: ${SENTRY_LARAVEL_DSN}
+            CSP_REPORT_URI: ${CSP_REPORT_URI}
+        volumes:
+            - ./mounts/app/storage:/var/www/storage
+        networks:
+            - default
+            - monitoring_iptc-editor
+        depends_on:
+            - db
+
+    cron:
+        <<: *laravel
+        entrypoint: [ "/bin/sh", "/var/www/entrypoint-cron.sh" ]
+        user: root
+        networks:
+            - default
+            - monitoring_iptc-editor
+        depends_on:
+            - db
+
+    horizon:
+        <<: *laravel
+        entrypoint: [ "/bin/sh", "/var/www/entrypoint-horizon.sh" ]
+        healthcheck:
+            test: ["CMD", "php", "artisan", "horizon:status"]
+        networks:
+            - default
+            - monitoring_iptc-editor
+        depends_on:
+            - db
+
+    nginx:
+        image: registry.gitlab.com/pyramine/iptc-editor/iptc-editor/nginx:${APP_VERSION:?err}
+        restart: unless-stopped
+        networks:
+            - default
+            - proxy_iptc-editor
+            - monitoring_iptc-editor
+        depends_on:
+            - laravel
+        labels:
+            # Datado
+            com.datadoghq.ad.check_names: '["tls", "php_fpm"]'
+            com.datadoghq.ad.init_configs: '[{}, {}]'
+            com.datadoghq.ad.instances: '[{"server": "iptc-editor.pyramine.de"}, {"status_url":"http://%%host_monitoring_iptc-editor%%/status", "ping_url":"http://%%host_monitoring_iptc-editor%%/ping", "use_fastcgi": false, "ping_reply": "pong"}]'
+            # Traefik
+            traefik.enable: 'true'
+            traefik.http.routers.iptc-editor.rule: 'Host(`iptc-editor.pyramine.de`) || Host (`www.iptc-editor.pyramine.de`)'
+            traefik.http.routers.iptc-editor.entrypoints: 'web,websecure'
+            traefik.http.routers.iptc-editor.tls.certresolver: 'le'
+            traefik.docker.network: 'proxy_iptc-editor'
+        volumes:
+            - ./mounts/app/storage:/var/www/storage:ro
+
+    db:
+        image: mariadb:11.8.2
+        restart: unless-stopped
+        labels:
+            com.datadoghq.ad.check_names: '["mysql"]'
+            com.datadoghq.ad.init_configs: '[{}]'
+            com.datadoghq.ad.instances: '[{"server": "%%host_monitoring_iptc-editor%%", "username": "datadog","password": "${DATADOG_DB_PASSWORD}"}]'
+        environment:
+            MYSQL_DATABASE: iptc-editor
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?err}
+            MYSQL_PASSWORD: ${DB_PASSWORD:?err}
+            MYSQL_USER: ${DB_USERNAME:?err}
+        networks:
+            - default
+            - monitoring_iptc-editor
+        volumes:
+            - ./mounts/mysql:/var/lib/mysql
+        #  - ./mounts/mysql:/docker-entrypoint-initdb.d
+
+    redis:
+        image: redis:7.4.5-alpine
+        restart: unless-stopped
+        labels:
+            com.datadoghq.ad.check_names: '["redisdb"]'
+            com.datadoghq.ad.init_configs: '[{}]'
+            com.datadoghq.ad.instances: '[{"host": "%%host_monitoring_iptc-editor%%","port":"6379","password":"${REDIS_PASSWORD:?err}"}]'
+        command: redis-server --requirepass ${REDIS_PASSWORD:?err}
+        networks:
+            - default
+            - monitoring_iptc-editor
+        volumes:
+            - ./mounts/redis/data:/data
+
+
+networks:
+    proxy_iptc-editor:
+        driver: bridge
+        external: true
+    monitoring_iptc-editor:
+        driver: bridge
+        external: true
