@@ -12,6 +12,7 @@ class ImageTest extends TestCase
         $image = Image::fromPath(self::PROPER_IMAGE);
 
         $this->assertMatchesObjectSnapshot($image->exif()->toArray());
+        $this->markTestIncompleteIfSnapshotsHaveChanged();
     }
 
     public function test_should_extract_exif_from_storage(): void
@@ -20,6 +21,7 @@ class ImageTest extends TestCase
         $image = Image::fromDisk(basename(self::PROPER_IMAGE), $storage);
 
         $this->assertMatchesObjectSnapshot($image->exif()->toArray());
+        $this->markTestIncompleteIfSnapshotsHaveChanged();
     }
 
     public function test_should_extract_iptc(): void
