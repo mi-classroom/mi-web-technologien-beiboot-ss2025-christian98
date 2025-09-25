@@ -30,6 +30,12 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const form = useCreateStorageConfigForm();
+const webDavForm = form as unknown as InertiaForm<
+    CreateStorageConfigForm<CreateWebDavFormData>
+>;
+const dropboxForm = form as unknown as InertiaForm<
+    CreateStorageConfigForm<CreateDropboxFormData>
+>;
 </script>
 
 <template>
@@ -81,18 +87,10 @@ const form = useCreateStorageConfigForm();
                     <div class="flex flex-col space-y-4">
                         <CreateWebDavForm
                             v-if="form.provider_type === 'webdav'"
-                            v-model="
-                                form as unknown as InertiaForm<
-                                    CreateStorageConfigForm<CreateWebDavFormData>
-                                >
-                            " />
+                            v-model="webDavForm" />
                         <CreateDropboxForm
                             v-if="form.provider_type === 'dropbox'"
-                            v-model="
-                                form as unknown as InertiaForm<
-                                    CreateStorageConfigForm<CreateDropboxFormData>
-                                >
-                            " />
+                            v-model="dropboxForm" />
                     </div>
 
                     <div>
