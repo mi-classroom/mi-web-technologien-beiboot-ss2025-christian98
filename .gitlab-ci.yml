@@ -130,7 +130,7 @@ phpunit:
     MYSQL_ROOT_PASSWORD: root
     MYSQL_USER: laravel
     MYSQL_PASSWORD: secret
-    MYSQL_DATABASE: blog
+    MYSQL_DATABASE: laravel
   # Download the artifacts for these jobs
   needs:
     - composer
