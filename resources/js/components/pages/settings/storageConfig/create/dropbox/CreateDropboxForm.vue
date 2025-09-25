@@ -5,7 +5,9 @@ import { CreateDropboxFormData } from '@/components/pages/settings/storageConfig
 import InputError from '@/components/InputError.vue';
 import { Input } from '@/components/ui/input';
 
-const form = defineModel<InertiaForm<CreateStorageConfigForm<CreateDropboxFormData>>>({
+const form = defineModel<
+    InertiaForm<CreateStorageConfigForm<CreateDropboxFormData>>
+>({
     required: true,
 });
 </script>

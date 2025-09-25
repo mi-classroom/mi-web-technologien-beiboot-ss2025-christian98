@@ -5,7 +5,6 @@ namespace App\Services\Storage\Provider\Laravel;
 use App\Services\Storage\Provider\Directory;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Collection;
-use Illuminate\Support\LazyCollection;
 
 class LaravelDirectory extends Directory
 {

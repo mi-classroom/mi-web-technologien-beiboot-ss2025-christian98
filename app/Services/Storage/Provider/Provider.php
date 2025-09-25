@@ -4,7 +4,6 @@ namespace App\Services\Storage\Provider;
 
 use App\Models\StorageConfig;
 use Illuminate\Support\Collection;
-use Illuminate\Support\LazyCollection;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 abstract class Provider

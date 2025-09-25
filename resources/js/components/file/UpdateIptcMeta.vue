@@ -61,7 +61,10 @@ function closeDialog() {
                 </DialogHeader>
                 <div class="mx-2">
                     <ul>
-                        <li v-for="(l, index) in iptcMeta" class="list-decimal" :key="index">
+                        <li
+                            v-for="(l, index) in iptcMeta"
+                            class="list-decimal"
+                            :key="index">
                             <div class="ml-2 flex gap-2">
                                 <Input
                                     :model-value="l"

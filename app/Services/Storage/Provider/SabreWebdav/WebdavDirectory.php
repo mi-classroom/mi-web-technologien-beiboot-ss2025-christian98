@@ -4,7 +4,6 @@ namespace App\Services\Storage\Provider\SabreWebdav;
 
 use App\Services\Storage\Provider\Directory;
 use Illuminate\Support\Collection;
-use Illuminate\Support\LazyCollection;
 use League\Flysystem\UnableToDeleteDirectory;
 use RuntimeException;
 use Sabre\HTTP\ClientHttpException;

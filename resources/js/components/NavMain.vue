@@ -17,7 +17,10 @@ const page = usePage<SharedData>();
 </script>
 
 <template>
-    <SidebarGroup v-for="group in items" :key="group.title" class="px-2 pt-2 pb-0">
+    <SidebarGroup
+        v-for="group in items"
+        :key="group.title"
+        class="px-2 pt-2 pb-0">
         <SidebarGroupLabel v-if="group.title">
             {{ group.title }}
         </SidebarGroupLabel>
