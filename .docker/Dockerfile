@@ -27,7 +27,7 @@ RUN rm -R html \
 FROM registry.gitlab.com/pyramine/laravel-base-image:1.7.6
 
 # Copy custom PHP-FPM config
-COPY .docker/php/blog.php-fpm.conf /usr/local/etc/php-fpm.d/blog.php-fpm.conf
+COPY .docker/php/blog.php-fpm.conf /usr/local/etc/php-fpm.d/iptc-editor.php-fpm.conf
 COPY .docker/php/php.ini /usr/local/etc/php/php.ini
 
 # Add entrypoints
