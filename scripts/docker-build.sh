@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 while getopts f:i:t:v:p: flag
 do
