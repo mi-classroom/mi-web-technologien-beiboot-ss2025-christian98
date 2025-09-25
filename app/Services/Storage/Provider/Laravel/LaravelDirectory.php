@@ -28,7 +28,7 @@ class LaravelDirectory extends Directory
         /** @var Collection<LaravelDirectory|LaravelFile> $result */
         $result = collect();
 
-        return $result->combine($dirs)->combine($files);
+        return $result->push(...$dirs)->push(...$files);
     }
 
     public function delete(): void
