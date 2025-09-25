@@ -12,7 +12,5 @@ class ExtractExifInfoTest extends TestCase
         $data = ExifReader::fromFilename(self::PROPER_IMAGE)->read();
 
         $this->assertMatchesObjectSnapshot($data->toArray());
-
-        $this->markTestIncompleteIfSnapshotsHaveChanged();
     }
 }
